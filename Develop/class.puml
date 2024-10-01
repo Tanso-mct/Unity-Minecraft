@@ -1,0 +1,81 @@
+﻿@startuml Unity Minecraft System
+
+enum MANAGER_MSG
+{
+    SUCSESS,
+    FAIL
+}
+
+class Params
+{
+    + MANAGER_MSG msg
+    + float left
+    + float right
+}
+
+GameManager o-- Manager
+class GameManager
+{
+    - {static} PARAMS params
+    - int SPECIFIED_FPS
+
+    - [SerializeField] List<string> SCENE_NAMES
+    - [SerializeField] Manager manager
+
+    - void [Unity] Awake()
+    - void [Unity] Start()
+    - void [Unity] Update()
+    - void Exit()
+
+    - MANAGER_MSG SetFps()
+
+    - MANAGER_MSG ConvertScene()
+    - MANAGER_MSG ForwardScene()
+    - MANAGER_MSG BackScene()
+}
+
+abstract class Manager
+{
+    - [SerializeField] string currSegment
+    - [SerializeField] List<Segment> segments
+    - Dictionary<string, int> segmentIndex
+
+    + {abstract} void UserAwake(ref Params params)
+    + {abstract} void UserStart(ref Params params)
+    + {abstract} void UserUpdate(ref Params params)
+    + {abstract} void UserExit(ref Params params)
+
+    + void SegmentAwake(ref Params params)
+    + void SegmentStart(ref Params params)
+    + void SegmentUpdate(ref Params params)
+    + void SegmentExit(ref Params params)
+
+    # void ChangeSegment(string name)
+}
+
+MainManager --|> Manager
+MainManager o-- Segment
+class MainManager
+{
+    + void UserAwake(ref Params params) override
+    + void UserStart(ref Params params) override
+    + void UserUpdate(ref Params params) override
+    + void UserExit(ref Params params) override
+}
+
+abstract class Segment
+{
+    + {abstract} void UserAwake(ref Params params)
+    + {abstract} void UserStart(ref Params params)
+    + {abstract} void UserUpdate(ref Params params)
+    + {abstract} void UserExit(ref Params params)
+}
+
+MainSegment --|> Segment
+class MainSegment
+{
+    + void UserAwake(ref Params params) override
+    + void UserStart(ref Params params) override
+    + void UserUpdate(ref Params params) override
+    + void UserExit(ref Params params) override
+}

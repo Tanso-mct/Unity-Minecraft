@@ -40,6 +40,8 @@ abstract class Manager
     - [SerializeField] List<Segment> segments
     - Dictionary<string, int> segmentIndex
 
+    - bool segmentChangeFlag
+
     + {abstract} void UserAwake(ref Params params)
     + {abstract} void UserStart(ref Params params)
     + {abstract} void UserUpdate(ref Params params)

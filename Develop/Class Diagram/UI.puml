@@ -1,0 +1,24 @@
+﻿@startuml Unity Minecraft UI
+
+class Element
+{
+
+}
+
+Button --|> Element
+class Button
+{
+
+}
+
+Text --|> Element
+class Text
+{
+
+}
+
+Settings o-- Element
+class Settings
+{
+
+}

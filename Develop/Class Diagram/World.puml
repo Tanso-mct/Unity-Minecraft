@@ -1,0 +1,68 @@
+﻿@startuml Unity Minecraft World
+
+enum BLOCK_STATE
+{
+    NONE,
+    ITEM,
+    BLOCK,
+    ENTITY
+}
+
+enum BLOCK_TYPE
+{
+    NORMAL,
+    ORE,
+    GLASS,
+    FENCE,
+    LEAF,
+    SEED,
+    FLUID,
+    FURNITURE,
+    FALL
+}
+
+abstract class Block
+{
+    - BLOCK_STATE state
+
+    - [SerializeField] BLOCK_TYPE type
+    - [SerializeField] string name
+    - [SerializeField] Texture texture
+
+    + {abstract} void Create()
+    + {abstract} void Destroy()
+
+    + {abstract} void Set()
+    + {abstract} void Break()
+
+    + void Get(Vector3 playerPos, Vector3 playerRot)
+    + void Drop(Vector3 playerPos, Vector3 playerRot)
+}
+
+abstract class Item
+{
+    - [SerializeField] string name
+    - [SerializeField] Texture texture
+
+    + {abstract} void Create()
+    + {abstract} void Destroy()
+
+    + {abstract} void Select()
+    + {abstract} void Deselect()
+
+    + {abstract} void Use()
+
+    + void Get(Vector3 playerPos, Vector3 playerRot)
+    + void Drop(Vector3 playerPos, Vector3 playerRot)
+}
+
+class World
+{
+    - Block[513, 513, 320] blocks
+
+    - [SerializeField] GameObject parentBlockPrefabs
+    - Dictionary<string, GameObject> blockPrefabs
+
+
+
+}

@@ -17,6 +17,12 @@ class Text
 
 }
 
+Bar --|> Element
+class Bar
+{
+
+}
+
 Settings o-- Element
 class Settings
 {

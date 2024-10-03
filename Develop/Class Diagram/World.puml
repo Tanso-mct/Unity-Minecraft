@@ -1,68 +1,132 @@
 ﻿@startuml Unity Minecraft World
 
-enum BLOCK_STATE
+enum VOXEL_STATE
 {
     NONE,
     ITEM,
     BLOCK,
+    USABLE,
     ENTITY
 }
 
-enum BLOCK_TYPE
+enum VOXEL_TYPE
 {
-    NORMAL,
-    ORE,
-    GLASS,
-    FENCE,
-    LEAF,
-    SEED,
-    FLUID,
-    FURNITURE,
+    BUILD_BLOC
+    ORE
+    GLASS
+    FENCE
+    LEAF
+    SEED
+    FLUID
+    FURNITURE
     FALL
+    FOOD,
+    TOOL,
+    ARMOR,
+    ENCHANT_BOOK
 }
 
+enum VOXEL_ID
+{
+
+}
+
+class Entity
+{
+
+}
+
+Mob --|> Entity
+class Mob
+{
+
+}
+
+class Inventory
+{
+
+}
+
+Player *-- Inventory
+Player --|> Entity
+class Player
+{
+
+}
+
+Voxel *-- VOXEL_STATE
+Voxel *-- VOXEL_TYPE
+Voxel *-- VOXEL_ID
+abstract class Voxel
+{
+    - VOXEL_STATE state
+
+    - [SerializeField] int maxStack
+    - [SerializeField] bool isBlock
+
+    - bool isHolding = false
+    - bool isWearing = false
+    - bool isSelecting = false
+
+    - VOXEL_ID id
+    - [SerializeField] VOXEL_TYPE type
+    - [SerializeField] string name
+    - [SerializeField] Texture texture
+
+    + {abstract} void Create()
+    + {abstract} void Destroy()
+
+    + VOXEL_ID ItemGet(ref Player player)
+    + VOXEL_ID ItemDrop(ref Player player)
+
+    + VOXEL_ID ItemHold()
+    + [virtual] VOXEL_ID ItemUse()
+    + VOXEL_ID ItemDisHold()
+
+    + VOXEL_ID ItemSelect(ref Inventory invent)
+    + VOXEL_ID ItemPut(ref Inventory invent)
+}
+
+Block --|> Voxel
 abstract class Block
 {
-    - BLOCK_STATE state
+    - bool isTarget = false
 
-    - [SerializeField] BLOCK_TYPE type
-    - [SerializeField] string name
-    - [SerializeField] Texture texture
+    + {abstract} void Place();
+    + {abstract} void Break();
 
-    + {abstract} void Create()
-    + {abstract} void Destroy()
-
-    + {abstract} void Set()
-    + {abstract} void Break()
-
-    + void Get(Vector3 playerPos, Vector3 playerRot)
-    + void Drop(Vector3 playerPos, Vector3 playerRot)
+    + void Target()
+    + [virtual] void Use()
+    + void DeTarget()
 }
 
-abstract class Item
+Usable --|> Voxel
+abstract class Usable
 {
-    - [SerializeField] string name
-    - [SerializeField] Texture texture
+    + [override] VOXEL_ID ItemUse()
+}
 
-    + {abstract} void Create()
-    + {abstract} void Destroy()
+Wearable --|> Voxel
+abstract class Wearable
+{
 
-    + {abstract} void Select()
-    + {abstract} void Deselect()
-
-    + {abstract} void Use()
-
-    + void Get(Vector3 playerPos, Vector3 playerRot)
-    + void Drop(Vector3 playerPos, Vector3 playerRot)
 }
 
 class World
 {
-    - Block[513, 513, 320] blocks
+    - int size = 513
+    - int height = 320
 
     - [SerializeField] GameObject parentBlockPrefabs
     - Dictionary<string, GameObject> blockPrefabs
 
+    - Block[,,] blocks = new Block[size, height, size]
 
+    + void Load()
+    + void UnLoad()
+
+    + void Create()
+    + void Save()
+    + void Destroy()
 
 }

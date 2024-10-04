@@ -117,9 +117,10 @@ class World
     - int size = 513
     - int height = 320
 
-    - [SerializeField] GameObject parentBlockPrefabs
-    - Dictionary<string, GameObject> blockPrefabs
+    - [SerializeField] GameObject parentVaxelPrefabs
+    - Dictionary<string, GameObject> vaxelPrefabs
 
+    - List<Voxel> voxels
     - Block[,,] blocks = new Block[size, height, size]
 
     + void Load()
@@ -130,3 +131,6 @@ class World
     + void Destroy()
 
 }
+
+
+@enduml

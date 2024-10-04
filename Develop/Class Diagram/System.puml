@@ -81,3 +81,6 @@ class MainSegment
     + void UserUpdate(ref Params params) override
     + void UserExit(ref Params params) override
 }
+
+
+@enduml

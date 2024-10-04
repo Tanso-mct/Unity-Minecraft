@@ -5,26 +5,59 @@ class Element
 
 }
 
+class Text
+{
+
+}
+
+Button *-- Text
 Button --|> Element
 class Button
 {
 
 }
 
-Text --|> Element
-class Text
-{
-
-}
-
+Bar *-- Text
 Bar --|> Element
 class Bar
 {
 
 }
 
-Settings o-- Element
-class Settings
+class McSetting
 {
 
 }
+
+McVideos --|> McSetting
+class McVideos
+{
+
+}
+
+McControls --|> McSetting
+class McControls
+{
+
+}
+
+McSounds --|> McSetting
+class McSounds
+{
+
+}
+
+McOption *-- McSetting
+class McOption
+{
+
+}
+
+McOptionUI o-- Element
+McOptionUI *-- McOption
+class McOptionUI
+{
+
+}
+
+@enduml

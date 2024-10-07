@@ -1,25 +1,44 @@
-﻿@startuml Unity Minecraft System
-
-enum MANAGER_MSG
-{
-    SUCSESS,
-    FAIL
-}
+﻿@startuml Prototype App Base System
 
 class Params
 {
-    + MANAGER_MSG msg
-    + float left
-    + float right
+    + {static} int msg
+    + {static} float floP
+    + {static} string strP
+
+    + {static} void Init()
 }
 
-GameManager o-- Manager
-class GameManager
+class Constants
 {
-    - {static} PARAMS params
-    - int SPECIFIED_FPS
+    + {static} readonly int SPECIFIED_FPS = 60
 
-    - [SerializeField] List<string> SCENE_NAMES
+    + {static} readonly int MSG_NULL = 0
+    + {static} readonly int MSG_SUCSESS = 1
+    + {static} readonly int MSG_FAILED = 2
+    + {static} readonly int MSG_ERROR = 3
+    + {static} readonly int MSG_WARNING = 4
+    + {static} readonly int MSG_CHANGE_SCENE = 5
+
+    + {static} readonly string SCENE_MENU = "Menu"
+
+    + {static} readonly string TYPE_BACKGROUND = "background"
+    + {static} readonly string TYPE_IMAGE = "image"
+    + {static} readonly string TYPE_INPUT_BOX = "inputBox"
+    + {static} readonly string TYPE_BUTTON = "button"
+    + {static} readonly string TYPE_TEXT = "text"
+
+    + {static} readonly string WND_TOP_MENU = "TopMenu"
+
+    + {static} readonly string VAXEL_STATE_NONE = "none"
+    + {static} readonly string VAXEL_STATE_ITEM = "item"
+}
+
+BaseManager *-- Params
+BaseManager *-- Manager
+class BaseManager
+{
+    - {static} PARAMS param
     - [SerializeField] Manager manager
 
     - void [Unity] Awake()
@@ -27,59 +46,176 @@ class GameManager
     - void [Unity] Update()
     - void Exit()
 
-    - MANAGER_MSG SetFps()
-
-    - MANAGER_MSG ConvertScene()
-    - MANAGER_MSG ForwardScene()
-    - MANAGER_MSG BackScene()
+    - int SetFps()
+    - int ChangeScene()
 }
 
+abstract class Element
+{
+    - [SerializeField] string type
+    - [SerializeField] string elName
+
+    + {abstract} void Init()
+    + {abstract} void Show()
+    + {abstract} void Close()
+    + {abstract} void Execute()
+    + {abstract} void Move(ref Vector2 vec, )
+}
+
+BackgroundEl --|> Element
+class BackgroundEl
+{
+    + [override] void Init()
+    + [override] void Show()
+    + [override] void Close()   
+    + [override] void Execute()
+    + [override] void Move(ref Vector2 vec, )
+}
+
+ImageEl --|> Element
+class ImageEl
+{
+    + [override] void Init()
+    + [override] void Show()
+    + [override] void Close()   
+    + [override] void Execute()
+    + [override] void Move(ref Vector2 vec, )
+}
+
+InputBoxEl --|> Element
+class InputBoxEl
+{
+    + [override] void Init()
+    + [override] void Show()
+    + [override] void Close()   
+    + [override] void Execute()
+    + [override] void Move(ref Vector2 vec, )
+}
+
+ButtonEl --|> Element
+class ButtonEl
+{
+    + [override] void Init()
+    + [override] void Show()
+    + [override] void Close()   
+    + [override] void Execute()
+    + [override] void Move(ref Vector2 vec, )
+}
+
+TextEl --|> Element
+class TextEl
+{
+    + [override] void Init()
+    + [override] void Show()
+    + [override] void Close()   
+    + [override] void Execute()
+    + [override] void Move(ref Vector2 vec, )
+}
+
+abstract class GameWindow
+{
+    - [SerializeField] string wndName
+
+    - bool isCreated = false
+    - bool isOpening = false
+    - [SerializeField] bool isScroll = true
+    - [SerializeField] bool isPopUp = false
+
+    - [SerializeField] Canvas canvas
+    - [SerializeField] Panel panel
+
+    # [SerializeField] GameObject images
+    # [SerializeField] GameObject texts
+
+    - Dictionary<string, Element> diImageEl
+    - Dictionary<string, Element> diTextEl
+
+    + {abstract} void Init()
+    + {abstract} void Show()
+    + {abstract} void Close()
+    + {abstract} void Execute()
+}
+
+MenuWindow *-- Element
+MenuWindow *-- McOption
+MenuWindow --|> GameWindow
+class MenuWindow
+{
+    - McOption option
+
+    - [SerializeField] GameObject backgrounds
+    - [SerializeField] GameObject inputBoxes
+    - [SerializeField] GameObject buttons
+
+    - Dictionary<string, Element> diBackgroundEl
+    - Dictionary<string, Element> diImageEl
+    - Dictionary<string, Element> diInputBoxEl
+    - Dictionary<string, Element> diButtonEl
+
+    + [override] void Init()
+    + [override] void Show()
+    + [override] void Close()
+    + [override] void Execute()
+}
+
+class McSetting
+{
+
+}
+
+McVideos --|> McSetting
+class McVideos
+{
+
+}
+
+McControls --|> McSetting
+class McControls
+{
+
+}
+
+McSounds --|> McSetting
+class McSounds
+{
+
+}
+
+McOption *-- McSetting
+class McOption
+{
+
+}
+
+
+PlayWindow --|> GameWindow
+class PlayWindow
+{
+    + [override] void Init()
+    + [override] void Show()
+    + [override] void Close()
+    + [override] void Execute()
+}
+
+Manager o-- GameWindow
 abstract class Manager
 {
-    - [SerializeField] string currSegment
-    - [SerializeField] List<Segment> segments
-    - Dictionary<string, int> segmentIndex
+    - [SerializeField] List<GameWindow> windows
+    - Dictionary<string, int> windowNameToIndex
 
-    - bool segmentChangeFlag
+    # void Init()
+    # void Destroy()
 
-    + {abstract} void UserAwake(ref Params params)
-    + {abstract} void UserStart(ref Params params)
-    + {abstract} void UserUpdate(ref Params params)
-    + {abstract} void UserExit(ref Params params)
+    # void ShowWindow(string name)
+    # void CloseWindow(string name)
 
-    + void SegmentAwake(ref Params params)
-    + void SegmentStart(ref Params params)
-    + void SegmentUpdate(ref Params params)
-    + void SegmentExit(ref Params params)
+    # void ExecuteWindows()
+    # void ScrollWindows()
 
-    # void ChangeSegment(string name)
-}
-
-MainManager --|> Manager
-MainManager o-- Segment
-class MainManager
-{
-    + void UserAwake(ref Params params) override
-    + void UserStart(ref Params params) override
-    + void UserUpdate(ref Params params) override
-    + void UserExit(ref Params params) override
-}
-
-abstract class Segment
-{
-    + {abstract} void UserAwake(ref Params params)
-    + {abstract} void UserStart(ref Params params)
-    + {abstract} void UserUpdate(ref Params params)
-    + {abstract} void UserExit(ref Params params)
-}
-
-MainSegment --|> Segment
-class MainSegment
-{
-    + void UserAwake(ref Params params) override
-    + void UserStart(ref Params params) override
-    + void UserUpdate(ref Params params) override
-    + void UserExit(ref Params params) override
+    + {abstract} void BaseAwake()
+    + {abstract} void BaseStart()
+    + {abstract} void BaseUpdate()
+    + {abstract} void BaseExit()
 }
 
 

@@ -27,6 +27,7 @@ class Constants
     + {static} readonly int MSG_CHANGE_SCENE = 5
 
     + {static} readonly string SCENE_MENU = "Menu"
+    + {static} readonly string SCENE_PLAY = "Play"
 
     + {static} readonly string TYPE_BACKGROUND = "background"
     + {static} readonly string TYPE_IMAGE = "image"
@@ -34,9 +35,9 @@ class Constants
     + {static} readonly string TYPE_BUTTON = "button"
     + {static} readonly string TYPE_TEXT = "text"
 
-    + {static} readonly string WND_TOP_MENU = "TopMenu"
+    + {static} readonly string WND_MENU = "WindowMenu"
 
-    + {static} readonly string VAXEL_STATE_NONE = "none"
+    + {static} readonly string VAXEL_STATE_NULL = "none"
     + {static} readonly string VAXEL_STATE_ITEM = "item"
     + {static} readonly string VAXEL_STATE_BLOCK = "block"
     + {static} readonly string VAXEL_STATE_ENTITY = "entity"
@@ -58,7 +59,7 @@ class Constants
     + {static} readonly string VAXEL_TYPE_ENTITY = "entity"
 }
 
-BaseManager *-- Params
+BaseManager *-- Param
 BaseManager *-- Manager
 class BaseManager
 {

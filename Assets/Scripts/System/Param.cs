@@ -4,15 +4,14 @@ using UnityEngine;
 
 public class Param : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [HideInInspector] public static int msg = Constants.MSG_NULL;
+    [HideInInspector] public static float floPar = 0;
+    [HideInInspector] public static string strPar = "";
 
-    // Update is called once per frame
-    void Update()
+    public static void Init()
     {
-        
+        msg = Constants.MSG_NULL;
+        floPar = 0;
+        strPar = "";
     }
 }

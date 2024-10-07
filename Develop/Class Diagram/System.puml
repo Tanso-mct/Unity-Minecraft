@@ -1,6 +1,6 @@
 ﻿@startuml Prototype App Base System
 
-class Params
+class Param
 {
     + {static} int msg
     + {static} float floP
@@ -136,6 +136,7 @@ class TextEl
     + [override] void Move(ref Vector2 vec, )
 }
 
+GameWindow *-- Element
 abstract class GameWindow
 {
     - [SerializeField] string wndName
@@ -160,7 +161,6 @@ abstract class GameWindow
     + {abstract} void Execute()
 }
 
-MenuWindow *-- Element
 MenuWindow *-- McOption
 MenuWindow --|> GameWindow
 class MenuWindow
@@ -182,30 +182,24 @@ class MenuWindow
     + [override] void Execute()
 }
 
-class McSetting
-{
-
-}
-
-McVideos --|> McSetting
 class McVideos
 {
 
 }
 
-McControls --|> McSetting
 class McControls
 {
 
 }
 
-McSounds --|> McSetting
 class McSounds
 {
 
 }
 
-McOption *-- McSetting
+McOption *-- McVideos
+McOption *-- McControls
+McOption *-- McSounds
 class McOption
 {
 
@@ -372,22 +366,24 @@ class Player
 
 }
 
-class Block
+class Blocks
 {
     - List<Voxel> existingVoxel
 }
 
-class Entity
+class Entities
 {
     - List<Voxel> existingVoxel
 }
 
+WorldData *-- Blocks
+WorldData *-- Entities
 WorldData *-- Vaxel
 class WorldData
 {
     - List<Voxel> voxels
-    - Block[,,] blocks = new Block[size, height, size]
-    - Entity[,,] entities = new Entity[size, height, size]
+    - Blocks[,,] blocks = new Blocks[size, height, size]
+    - Entities[,,] entities = new Entities[size, height, size]
 
     + void SaveVaxels()
 }
@@ -432,6 +428,24 @@ abstract class Manager
     + {abstract} void BaseStart()
     + {abstract} void BaseUpdate()
     + {abstract} void BaseExit()
+}
+
+MenuManager --|> Manager
+class MenuManager
+{
+    + [override] void BaseAwake()
+    + [override] void BaseStart()
+    + [override] void BaseUpdate()
+    + [override] void BaseExit()
+}
+
+PlayManager --|> Manager
+class PlayManager
+{
+    + [override] void BaseAwake()
+    + [override] void BaseStart()
+    + [override] void BaseUpdate()
+    + [override] void BaseExit()
 }
 
 

@@ -9,6 +9,12 @@ class Params
     + {static} void Init()
 }
 
+enum VOXEL_ID
+{
+
+}
+
+Constants *-- VOXEL_ID
 class Constants
 {
     + {static} readonly int SPECIFIED_FPS = 60
@@ -32,6 +38,24 @@ class Constants
 
     + {static} readonly string VAXEL_STATE_NONE = "none"
     + {static} readonly string VAXEL_STATE_ITEM = "item"
+    + {static} readonly string VAXEL_STATE_BLOCK = "block"
+    + {static} readonly string VAXEL_STATE_ENTITY = "entity"
+
+    + {static} readonly string VAXEL_TYPE_BUILD_BLOCK = "buildBlock"
+    + {static} readonly string VAXEL_TYPE_GRASS = "grass"
+    + {static} readonly string VAXEL_TYPE_ORE = "ore"
+    + {static} readonly string VAXEL_TYPE_GLASS = "glass"
+    + {static} readonly string VAXEL_TYPE_FENCE = "fence"
+    + {static} readonly string VAXEL_TYPE_LEAF = "leaf"
+    + {static} readonly string VAXEL_TYPE_SEED = "seed"
+    + {static} readonly string VAXEL_TYPE_FLUID = "fluid"
+    + {static} readonly string VAXEL_TYPE_FURNITURE = "furniture"
+    + {static} readonly string VAXEL_TYPE_FALL = "fall"
+    + {static} readonly string VAXEL_TYPE_FOOD = "food"
+    + {static} readonly string VAXEL_TYPE_TOOL = "tool"
+    + {static} readonly string VAXEL_TYPE_ARMOR = "armor"
+    + {static} readonly string VAXEL_TYPE_ENCHANT_BOOK = "enchantBook"
+    + {static} readonly string VAXEL_TYPE_ENTITY = "entity"
 }
 
 BaseManager *-- Params
@@ -187,7 +211,7 @@ class McOption
 
 }
 
-
+PlayWindow *-- World
 PlayWindow --|> GameWindow
 class PlayWindow
 {
@@ -195,6 +219,198 @@ class PlayWindow
     + [override] void Show()
     + [override] void Close()
     + [override] void Execute()
+}
+
+Vaxel *-- VaxelData
+class Vaxel
+{
+    [SerializeField] VaxelData data
+}
+
+abstract class VaxelData
+{
+    - [SerializeField] string name
+    - [SerializeField] string state
+    - [SerializeField] string type
+
+    - [SerializeField] int id
+    - [SerializeField] int maxCount
+
+    - [SerializeField] bool isStackable
+    - [SerializeField] bool isUsable
+    - [SerializeField] bool isWearable
+
+    - [SerializeField] Texture texture
+
+    - bool isTargetting = false
+    - bool isSelecting = false
+    - bool isHolding = false
+    - bool isWearing = false
+
+    - Vector3 pos
+
+    + {abstract} void Create()
+    + {abstract} void Destroy()
+
+    + void ItemGet(ref Player player)
+    + void ItemDrop(ref Player player)
+}
+
+BuildBlockData --|> VaxelData
+class BuildBlockData
+{
+    + [override] void Create()
+    + [override] void Destroy()
+}
+
+GrassData --|> VaxelData
+class GrassData
+{
+    + [override] void Create()
+    + [override] void Destroy()
+}
+
+OreData --|> VaxelData
+class OreData
+{
+    + [override] void Create()
+    + [override] void Destroy()
+}
+
+GlassData --|> VaxelData
+class GlassData
+{
+    + [override] void Create()
+    + [override] void Destroy()
+}
+
+FenceData --|> VaxelData
+class FenceData
+{
+    + [override] void Create()
+    + [override] void Destroy()
+}
+
+LeafData --|> VaxelData
+class LeafData
+{
+    + [override] void Create()
+    + [override] void Destroy()
+}
+
+SeedData --|> VaxelData
+class SeedData
+{
+    + [override] void Create()
+    + [override] void Destroy()
+}
+
+FluidData --|> VaxelData
+class FluidData
+{
+    + [override] void Create()
+    + [override] void Destroy()
+}
+
+FurnitureData --|> VaxelData
+class FurnitureData
+{
+    + [override] void Create()
+    + [override] void Destroy()
+}
+
+FallData --|> VaxelData
+class FallData
+{
+    + [override] void Create()
+    + [override] void Destroy()
+}
+
+FoodData --|> VaxelData
+class FoodData
+{
+    + [override] void Create()
+    + [override] void Destroy()
+}
+
+ToolData --|> VaxelData
+class ToolData
+{
+    + [override] void Create()
+    + [override] void Destroy()
+}
+
+ArmorData --|> VaxelData
+class ArmorData
+{
+    + [override] void Create()
+    + [override] void Destroy()
+}
+
+EnchantBookData --|> VaxelData
+class EnchantBookData
+{
+    + [override] void Create()
+    + [override] void Destroy()
+}
+
+EntityData --|> VaxelData
+class EntityData
+{
+    + [override] void Create()
+    + [override] void Destroy()
+}
+
+class PlayerData
+{
+
+}
+
+Player *-- PlayerData
+class Player
+{
+
+}
+
+class Block
+{
+    - List<Voxel> existingVoxel
+}
+
+class Entity
+{
+    - List<Voxel> existingVoxel
+}
+
+WorldData *-- Vaxel
+class WorldData
+{
+    - List<Voxel> voxels
+    - Block[,,] blocks = new Block[size, height, size]
+    - Entity[,,] entities = new Entity[size, height, size]
+
+    + void SaveVaxels()
+}
+
+World *-- Player
+World *-- WorldData
+class World
+{
+    - int size = 513
+    - int height = 320
+
+    - [SerializeField] GameObject parentVaxelPrefabs
+    - Dictionary<string, GameObject> vaxelPrefabs
+
+    - Player player
+    - WorldData data
+
+    + void Load()
+    + void UnLoad()
+
+    + void Create()
+    + void Save()
+    + void Destroy()
 }
 
 Manager o-- GameWindow

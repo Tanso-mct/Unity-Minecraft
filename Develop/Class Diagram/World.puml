@@ -120,8 +120,7 @@ class World
     - [SerializeField] GameObject parentVaxelPrefabs
     - Dictionary<string, GameObject> vaxelPrefabs
 
-    - List<Voxel> voxels
-    - Block[,,] blocks = new Block[size, height, size]
+    - WorldData data
 
     + void Load()
     + void UnLoad()

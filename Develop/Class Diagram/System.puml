@@ -63,7 +63,6 @@ BaseManager *-- Param
 BaseManager *-- Manager
 class BaseManager
 {
-    - {static} PARAMS param
     - [SerializeField] Manager manager
 
     - void [Unity] Awake()

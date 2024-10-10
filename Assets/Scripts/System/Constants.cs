@@ -20,7 +20,6 @@ public class Constants : MonoBehaviour
     public static readonly string SCENE_PLAY = "Play";
 
     // Element type
-    public static readonly string TYPE_BACKGROUND = "Background";
     public static readonly string TYPE_IMAGE = "Image";
     public static readonly string TYPE_INPUT_BOX = "InputBox";
     public static readonly string TYPE_BUTTON = "Button";

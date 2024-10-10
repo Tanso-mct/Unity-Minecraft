@@ -5,19 +5,19 @@ using UnityEngine.UI;
 
 abstract public class GameWindow : MonoBehaviour
 {
-    private bool isCreated = false;
+    protected bool isCreated = false;
     public bool IsCreated
         { get { return isCreated; } }
 
-    private bool isOpening = false;
+    protected bool isOpening = false;
     public bool IsOpening
         { get { return isOpening; } }
 
-    [SerializeField] private bool isScroll = false;
+    [SerializeField] protected bool isScroll = false;
     public bool IsScroll
         { get { return isScroll; } }
 
-    [SerializeField] private bool isPopUp = false;
+    [SerializeField] protected bool isPopUp = false;
     public bool IsPopUp
         { get { return isPopUp; } }
 
@@ -84,27 +84,6 @@ abstract public class GameWindow : MonoBehaviour
     }
 
     abstract public void Init();
-    // {
-    //     Debug.Log("Window Init [" + name + "]");
-
-    //     // 各キャンバスとパネルを非表示にする
-    //     ShowCanvases(false);
-    //     ShowPanels(false);
-
-    //     // 各辞書変数を初期化
-    //     diImageEl = new Dictionary<string, Element>();
-    //     diTextEl = new Dictionary<string, Element>();
-
-    //     // 各要素を取得
-    //     GetElements(ref images, ref diImageEl);
-    //     GetElements(ref texts, ref diTextEl);
-
-    //     // 各要素を初期化
-    //     ElementsInit(ref diImageEl);
-    //     ElementsInit(ref diTextEl);
-
-    //     return Constants.MSG_SUCSESS;
-    // }
 
     protected void ElementsShow(ref Dictionary<string, Element> diEl)
     {
@@ -115,23 +94,6 @@ abstract public class GameWindow : MonoBehaviour
     }
 
     abstract public void Show();
-    // {
-    //     // 開いている場合は処理しない
-    //     if (isOpening) return Constants.MSG_FAILED;
-    //     isOpening = true;
-
-    //     Debug.Log("Window Show [" + name + "]");
-
-    //     // キャンバスとパネルを表示
-    //     ShowCanvases(true);
-    //     ShowPanels(true);
-
-    //     // 各要素を表示
-    //     ElementsShow(ref diImageEl);
-    //     ElementsShow(ref diTextEl);
-
-    //     return Constants.MSG_SUCSESS;
-    // }
 
     protected void ElementsClose(ref Dictionary<string, Element> diEl)
     {
@@ -142,23 +104,6 @@ abstract public class GameWindow : MonoBehaviour
     }
 
     abstract public void Close();
-    // {
-    //     // 開いていない場合は処理しない
-    //     if (!isOpening) return Constants.MSG_FAILED;
-    //     isOpening = false;
-
-    //     Debug.Log("Window Close [" + name + "]");
-
-    //     // キャンバスとパネルを非表示
-    //     ShowCanvases(false);
-    //     ShowPanels(false);
-
-    //     // 各要素を非表示
-    //     ElementsClose(ref diImageEl);
-    //     ElementsClose(ref diTextEl);
-
-    //     return Constants.MSG_SUCSESS;
-    // }
 
     protected void ElementsExecute(ref Dictionary<string, Element> diEl)
     {
@@ -169,14 +114,6 @@ abstract public class GameWindow : MonoBehaviour
     }
 
     abstract public void Execute();
-    // {
-    //     // 開いていない場合は処理しない
-    //     if (!isOpening) return;
-
-    //     // 各要素を実行
-    //     ElementsExecute(ref diImageEl);
-    //     ElementsExecute(ref diTextEl);
-    // }
 
     protected void ElementsMove(ref Dictionary<string, Element> diEl, ref Vector2 vec)
     {
@@ -187,11 +124,4 @@ abstract public class GameWindow : MonoBehaviour
     }
 
     abstract public void Move(ref Vector2 moveVec);
-    // {
-    //     if (!isOpening) return;
-
-    //     // 各要素を移動
-    //     ElementsMove(ref diImageEl, ref moveVec);
-    //     ElementsMove(ref diTextEl, ref moveVec);
-    // }
 }

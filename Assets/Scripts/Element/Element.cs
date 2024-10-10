@@ -12,19 +12,36 @@ abstract public class Element : MonoBehaviour
     // 要素の外枠になる画像を持つGameObjectを設定。画像は透明度０にすることで非表示状態にしておく
     [SerializeField] protected GameObject frame;
 
-    // 要素に使用した画像らをインスペクターで設定。
-    [SerializeField] private List<Image> images;
+    // 使用する画像の親オブジェクトを設定
+    [SerializeField] private GameObject images;
+
+    // 使用する画像を格納
+    private List<Image> liImages;
 
     // エレメントの表示状態を設定。
     private bool isShow = false;
     public bool IsShow { get { return isShow; } set { isShow = value; } }
 
+    // 画像らの初期化処理を記述
+    protected void InitImages()
+    {
+        liImages = new List<Image>();
+        foreach (Transform child in images.transform)
+        {
+            child.gameObject.GetComponent<Image>().enabled = false;
+            liImages.Add(child.gameObject.GetComponent<Image>());
+        }
+
+        // フレームの透明度を０にすることで非表示状態にする
+        frame.GetComponent<Image>().color = new Color(0, 0, 0, 0);
+    }
+
     // Imageの表示状態を設定
     protected void ShowImages(bool val)
     {
-        for (int i = 0; i < images.Count; i++)
+        for (int i = 0; i < liImages.Count; i++)
         {
-            images[i].enabled = val;
+            liImages[i].enabled = val;
         }
     }
 
@@ -43,14 +60,19 @@ abstract public class Element : MonoBehaviour
     // エレメントの移動処理を記述
     public void Move(ref Vector2 vec)
     {
-        foreach (var image in images)
+        for (int i = 0; i < liImages.Count; i++)
         {
             Vector2 newVec = new Vector2
             (
-                image.rectTransform.anchoredPosition.x + vec.x,
-                image.rectTransform.anchoredPosition.y + vec.y
+                liImages[i].rectTransform.anchoredPosition.x + vec.x,
+                liImages[i].rectTransform.anchoredPosition.y + vec.y
             );
-            image.rectTransform.anchoredPosition = newVec;
+            liImages[i].rectTransform.anchoredPosition = newVec;
         }
+    }
+
+    public bool IsClick()
+    {
+        return false;
     }
 }

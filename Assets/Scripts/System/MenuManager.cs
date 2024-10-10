@@ -8,8 +8,6 @@ public class MenuManager : Manager
 
     public override void BaseAwake()
     {
-        Debug.Log("HomeManager Awake");
-
         // Managerに設定されているすべてのWindowを初期化
         Init();
 
@@ -19,8 +17,6 @@ public class MenuManager : Manager
 
     public override void BaseStart()
     {
-        Debug.Log("HomeManager Start");
-
         // 各ウィンドウの処理を実行
         ExecuteWindows();
 
@@ -39,8 +35,6 @@ public class MenuManager : Manager
 
     public override void BaseExit()
     {
-        Debug.Log("HomeManager Exit");
-
         // Managerの終了処理を実行
         Destoroy();
     }

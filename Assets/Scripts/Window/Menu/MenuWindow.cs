@@ -1,17 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class MenuWindow : MonoBehaviour
+public class MenuWindow : GameWindow
 {
-    // Start is called before the first frame update
-    void Start()
+    public override void Init()
     {
         
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void Show()
+    {
+        
+    }
+
+    public override void Close()
+    {
+        
+    }
+
+    public override void Execute()
+    {
+        
+    }
+
+    public override void Move(ref Vector2 moveVec)
     {
         
     }

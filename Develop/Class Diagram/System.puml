@@ -86,16 +86,6 @@ abstract class Element
     + {abstract} void Move(ref Vector2 vec, )
 }
 
-BackgroundEl --|> Element
-class BackgroundEl
-{
-    + [override] void Init()
-    + [override] void Show()
-    + [override] void Close()   
-    + [override] void Execute()
-    + [override] void Move(ref Vector2 vec, )
-}
-
 ImageEl --|> Element
 class ImageEl
 {

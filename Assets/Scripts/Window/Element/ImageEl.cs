@@ -2,17 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ImageEl : MonoBehaviour
+public class ImageEl : Element
 {
-    // Start is called before the first frame update
-    void Start()
+    public override void Init()
     {
-        
+        Debug.Log("Init ImageEl [" + name + "]");
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void Show()
     {
-        
+        Debug.Log("Show ImageEl [" + name + "]");
+    }
+
+    public override void Close()
+    {
+        Debug.Log("Close ImageEl [" + name + "]");
+    }
+
+    public override void Execute()
+    {
+        Debug.Log("Execute ImageEl [" + name + "]");
     }
 }

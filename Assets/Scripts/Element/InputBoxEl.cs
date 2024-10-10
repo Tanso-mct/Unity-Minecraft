@@ -30,6 +30,6 @@ public class InputBoxEl : Element
 
     public override void Execute()
     {
-        Debug.Log("Execute InputBoxEl [" + name + "]");
+        
     }
 }

@@ -47,10 +47,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isScroll: 0
   isPopUp: 0
-  canvases:
-  - {fileID: 9133842038446794968}
-  backgrounds:
-  - {fileID: 1712327473447322400}
+  canvas: {fileID: 9133842038446794968}
+  background: {fileID: 4930619718035713642}
   images:
   - {fileID: 5048533058553212295}
   texts:
@@ -152,9 +150,9 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 826c7db287b6376409e7362828c7a270, type: 3}
---- !u!114 &1712327473447322400 stripped
+--- !u!114 &4930619718035713642 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7472955692595189477, guid: 826c7db287b6376409e7362828c7a270, type: 3}
+  m_CorrespondingSourceObject: {fileID: 3754658326007839663, guid: 826c7db287b6376409e7362828c7a270, type: 3}
   m_PrefabInstance: {fileID: 8103714436262843845}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}

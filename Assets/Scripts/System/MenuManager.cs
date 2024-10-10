@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class MenuManager : Manager
 {
+    [SerializeField] private GameObject wndLoad;
     [SerializeField] private GameObject wndMenu;
 
     public override void BaseAwake()
@@ -12,7 +13,7 @@ public class MenuManager : Manager
         Init();
 
         // MenuWindowを表示
-        ShowWindow(wndMenu.name);
+        ShowWindow(wndLoad.name);
     }
 
     public override void BaseStart()

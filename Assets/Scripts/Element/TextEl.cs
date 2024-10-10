@@ -30,6 +30,6 @@ public class TextEl : Element
 
     public override void Execute()
     {
-        Debug.Log("Execute TextEl [" + name + "]");
+        
     }
 }

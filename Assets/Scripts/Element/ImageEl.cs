@@ -30,6 +30,6 @@ public class ImageEl : Element
 
     public override void Execute()
     {
-        Debug.Log("Execute ImageEl [" + name + "]");
+        
     }
 }

@@ -9,7 +9,7 @@ public class PlayWindow : GameWindow
     {
         // 各キャンバスとパネルを非表示にする
         ShowCanvases(false);
-        ShowPanels(false);
+        ShowBackgrounds(false);
 
         // 各辞書変数を初期化
         diImageEl = new Dictionary<string, Element>();
@@ -33,7 +33,7 @@ public class PlayWindow : GameWindow
 
         // キャンバスとパネルを表示
         ShowCanvases(true);
-        ShowPanels(true);
+        ShowBackgrounds(true);
 
         // 各要素を表示
         ElementsShow(ref diImageEl);
@@ -48,7 +48,7 @@ public class PlayWindow : GameWindow
 
         // キャンバスとパネルを非表示
         ShowCanvases(false);
-        ShowPanels(false);
+        ShowBackgrounds(false);
 
         // 各要素を非表示
         ElementsClose(ref diImageEl);

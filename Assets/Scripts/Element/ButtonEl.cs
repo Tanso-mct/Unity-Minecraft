@@ -30,6 +30,6 @@ public class ButtonEl : Element
 
     public override void Execute()
     {
-        Debug.Log("Execute ButtonEl [" + name + "]");
+        
     }
 }

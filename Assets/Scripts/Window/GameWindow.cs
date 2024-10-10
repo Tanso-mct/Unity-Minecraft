@@ -21,8 +21,8 @@ abstract public class GameWindow : MonoBehaviour
     public bool IsPopUp
         { get { return isPopUp; } }
 
-    [SerializeField] private List<Canvas> canvases;
-    [SerializeField] private List<Image> backgrounds;
+    [SerializeField] private Canvas canvas;
+    [SerializeField] private Image background;
 
     [SerializeField] protected List<GameObject> images = null;
     [SerializeField] protected List<GameObject> texts = null;
@@ -31,24 +31,21 @@ abstract public class GameWindow : MonoBehaviour
     protected Dictionary<string, Element> diTextEl;
 
     // 孫オブジェクトをすべて取得
-    protected List<GameObject> GetAllGrandchildren(GameObject parent)
+    protected List<GameObject> GetAllChildren(GameObject parent)
     {
-        List<GameObject> grandchildren = new List<GameObject>();
+        List<GameObject> children = new List<GameObject>();
         foreach (Transform child in parent.transform)
         {
-            foreach (Transform grandchild in child)
-            {
-                grandchildren.Add(grandchild.gameObject);
-            }
+            children.Add(child.gameObject);
         }
-        return grandchildren;
+        return children;
     }
 
     protected void GetElements(ref List<GameObject> parents, ref Dictionary<string, Element> diEl)
     {
         for (int i = 0; i < parents.Count; i++)
         {
-            List<GameObject> grandChildren = GetAllGrandchildren(parents[i]);
+            List<GameObject> grandChildren = GetAllChildren(parents[i]);
             for (int j = 0; j < grandChildren.Count; j++)
             {
                 if (!diEl.TryAdd(grandChildren[j].name, grandChildren[j].GetComponent<Element>()))
@@ -69,18 +66,12 @@ abstract public class GameWindow : MonoBehaviour
 
     protected void ShowCanvases(bool val)
     {
-        for (int i = 0; i < canvases.Count; i++)
-        {
-            canvases[i].enabled = val;
-        }
+        canvas.enabled = val;
     }
 
-    protected void ShowPanels(bool val)
+    protected void ShowBackgrounds(bool val)
     {
-        for (int i = 0; i < backgrounds.Count; i++)
-        {
-            backgrounds[i].enabled = val;
-        }
+        background.enabled = val;
     }
 
     abstract public void Init();

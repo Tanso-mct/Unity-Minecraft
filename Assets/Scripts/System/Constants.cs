@@ -7,9 +7,13 @@ public class Constants : MonoBehaviour
     // Set FPS. Make sure that fps is this value.
     public static readonly int SPECIFIED_FPS = 60;
 
+    // Screen resolution
+    public static readonly int SCREEN_WIDTH = 1920;
+    public static readonly int SCREEN_HEIGHT = 1080;
+
     // Message processing parameters
     public static readonly int MSG_NULL = 0;
-    public static readonly int MSG_SUCSESS = 1;
+    public static readonly int MSG_SUCCESS = 1;
     public static readonly int MSG_FAILED = 2;
     public static readonly int MSG_ERROR = 3;
     public static readonly int MSG_WARNING = 4;

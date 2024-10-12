@@ -1,35 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ImageEl : Element
 {
+    public UnityEvent hoverEvent = null;
+
     public override void Init()
     {
-        Debug.Log("Init ImageEl [" + name + "]");
-
-        // 画像の初期化処理
-        InitImages();
+        // 継承元クラスの初期化処理を実行
+        BaseInit();
     }
 
     public override void Show()
     {
-        Debug.Log("Show ImageEl [" + name + "]");
-
         // 画像の表示処理
-        ShowImages(true);
+        ShowImages(true, initGroup.name);
     }
 
     public override void Close()
     {
-        Debug.Log("Close ImageEl [" + name + "]");
-
         // 画像の非表示処理
-        ShowImages(false);
+        ShowImages(false, initGroup.name);
     }
 
     public override void Execute()
     {
-        
+        if (IsHover() && hoverEvent != null) hoverEvent.Invoke();
     }
 }

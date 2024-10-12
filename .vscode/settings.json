@@ -1,5 +1,8 @@
 {
     "commentTranslate.hover.enabled": true,
     "commentTranslate.targetLanguage": "en",
-    "dotnet.preferCSharpExtension": true
+    "dotnet.preferCSharpExtension": true,
+    "cSpell.words": [
+        "Raycast"
+    ]
 }

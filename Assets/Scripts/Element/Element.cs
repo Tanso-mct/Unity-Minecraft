@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 abstract public class Element : MonoBehaviour
@@ -9,27 +10,68 @@ abstract public class Element : MonoBehaviour
     [SerializeField] private string type = "";
     public string Type { get { return type; } }
 
+    // イベントシステムを設定
+    private EventSystem eventSystem;
+
+    // レイキャスターを設定
+    private GraphicRaycaster raycaster;
+
     // 要素の外枠になる画像を持つGameObjectを設定。画像は透明度０にすることで非表示状態にしておく
     [SerializeField] protected GameObject frame;
 
+    // 初期設定で表示される画像の親オブジェクトを設定
+    [SerializeField] protected GameObject initGroup;
+
     // 使用する画像の親オブジェクトを設定
-    [SerializeField] private GameObject images;
+    [SerializeField] private GameObject imageGroups;
 
     // 使用する画像を格納
-    private List<Image> liImages;
+    private Dictionary<string, List<Image>> diImageGroups;
 
     // エレメントの表示状態を設定。
+    private Dictionary<string, bool> diGroupShow;
+
     private bool isShow = false;
-    public bool IsShow { get { return isShow; } set { isShow = value; } }
+    public bool IsShow { get { return isShow; } }
+
+    // エレメントの初期化処理。Init関数で呼び出す
+    protected void BaseInit()
+    {
+        raycaster = GetComponentInParent<GraphicRaycaster>();
+        eventSystem = GetComponentInParent<EventSystem>();
+
+        InitImages();
+    }
+
+    // 孫オブジェクトをすべて取得
+    protected List<GameObject> GetAllChildren(GameObject parent)
+    {
+        List<GameObject> children = new List<GameObject>();
+        foreach (Transform child in parent.transform)
+        {
+            children.Add(child.gameObject);
+        }
+        return children;
+    }
 
     // 画像らの初期化処理を記述
     protected void InitImages()
     {
-        liImages = new List<Image>();
-        foreach (Transform child in images.transform)
+        diImageGroups = new Dictionary<string, List<Image>>();
+        diGroupShow = new Dictionary<string, bool>();
+
+        List<GameObject> liImageGroups = GetAllChildren(imageGroups);
+
+        for (int i = 0; i < liImageGroups.Count; i++)
         {
-            child.gameObject.GetComponent<Image>().enabled = false;
-            liImages.Add(child.gameObject.GetComponent<Image>());
+            List<Image> liImages = new List<Image>();
+            foreach (Transform child in liImageGroups[i].transform)
+            {
+                child.gameObject.GetComponent<Image>().enabled = false;
+                liImages.Add(child.gameObject.GetComponent<Image>());
+            }
+            diImageGroups.Add(liImageGroups[i].name, liImages);
+            diGroupShow.Add(liImageGroups[i].name, false);
         }
 
         // フレームの透明度を０にすることで非表示状態にする
@@ -37,12 +79,25 @@ abstract public class Element : MonoBehaviour
     }
 
     // Imageの表示状態を設定
-    protected void ShowImages(bool val)
+    protected void ShowImages(bool val, string groupName)
     {
-        for (int i = 0; i < liImages.Count; i++)
+        for (int i = 0; i < diImageGroups[groupName].Count; i++)
         {
-            liImages[i].enabled = val;
+            diImageGroups[groupName][i].enabled = val;
         }
+
+        diGroupShow[groupName] = val;
+
+        foreach (KeyValuePair<string, bool> pair in diGroupShow)
+        {
+            if (pair.Value)
+            {
+                isShow = true;
+                return;
+            }
+        }
+
+        isShow = false;
     }
 
     // エレメントの初期化処理を記述。初期化時にエレメントは非表示状態にする
@@ -60,19 +115,61 @@ abstract public class Element : MonoBehaviour
     // エレメントの移動処理を記述
     public void Move(ref Vector2 vec)
     {
-        for (int i = 0; i < liImages.Count; i++)
+        if (!isShow) return;
+
+        foreach(KeyValuePair<string, List<Image>> pair in diImageGroups)
         {
-            Vector2 newVec = new Vector2
-            (
-                liImages[i].rectTransform.anchoredPosition.x + vec.x,
-                liImages[i].rectTransform.anchoredPosition.y + vec.y
-            );
-            liImages[i].rectTransform.anchoredPosition = newVec;
+            for (int i = 0; i < pair.Value.Count; i++)
+            {
+                Vector2 newVec = new Vector2
+                (
+                    pair.Value[i].rectTransform.anchoredPosition.x + vec.x,
+                    pair.Value[i].rectTransform.anchoredPosition.y + vec.y
+                );
+                pair.Value[i].rectTransform.anchoredPosition = newVec;
+            }
         }
     }
 
-    public bool IsClick()
+    private bool IsUnderMouse()
     {
+        PointerEventData pointerEventData = new PointerEventData(eventSystem)
+        {
+            position = Input.mousePosition
+        };
+
+        List<RaycastResult> results = new List<RaycastResult>();
+        raycaster.Raycast(pointerEventData, results);
+
+        foreach (RaycastResult result in results)
+        {
+            if (result.gameObject == frame)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected bool IsClick()
+    {
+        if (!isShow) return false;
+
+        if (Input.GetMouseButtonDown(0) && IsUnderMouse())
+        {
+            return true;
+        }
+        return false;
+    }
+
+    protected bool IsHover()
+    {
+        if (!isShow) return false;
+
+        if (IsUnderMouse())
+        {
+            return true;
+        }
         return false;
     }
 }

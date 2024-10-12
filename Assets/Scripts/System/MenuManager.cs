@@ -7,6 +7,9 @@ public class MenuManager : Manager
     [SerializeField] private GameObject wndLoad;
     [SerializeField] private GameObject wndMenu;
 
+    [SerializeField] private int loadingShowFrame = 120;
+    private int loadingFrame = 0;
+
     public override void BaseAwake()
     {
         // Managerに設定されているすべてのWindowを初期化
@@ -32,11 +35,21 @@ public class MenuManager : Manager
 
         // 各ウィンドウの処理を実行
         ScrollWindows();
+
+        if (loadingFrame < loadingShowFrame)
+        {
+            loadingFrame++;
+        }
+        else
+        {
+            CloseWindow(wndLoad.name);
+            ShowWindow(wndMenu.name);
+        }
     }
 
     public override void BaseExit()
     {
         // Managerの終了処理を実行
-        Destoroy();
+        Dispose();
     }
 }

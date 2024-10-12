@@ -36,7 +36,7 @@ abstract public class Manager : MonoBehaviour
     }
 
     // BaseExit関数で最後に必ず実行する。Managerクラスの終了処理を行う
-    protected void Destoroy()
+    protected void Dispose()
     {
 
     }

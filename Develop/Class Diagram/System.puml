@@ -63,7 +63,8 @@ BaseManager *-- Param
 BaseManager *-- Manager
 class BaseManager
 {
-    - [SerializeField] Manager manager
+    - [SerializeField] GameObject managerObject
+    - Manager manager
 
     - void [Unity] Awake()
     - void [Unity] Start()
@@ -77,13 +78,25 @@ class BaseManager
 abstract class Element
 {
     - [SerializeField] string type
-    - [SerializeField] string elName
+
+    #  [SerializeField] GameObject frame
+
+    - [SerializeField] GameObject images
+    - List<Image> liImages
+
+    - bool isShow = false
+
+    # void InitImages()
+    # void ShowImages()
 
     + {abstract} void Init()
     + {abstract} void Show()
     + {abstract} void Close()
     + {abstract} void Execute()
-    + {abstract} void Move(ref Vector2 vec, )
+    + {abstract} void Move(ref Vector2 vec)
+    
+    + bool IsClick()
+    + bool IsHover()
 }
 
 ImageEl --|> Element
@@ -93,7 +106,7 @@ class ImageEl
     + [override] void Show()
     + [override] void Close()   
     + [override] void Execute()
-    + [override] void Move(ref Vector2 vec, )
+    + [override] void Move(ref Vector2 vec)
 }
 
 InputBoxEl --|> Element
@@ -103,7 +116,7 @@ class InputBoxEl
     + [override] void Show()
     + [override] void Close()   
     + [override] void Execute()
-    + [override] void Move(ref Vector2 vec, )
+    + [override] void Move(ref Vector2 vec)
 }
 
 ButtonEl --|> Element
@@ -113,7 +126,7 @@ class ButtonEl
     + [override] void Show()
     + [override] void Close()   
     + [override] void Execute()
-    + [override] void Move(ref Vector2 vec, )
+    + [override] void Move(ref Vector2 vec)
 }
 
 TextEl --|> Element
@@ -123,27 +136,28 @@ class TextEl
     + [override] void Show()
     + [override] void Close()   
     + [override] void Execute()
-    + [override] void Move(ref Vector2 vec, )
+    + [override] void Move(ref Vector2 vec)
 }
 
 GameWindow *-- Element
 abstract class GameWindow
 {
-    - [SerializeField] string wndName
-
     - bool isCreated = false
     - bool isOpening = false
     - [SerializeField] bool isScroll = true
     - [SerializeField] bool isPopUp = false
 
     - [SerializeField] Canvas canvas
-    - [SerializeField] Panel panel
+    - [SerializeField] Image background
 
     # [SerializeField] GameObject images
     # [SerializeField] GameObject texts
 
     - Dictionary<string, Element> diImageEl
     - Dictionary<string, Element> diTextEl
+
+    # ShowCanvas()
+    # ShowBackground()
 
     + {abstract} void Init()
     + {abstract} void Show()
@@ -157,12 +171,9 @@ class MenuWindow
 {
     - McOption option
 
-    - [SerializeField] GameObject backgrounds
     - [SerializeField] GameObject inputBoxes
     - [SerializeField] GameObject buttons
 
-    - Dictionary<string, Element> diBackgroundEl
-    - Dictionary<string, Element> diImageEl
     - Dictionary<string, Element> diInputBoxEl
     - Dictionary<string, Element> diButtonEl
 

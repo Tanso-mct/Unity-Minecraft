@@ -4,15 +4,8 @@ using UnityEngine;
 
 public class McOption : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    // シングルトン
+    public McVideos videos;
+    public McControls controls;
+    public McSounds sounds;
 }

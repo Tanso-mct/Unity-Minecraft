@@ -5,6 +5,14 @@ using UnityEngine.UI;
 
 public class MenuWindow : GameWindow
 {
+    [SerializeField] protected List<GameObject> inputBoxes = null;
+    [SerializeField] protected List<GameObject> buttons = null;
+
+    protected Dictionary<string, Element> diInputBoxEl;
+    protected Dictionary<string, Element> diButtonEl;
+
+    [SerializeField] private McOption option;
+
     public override void Init()
     {
         // 各キャンバスとパネルを非表示にする
@@ -15,13 +23,22 @@ public class MenuWindow : GameWindow
         diImageEl = new Dictionary<string, Element>();
         diTextEl = new Dictionary<string, Element>();
 
+        diInputBoxEl = new Dictionary<string, Element>();
+        diButtonEl = new Dictionary<string, Element>();
+
         // 各要素を取得
         GetElements(ref images, ref diImageEl);
         GetElements(ref texts, ref diTextEl);
 
+        GetElements(ref inputBoxes, ref diInputBoxEl);
+        GetElements(ref buttons, ref diButtonEl);
+
         // 各要素を初期化
         ElementsInit(ref diImageEl);
         ElementsInit(ref diTextEl);
+
+        ElementsInit(ref diInputBoxEl);
+        ElementsInit(ref diButtonEl);
 
     }
 
@@ -38,6 +55,9 @@ public class MenuWindow : GameWindow
         // 各要素を表示
         ElementsShow(ref diImageEl);
         ElementsShow(ref diTextEl);
+
+        ElementsShow(ref diInputBoxEl);
+        ElementsShow(ref diButtonEl);
     }
 
     public override void Close()
@@ -53,6 +73,9 @@ public class MenuWindow : GameWindow
         // 各要素を非表示
         ElementsClose(ref diImageEl);
         ElementsClose(ref diTextEl);
+
+        ElementsClose(ref diInputBoxEl);
+        ElementsClose(ref diButtonEl);
     }
 
     public override void Execute()
@@ -63,6 +86,9 @@ public class MenuWindow : GameWindow
         // 各要素を実行
         ElementsExecute(ref diImageEl);
         ElementsExecute(ref diTextEl);
+
+        ElementsExecute(ref diInputBoxEl);
+        ElementsExecute(ref diButtonEl);
     }
 
     public override void Move(ref Vector2 moveVec)
@@ -72,5 +98,8 @@ public class MenuWindow : GameWindow
         // 各要素を移動
         ElementsMove(ref diImageEl, ref moveVec);
         ElementsMove(ref diTextEl, ref moveVec);
+
+        ElementsMove(ref diInputBoxEl, ref moveVec);
+        ElementsMove(ref diButtonEl, ref moveVec);
     }
 }

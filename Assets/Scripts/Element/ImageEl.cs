@@ -5,7 +5,10 @@ using UnityEngine.Events;
 
 public class ImageEl : Element
 {
+    private bool isHover = false;
+
     public UnityEvent hoverEvent = null;
+    public UnityEvent unHoverEvent = null;
 
     public override void Init()
     {
@@ -22,11 +25,21 @@ public class ImageEl : Element
     public override void Close()
     {
         // 画像の非表示処理
-        ShowImages(false, initGroup.name);
+        ShowAllImages(false);
+
     }
 
     public override void Execute()
     {
-        if (IsHover() && hoverEvent != null) hoverEvent.Invoke();
+        if (IsHover() && hoverEvent != null)
+        {
+            isHover = true;
+            hoverEvent.Invoke();
+        }
+        else if (!IsHover() && isHover)
+        {
+            isHover = false;
+            unHoverEvent.Invoke();
+        }
     }
 }

@@ -20,7 +20,7 @@ public class InputBoxEl : Element
     public override void Close()
     {
         // 画像の非表示処理
-        ShowImages(false, initGroup.name);
+        ShowAllImages(false);
     }
 
     public override void Execute()

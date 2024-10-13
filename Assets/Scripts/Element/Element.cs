@@ -20,7 +20,7 @@ abstract public class Element : MonoBehaviour
     [SerializeField] protected GameObject frame;
 
     // 初期設定で表示される画像の親オブジェクトを設定
-    [SerializeField] protected GameObject initGroup;
+    [SerializeField] public GameObject initGroup;
 
     // 使用する画像の親オブジェクトを設定
     [SerializeField] private GameObject imageGroups;
@@ -55,7 +55,7 @@ abstract public class Element : MonoBehaviour
     }
 
     // 画像らの初期化処理を記述
-    protected void InitImages()
+    private void InitImages()
     {
         diImageGroups = new Dictionary<string, List<Image>>();
         diGroupShow = new Dictionary<string, bool>();
@@ -79,7 +79,7 @@ abstract public class Element : MonoBehaviour
     }
 
     // Imageの表示状態を設定
-    protected void ShowImages(bool val, string groupName)
+    public void ShowImages(bool val, string groupName)
     {
         for (int i = 0; i < diImageGroups[groupName].Count; i++)
         {
@@ -98,6 +98,14 @@ abstract public class Element : MonoBehaviour
         }
 
         isShow = false;
+    }
+
+    public void ShowAllImages(bool val)
+    {
+        foreach (KeyValuePair<string, List<Image>> pair in diImageGroups)
+        {
+            ShowImages(val, pair.Key);
+        }
     }
 
     // エレメントの初期化処理を記述。初期化時にエレメントは非表示状態にする

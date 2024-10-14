@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class TextButtonEl : Element
+public class TextEl : Element
 {
     [SerializeField] public Text initText;
     [SerializeField] private GameObject texts;

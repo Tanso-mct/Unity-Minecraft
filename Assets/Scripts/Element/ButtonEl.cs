@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class ImageButtonEl : Element
+public class ButtonEl : Element
 {
     public UnityEvent clickEvent = null;
 

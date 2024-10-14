@@ -6,7 +6,7 @@ using UnityEngine.Events;
 public class TextButtonParts : MonoBehaviour
 {
     public UnityEvent clickEvent = null;
-    [SerializeField] private TextButtonEl textEl = null;
+    [SerializeField] private TextEl textEl = null;
 
     [SerializeField] private GameObject hoverImageGroup = null;
     [SerializeField] private GameObject hoverText = null;

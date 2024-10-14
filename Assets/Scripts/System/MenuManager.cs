@@ -6,6 +6,7 @@ public class MenuManager : Manager
 {
     [SerializeField] private GameObject wndLoad;
     [SerializeField] private GameObject wndMenu;
+    [SerializeField] private GameObject wndOption;
 
     [SerializeField] private int loadingShowFrame = 120;
     private int loadingFrame = 0;
@@ -45,6 +46,18 @@ public class MenuManager : Manager
             CloseWindow(wndLoad.name);
             ShowWindow(wndMenu.name);
         }
+    }
+
+    public void ShowOption()
+    {
+        CloseWindow(wndMenu.name);
+        ShowWindow(wndOption.name);
+    }
+
+    public void CloseOption()
+    {
+        CloseWindow(wndOption.name);
+        ShowWindow(wndMenu.name);
     }
 
     public override void BaseExit()

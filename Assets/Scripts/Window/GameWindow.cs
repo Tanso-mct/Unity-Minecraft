@@ -45,12 +45,12 @@ abstract public class GameWindow : MonoBehaviour
     {
         for (int i = 0; i < parents.Count; i++)
         {
-            List<GameObject> grandChildren = GetAllChildren(parents[i]);
-            for (int j = 0; j < grandChildren.Count; j++)
+            List<GameObject> children = GetAllChildren(parents[i]);
+            for (int j = 0; j < children.Count; j++)
             {
-                if (!diEl.TryAdd(grandChildren[j].name, grandChildren[j].GetComponent<Element>()))
+                if (!diEl.TryAdd(children[j].name, children[j].GetComponent<Element>()))
                 {
-                    Debug.LogError("Failed to add " + grandChildren[j].name + " to diEl.");
+                    Debug.LogError("Failed to add " + children[j].name + " to diEl.");
                 }
             }
         }

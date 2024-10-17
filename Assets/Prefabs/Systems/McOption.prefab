@@ -9,8 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1888011062097898269}
-  - component: {fileID: 7171360356346431953}
-  - component: {fileID: 3981361113642297480}
+  - component: {fileID: 7404210073812728297}
   m_Layer: 0
   m_Name: McSounds
   m_TagString: Untagged
@@ -33,19 +32,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1390743526941196719}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7171360356346431953
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1565333924899909515}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e148d47387a1da4a949979efd759b19, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &3981361113642297480
+--- !u!114 &7404210073812728297
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -106,7 +93,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   videos: {fileID: 6034815904940882573}
   controls: {fileID: 2893375746357514140}
-  sounds: {fileID: 3981361113642297480}
+  sounds: {fileID: 7404210073812728297}
 --- !u!1 &2987161740150081349
 GameObject:
   m_ObjectHideFlags: 0
@@ -160,7 +147,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6057494757911678974}
-  - component: {fileID: 4552101432413950077}
   - component: {fileID: 6034815904940882573}
   m_Layer: 0
   m_Name: McVideos
@@ -184,18 +170,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1390743526941196719}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4552101432413950077
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3787311949653340865}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8775a8357afb6814cabcbd10f74a3c73, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &6034815904940882573
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -208,3 +182,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e148d47387a1da4a949979efd759b19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fovSb: {fileID: 0}
+  renderDistanceSb: {fileID: 0}
+  brightnessSb: {fileID: 0}

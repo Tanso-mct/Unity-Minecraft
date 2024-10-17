@@ -194,6 +194,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: McOption
       objectReference: {fileID: 0}
+    - target: {fileID: 4462106990168337349, guid: 54694af935c3e744c8aa4205eccd5b05, type: 3}
+      propertyPath: manager
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -139,6 +139,26 @@ abstract public class Element : MonoBehaviour
         }
     }
 
+    public void Move(ref Vector2 vec, ref Image image)
+    {
+        if (!isShow) return;
+
+        Vector2 newVec = new Vector2
+        (
+            image.rectTransform.anchoredPosition.x + vec.x,
+            image.rectTransform.anchoredPosition.y + vec.y
+        );
+        image.rectTransform.anchoredPosition = newVec;
+    }
+
+    public void Transfer(ref Vector2 vec, ref Image image)
+    {
+        if (!isShow) return;
+
+        Vector2 newVec = new Vector2(vec.x, vec.y);
+        image.transform.position = newVec;
+    }
+
     private bool IsUnderMouse()
     {
         PointerEventData pointerEventData = new PointerEventData(eventSystem)
@@ -159,11 +179,42 @@ abstract public class Element : MonoBehaviour
         return false;
     }
 
+    public bool IsUnderMouse(ref Image image)
+    {
+        PointerEventData pointerEventData = new PointerEventData(eventSystem)
+        {
+            position = Input.mousePosition
+        };
+
+        List<RaycastResult> results = new List<RaycastResult>();
+        raycaster.Raycast(pointerEventData, results);
+
+        foreach (RaycastResult result in results)
+        {
+            if (result.gameObject == image)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     protected bool IsClick()
     {
         if (!isShow) return false;
 
         if (Input.GetMouseButtonDown(0) && IsUnderMouse())
+        {
+            return true;
+        }
+        return false;
+    }
+
+    protected bool IsClick(ref Image image)
+    {
+        if (!isShow) return false;
+
+        if (Input.GetMouseButtonDown(0) && IsUnderMouse(ref image))
         {
             return true;
         }

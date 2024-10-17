@@ -28,6 +28,7 @@ public class Constants : MonoBehaviour
     public static readonly string TYPE_INPUT_BOX = "InputBox";
     public static readonly string TYPE_BUTTON = "Button";
     public static readonly string TYPE_TEXT = "Text";
+    public static readonly string TYPE_SELECT_BAR = "SelectBar";
 
     // Window name
     public static readonly string WND_MENU = "WindowMenu";

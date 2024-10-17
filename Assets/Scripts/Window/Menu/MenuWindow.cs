@@ -7,9 +7,11 @@ public class MenuWindow : GameWindow
 {
     [SerializeField] protected List<GameObject> inputBoxes = null;
     [SerializeField] protected List<GameObject> buttons = null;
+    [SerializeField] protected List<GameObject> selectBars = null;
 
     protected Dictionary<string, Element> diInputBoxEl;
     protected Dictionary<string, Element> diButtonEl;
+    protected Dictionary<string, Element> diSelectBarEl;
 
     [SerializeField] private McOption option;
 
@@ -25,6 +27,7 @@ public class MenuWindow : GameWindow
 
         diInputBoxEl = new Dictionary<string, Element>();
         diButtonEl = new Dictionary<string, Element>();
+        diSelectBarEl = new Dictionary<string, Element>();
 
         // 各要素を取得
         GetElements(ref images, ref diImageEl);
@@ -32,6 +35,7 @@ public class MenuWindow : GameWindow
 
         GetElements(ref inputBoxes, ref diInputBoxEl);
         GetElements(ref buttons, ref diButtonEl);
+        GetElements(ref selectBars, ref diSelectBarEl);
 
         // 各要素を初期化
         ElementsInit(ref diImageEl);
@@ -39,6 +43,7 @@ public class MenuWindow : GameWindow
 
         ElementsInit(ref diInputBoxEl);
         ElementsInit(ref diButtonEl);
+        ElementsInit(ref diSelectBarEl);
 
     }
 
@@ -58,6 +63,7 @@ public class MenuWindow : GameWindow
 
         ElementsShow(ref diInputBoxEl);
         ElementsShow(ref diButtonEl);
+        ElementsShow(ref diSelectBarEl);
     }
 
     public override void Close()
@@ -76,6 +82,7 @@ public class MenuWindow : GameWindow
 
         ElementsClose(ref diInputBoxEl);
         ElementsClose(ref diButtonEl);
+        ElementsClose(ref diSelectBarEl);
     }
 
     public override void Execute()
@@ -89,6 +96,7 @@ public class MenuWindow : GameWindow
 
         ElementsExecute(ref diInputBoxEl);
         ElementsExecute(ref diButtonEl);
+        ElementsExecute(ref diSelectBarEl);
     }
 
     public override void Move(ref Vector2 moveVec)
@@ -101,5 +109,6 @@ public class MenuWindow : GameWindow
 
         ElementsMove(ref diInputBoxEl, ref moveVec);
         ElementsMove(ref diButtonEl, ref moveVec);
+        ElementsMove(ref diSelectBarEl, ref moveVec);
     }
 }

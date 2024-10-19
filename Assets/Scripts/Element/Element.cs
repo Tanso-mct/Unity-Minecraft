@@ -27,6 +27,7 @@ abstract public class Element : MonoBehaviour
 
     // 使用する画像を格納
     private Dictionary<string, List<Image>> diImageGroups;
+    protected Dictionary<string, Text> diTexts;
 
     // エレメントの表示状態を設定。
     private Dictionary<string, bool> diGroupShow;
@@ -41,6 +42,8 @@ abstract public class Element : MonoBehaviour
         eventSystem = GetComponentInParent<EventSystem>();
 
         InitImages();
+
+        diTexts = new Dictionary<string, Text>();
     }
 
     // 孫オブジェクトをすべて取得
@@ -108,6 +111,22 @@ abstract public class Element : MonoBehaviour
         }
     }
 
+    public void ShowText(bool val, string name)
+    {
+        if (diTexts.ContainsKey(name))
+        {
+            diTexts[name].enabled = val;
+        }
+    }
+
+    protected void ShowAllTexts(bool val)
+    {
+        foreach (KeyValuePair<string, Text> pair in diTexts)
+        {
+            pair.Value.enabled = val;
+        }
+    }
+
     // エレメントの初期化処理を記述。初期化時にエレメントは非表示状態にする
     abstract public void Init();
 
@@ -131,12 +150,30 @@ abstract public class Element : MonoBehaviour
             {
                 Vector2 newVec = new Vector2
                 (
-                    pair.Value[i].rectTransform.anchoredPosition.x + vec.x,
-                    pair.Value[i].rectTransform.anchoredPosition.y + vec.y
+                    pair.Value[i].rectTransform.position.x + vec.x,
+                    pair.Value[i].rectTransform.position.y + vec.y
                 );
-                pair.Value[i].rectTransform.anchoredPosition = newVec;
+                pair.Value[i].rectTransform.position = newVec;
             }
         }
+
+        foreach (KeyValuePair<string, Text> pair in diTexts)
+        {
+            Vector2 newVec = new Vector2
+            (
+                pair.Value.rectTransform.position.x + vec.x,
+                pair.Value.rectTransform.position.y + vec.y
+            );
+            pair.Value.rectTransform.position = newVec;
+        }
+
+        Vector2 newFrameVec = new Vector2
+        (
+            frame.GetComponent<RectTransform>().position.x + vec.x,
+            frame.GetComponent<RectTransform>().position.y + vec.y
+        );
+        frame.GetComponent<RectTransform>().position = newFrameVec;
+
     }
 
     public void Move(ref Vector2 vec, ref Image image)
@@ -145,10 +182,10 @@ abstract public class Element : MonoBehaviour
 
         Vector2 newVec = new Vector2
         (
-            image.rectTransform.anchoredPosition.x + vec.x,
-            image.rectTransform.anchoredPosition.y + vec.y
+            image.rectTransform.position.x + vec.x,
+            image.rectTransform.position.y + vec.y
         );
-        image.rectTransform.anchoredPosition = newVec;
+        image.rectTransform.position = newVec;
     }
 
     public void Transfer(ref Vector2 vec, ref Image image)

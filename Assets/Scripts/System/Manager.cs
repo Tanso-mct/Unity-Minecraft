@@ -13,6 +13,9 @@ abstract public class Manager : MonoBehaviour
     // ウィンドウの名前をキーにし、リストのインデックスを取得するための変数
     private Dictionary<string, GameWindow> windowNameToIndex = null;
 
+    [SerializeField] private float scrollSpeed;
+    private Vector2 movedVec;
+
     private void AddWindows()
     {
         windows = new List<GameWindow>();
@@ -33,6 +36,8 @@ abstract public class Manager : MonoBehaviour
             windowNameToIndex.Add(windows[i].name, windows[i]);
             windows[i].Init();
         }
+
+        movedVec = new Vector2(0, 0);
     }
 
     // BaseExit関数で最後に必ず実行する。Managerクラスの終了処理を行う
@@ -44,12 +49,24 @@ abstract public class Manager : MonoBehaviour
     // 引数にウィンドウの名前を指定し、そのウィンドウを表示する
     protected void ShowWindow(string wndName)
     {
+        movedVec.x = 0;
+        movedVec.y = 0;
+
         windows[windows.IndexOf(windowNameToIndex[wndName])].Show();
     }
 
     // 引数にウィンドウの名前を指定し、そのウィンドウを非表示にする
     protected void CloseWindow(string wndName)
     {
+        // ウィンドウを非表示にした場合、スクロール量をリセットする
+        if 
+        (
+            windows[windows.IndexOf(windowNameToIndex[wndName])].IsScroll &&
+            !windows[windows.IndexOf(windowNameToIndex[wndName])].IsPopUp
+        ){
+            windows[windows.IndexOf(windowNameToIndex[wndName])].Move(ref movedVec);
+        }
+
         windows[windows.IndexOf(windowNameToIndex[wndName])].Close();
     }
 
@@ -70,10 +87,17 @@ abstract public class Manager : MonoBehaviour
         // スクロールによるウィンドウの移動量を取得
         Vector2 moveVec = new Vector2(0, 0);
 
-        // スクロールする必要があるウィンドウの場合、ウィンドウをスクロールに合わせて移動させる
-        for (int i = 0; i < windows.Count; i++)
+        float scroll = Input.GetAxis("Mouse ScrollWheel");
+        if (scroll != 0)
         {
-            if (windows[i].IsScroll) windows[i].Move(ref moveVec);
+            moveVec.y = scroll * scrollSpeed;
+            movedVec -= moveVec;
+
+            // スクロールする必要があるウィンドウの場合、ウィンドウをスクロールに合わせて移動させる
+            for (int i = 0; i < windows.Count; i++)
+            {
+                if (windows[i].IsScroll && !windows[i].IsPopUp) windows[i].Move(ref moveVec);
+            }
         }
     }
 

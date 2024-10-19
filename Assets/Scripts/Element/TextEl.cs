@@ -8,7 +8,6 @@ public class TextEl : Element
 {
     [SerializeField] public Text initText;
     [SerializeField] private GameObject texts;
-    private Dictionary<string, Text> diTexts;
 
     private bool isHover = false;
     public UnityEvent hoverEvent = null;
@@ -23,8 +22,6 @@ public class TextEl : Element
 
         // テキストの初期化処理
         List<GameObject> textList = GetAllChildren(texts);
-
-        diTexts = new Dictionary<string, Text>();
         for (int i = 0; i < textList.Count; i++)
         {
             textList[i].GetComponent<Text>().enabled = false;
@@ -32,22 +29,6 @@ public class TextEl : Element
             {
                 Debug.LogError("Failed to add " + textList[i].name + " to diTexts.");
             }
-        }
-    }
-
-    public void ShowText(bool val, string name)
-    {
-        if (diTexts.ContainsKey(name))
-        {
-            diTexts[name].enabled = val;
-        }
-    }
-
-    private void ShowAllTexts(bool val)
-    {
-        foreach (KeyValuePair<string, Text> pair in diTexts)
-        {
-            pair.Value.enabled = val;
         }
     }
 

@@ -8,7 +8,6 @@ public class SelectBarEl : Element
 {
     [SerializeField] public Text initText;
     [SerializeField] public GameObject texts;
-    private Dictionary<string, Text> diTexts;
 
     [SerializeField] public Image selector;
 
@@ -36,22 +35,6 @@ public class SelectBarEl : Element
             {
                 Debug.LogError("Failed to add " + textList[i].name + " to diTexts.");
             }
-        }
-    }
-
-    public void ShowText(bool val, string name)
-    {
-        if (diTexts.ContainsKey(name))
-        {
-            diTexts[name].enabled = val;
-        }
-    }
-
-    private void ShowAllTexts(bool val)
-    {
-        foreach (KeyValuePair<string, Text> pair in diTexts)
-        {
-            pair.Value.enabled = val;
         }
     }
 

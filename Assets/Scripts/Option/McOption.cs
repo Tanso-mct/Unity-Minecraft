@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class McOption : MonoBehaviour
 {
-    // シングルトン
     public McVideos videos;
     public McControls controls;
     public McSounds sounds;

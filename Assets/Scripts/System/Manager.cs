@@ -76,7 +76,17 @@ abstract public class Manager : MonoBehaviour
     {
         for (int i = 0; i < windows.Count; i++)
         {
-            windows[i].Execute();
+            if (windows[i].IsPopUp)
+            {
+                windows[i].Execute();
+                if (Param.popUpWindowDone) return;
+            }
+        }
+
+
+        for (int i = 0; i < windows.Count; i++)
+        {
+            if (!windows[i].IsPopUp) windows[i].Execute();
         }
     }
 
@@ -100,6 +110,41 @@ abstract public class Manager : MonoBehaviour
             }
         }
     }
+
+    // スクロールすることが検知された場合、ウィンドウをスクロールに合わせて移動させる
+    // スクロールの限界値を指定する
+    
+    protected void ScrollWindows(float bottomY)
+    {
+        // スクロールによるウィンドウの移動量を取得
+        Vector2 moveVec = new Vector2(0, 0);
+
+        float scroll = -Input.GetAxis("Mouse ScrollWheel");
+        if (scroll != 0)
+        {
+            moveVec.y = scroll * scrollSpeed;
+            
+            movedVec -= moveVec;
+            if (movedVec.y < bottomY)
+            {
+                movedVec += moveVec;
+                return;
+            }
+            else if (movedVec.y > 0)
+            {
+                movedVec += moveVec;
+                return;
+            }
+
+            // スクロールする必要があるウィンドウの場合、ウィンドウをスクロールに合わせて移動させる
+            for (int i = 0; i < windows.Count; i++)
+            {
+                if (windows[i].IsScroll && !windows[i].IsPopUp) windows[i].Move(ref moveVec);
+            }
+        }
+    }
+
+
 
     // UnityのAwake関数の代わりに使用する関数
     abstract public void BaseAwake();

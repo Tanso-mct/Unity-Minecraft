@@ -30,6 +30,29 @@ public class Constants : MonoBehaviour
     public static readonly string TYPE_TEXT = "Text";
     public static readonly string TYPE_SELECT_BAR = "SelectBar";
 
+    // Control name
+    public static readonly string CONTROL_ATTACK = "Attack";
+    public static readonly string CONTROL_DROP_ITEM = "DropItem";
+    public static readonly string CONTROL_USE = "Use";
+    public static readonly string CONTROL_HS1 = "HS1";
+    public static readonly string CONTROL_HS2 = "HS2";
+    public static readonly string CONTROL_HS3 = "HS3";
+    public static readonly string CONTROL_HS4 = "HS4";
+    public static readonly string CONTROL_HS5 = "HS5";
+    public static readonly string CONTROL_HS6 = "HS6";
+    public static readonly string CONTROL_HS7 = "HS7";
+    public static readonly string CONTROL_HS8 = "HS8";
+    public static readonly string CONTROL_HS9 = "HS9";
+    public static readonly string CONTROL_INVENTORY = "Inventory";
+    public static readonly string CONTROL_PERSPECTIVE = "Perspective";
+    public static readonly string CONTROL_JUMP = "Jump";
+    public static readonly string CONTROL_SPRINT = "Sprint";
+    public static readonly string CONTROL_LEFT = "Left";
+    public static readonly string CONTROL_RIGHT = "Right";
+    public static readonly string CONTROL_BACK = "Back";
+    public static readonly string CONTROL_FORWARD = "Forward";
+
+
     // Window name
     public static readonly string WND_MENU = "WindowMenu";
 
@@ -38,6 +61,7 @@ public class Constants : MonoBehaviour
     public static readonly string VAXEL_STATE_ITEM = "Item";
     public static readonly string VAXEL_STATE_BLOCK = "Block";
     public static readonly string VAXEL_STATE_ENTITY = "Entity";
+
 
 
 }

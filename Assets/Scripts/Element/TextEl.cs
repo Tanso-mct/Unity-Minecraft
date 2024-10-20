@@ -13,7 +13,7 @@ public class TextEl : Element
     public UnityEvent hoverEvent = null;
     public UnityEvent unHoverEvent = null;
 
-    public UnityEvent clickEvent = null;
+    public UnityEvent<string> clickEvent = null;
 
     public override void Init()
     {
@@ -63,6 +63,6 @@ public class TextEl : Element
             unHoverEvent.Invoke();
         }
         
-        if (IsClick() && clickEvent != null) clickEvent.Invoke();
+        if (IsClick() && clickEvent != null) clickEvent.Invoke("");
     }
 }

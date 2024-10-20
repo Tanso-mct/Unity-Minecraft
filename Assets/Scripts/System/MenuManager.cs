@@ -13,6 +13,9 @@ public class MenuManager : Manager
     [SerializeField] private GameObject wndControlSettingScroll;
 
     [SerializeField] private int loadingShowFrame = 120;
+
+    [SerializeField] private float scrollBottom;
+
     private int loadingFrame = 0;
 
     public override void BaseAwake()
@@ -30,7 +33,7 @@ public class MenuManager : Manager
         ExecuteWindows();
 
         // スクロールされている場合、ウィンドウを移動
-        ScrollWindows();
+        ScrollWindows(scrollBottom);
     }
 
     public override void BaseUpdate()
@@ -39,7 +42,7 @@ public class MenuManager : Manager
         ExecuteWindows();
 
         // 各ウィンドウの処理を実行
-        ScrollWindows();
+        ScrollWindows(scrollBottom);
 
         if (loadingFrame < loadingShowFrame)
         {
@@ -117,5 +120,7 @@ public class MenuManager : Manager
         CloseWindow(wndControlSettingScroll.name);
 
         ShowWindow(wndOption.name);
+
+        Param.popUpWindowDone = true;
     }
 }

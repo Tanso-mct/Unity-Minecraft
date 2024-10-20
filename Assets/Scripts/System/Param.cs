@@ -8,10 +8,13 @@ public class Param : MonoBehaviour
     [HideInInspector] public static float floPar = 0;
     [HideInInspector] public static string strPar = "";
 
+    [HideInInspector] public static bool popUpWindowDone = false;
+
     public static void Init()
     {
         msg = Constants.MSG_NULL;
         floPar = 0;
         strPar = "";
+        popUpWindowDone = false;
     }
 }

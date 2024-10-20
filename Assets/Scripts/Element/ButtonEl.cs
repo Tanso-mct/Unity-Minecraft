@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 public class ButtonEl : Element
 {
-    public UnityEvent clickEvent = null;
+    public UnityEvent<string> clickEvent = null;
 
     private bool isHover = false;
     public UnityEvent hoverEvent = null;
@@ -42,6 +42,6 @@ public class ButtonEl : Element
             unHoverEvent.Invoke();
         }
 
-        if (IsClick() && clickEvent != null) clickEvent.Invoke();
+        if (IsClick() && clickEvent != null) clickEvent.Invoke("");
     }
 }

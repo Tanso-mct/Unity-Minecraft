@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class McSounds : MonoBehaviour
 {
+    private static bool hasSaveData = false;
+
     [SerializeField] SelectBarParts masterSb;
     [SerializeField] SelectBarParts musicSb;
     [SerializeField] SelectBarParts blocksSb;
@@ -33,12 +35,25 @@ public class McSounds : MonoBehaviour
     private static int friendlyVal = 50;
     private static Vector2 friendlySbPos;
 
+    public void Init()
+    {
+        if (hasSaveData)
+        {
+            // Load data
+        }
+    }
+
+    public void Save()
+    {
+        // Save data
+    }
+
     public void SetMaster()
     {
         masterVal = (int)masterSb.Val;
         masterSbPos = masterSb.SelectorPos;
 
-        Debug.Log("master: " + masterVal);
+        masterSb.EditTxt("Master Volume: " + masterVal + "%");
     }
 
     public void SetMusic()
@@ -46,7 +61,7 @@ public class McSounds : MonoBehaviour
         musicVal = (int)musicSb.Val;
         musicSbPos = musicSb.SelectorPos;
 
-        Debug.Log("music: " + musicVal);
+        musicSb.EditTxt("Music: " + musicVal + "%");
     }
 
     public void SetBlocks()
@@ -54,7 +69,7 @@ public class McSounds : MonoBehaviour
         blocksVal = (int)blocksSb.Val;
         blocksSbPos = blocksSb.SelectorPos;
 
-        Debug.Log("blocks: " + blocksVal);
+        blocksSb.EditTxt("Blocks: " + blocksVal + "%");
     }
 
     public void SetUi()
@@ -62,7 +77,7 @@ public class McSounds : MonoBehaviour
         uiVal = (int)uiSb.Val;
         uiSbPos = uiSb.SelectorPos;
 
-        Debug.Log("ui: " + uiVal);
+        uiSb.EditTxt("UI: " + uiVal + "%");
     }
 
     public void SetPlayers()
@@ -70,7 +85,7 @@ public class McSounds : MonoBehaviour
         playersVal = (int)playersSb.Val;
         playersSbPos = playersSb.SelectorPos;
 
-        Debug.Log("players: " + playersVal);
+        playersSb.EditTxt("Players: " + playersVal + "%");
     }
 
     public void SetHostile()
@@ -78,7 +93,7 @@ public class McSounds : MonoBehaviour
         hostileVal = (int)hostileSb.Val;
         hostileSbPos = hostileSb.SelectorPos;
 
-        Debug.Log("hostile: " + hostileVal);
+        hostileSb.EditTxt("Hostile Creatures: " + hostileVal + "%");
     }
 
     public void SetFriendly()
@@ -86,7 +101,7 @@ public class McSounds : MonoBehaviour
         friendlyVal = (int)friendlySb.Val;
         friendlySbPos = friendlySb.SelectorPos;
 
-        Debug.Log("friendly: " + friendlyVal);
+        friendlySb.EditTxt("Friendly Creatures: " + friendlyVal + "%");
     }
     
 }

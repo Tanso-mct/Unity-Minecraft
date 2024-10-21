@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class McVideos : MonoBehaviour
 {
+    private static bool hasSaveData = false;
+
     [SerializeField] SelectBarParts fovSb;
     [SerializeField] SelectBarParts renderDistanceSb;
     [SerializeField] SelectBarParts brightnessSb;
@@ -17,6 +19,19 @@ public class McVideos : MonoBehaviour
     private static int brightness = 50;
     private static Vector2 brightnessSbPos;
 
+    public void Init()
+    {
+        if (hasSaveData)
+        {
+            // Load data
+        }
+    }
+
+    public void Save()
+    {
+        // Save data
+    }
+
     public void SetFov()
     {
         fov = (int)fovSb.Val;
@@ -25,8 +40,6 @@ public class McVideos : MonoBehaviour
         if (fov == 70) fovSb.EditTxt("FOV: Normal");
         else if (fov == 110) fovSb.EditTxt("FOV: Quake Pro");
         else fovSb.EditTxt("FOV: " + fov);
-
-        Debug.Log("fov: " + fov);
     }
 
     public void SetRenderDistance()
@@ -48,8 +61,6 @@ public class McVideos : MonoBehaviour
         else if (renderDistance == 48) txt += " Insane";
 
         renderDistanceSb.EditTxt(txt);
-
-        Debug.Log("renderDistance: " + renderDistance);
     }
 
     public void SetBrightness()
@@ -60,7 +71,5 @@ public class McVideos : MonoBehaviour
         if (brightness == 0) brightnessSb.EditTxt("Brightness: Moody");
         else if (brightness > 0 && brightness < 100) brightnessSb.EditTxt("Brightness: +" + brightness + "%");
         else if (brightness == 100) brightnessSb.EditTxt("Brightness: Bright");
-
-        Debug.Log("brightness: " + brightness);
     }
 }

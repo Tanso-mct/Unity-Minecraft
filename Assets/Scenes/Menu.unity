@@ -2624,7 +2624,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5803714343951218272, guid: a7157aa127c531d4db91cf7926eb7596, type: 3}
       propertyPath: clickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: 
+      value: DestroySelectWorld
       objectReference: {fileID: 0}
     - target: {fileID: 5803714343951218272, guid: a7157aa127c531d4db91cf7926eb7596, type: 3}
       propertyPath: clickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
@@ -11771,6 +11771,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3379727396607066145, guid: 5e412af8e24955f44a863a25b048b3e6, type: 3}
+      propertyPath: senSb
+      value: 
+      objectReference: {fileID: 1382185556}
     - target: {fileID: 4264054985776440440, guid: 5e412af8e24955f44a863a25b048b3e6, type: 3}
       propertyPath: manager
       value: 
@@ -14118,15 +14122,15 @@ PrefabInstance:
       objectReference: {fileID: -748194229, guid: a6be7d01d33a1f44cbce4faab3cb83c9, type: 3}
     - target: {fileID: 3254369464187890530, guid: 0bfdc381a039f7a488ddf9fdcbda93b0, type: 3}
       propertyPath: val
-      value: 70
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 3254369464187890530, guid: 0bfdc381a039f7a488ddf9fdcbda93b0, type: 3}
       propertyPath: maxVal
-      value: 110
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 3254369464187890530, guid: 0bfdc381a039f7a488ddf9fdcbda93b0, type: 3}
       propertyPath: minVal
-      value: 30
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3254369464187890530, guid: 0bfdc381a039f7a488ddf9fdcbda93b0, type: 3}
       propertyPath: mouseEvent.m_PersistentCalls.m_Calls.Array.size
@@ -14139,18 +14143,18 @@ PrefabInstance:
     - target: {fileID: 3254369464187890530, guid: 0bfdc381a039f7a488ddf9fdcbda93b0, type: 3}
       propertyPath: mouseEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1488462534}
+      objectReference: {fileID: 643619162}
     - target: {fileID: 3254369464187890530, guid: 0bfdc381a039f7a488ddf9fdcbda93b0, type: 3}
       propertyPath: mouseEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3254369464187890530, guid: 0bfdc381a039f7a488ddf9fdcbda93b0, type: 3}
       propertyPath: mouseEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SetFov
+      value: SenEdit
       objectReference: {fileID: 0}
     - target: {fileID: 3254369464187890530, guid: 0bfdc381a039f7a488ddf9fdcbda93b0, type: 3}
       propertyPath: mouseEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: McVideos, Assembly-CSharp
+      value: McControls, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 3254369464187890530, guid: 0bfdc381a039f7a488ddf9fdcbda93b0, type: 3}
       propertyPath: mouseEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
@@ -14587,6 +14591,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8482352566190243646, guid: 0bfdc381a039f7a488ddf9fdcbda93b0, type: 3}
   m_PrefabInstance: {fileID: 1349909328}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1382185556 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3254369464187890530, guid: 0bfdc381a039f7a488ddf9fdcbda93b0, type: 3}
+  m_PrefabInstance: {fileID: 1349909328}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c63ed6a68f6388f47b51b7203c7eacde, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1385585341
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17123,7 +17138,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5803714343951218272, guid: a7157aa127c531d4db91cf7926eb7596, type: 3}
       propertyPath: clickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: 
+      value: PlaySelectWorld
       objectReference: {fileID: 0}
     - target: {fileID: 5803714343951218272, guid: a7157aa127c531d4db91cf7926eb7596, type: 3}
       propertyPath: clickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
@@ -17763,7 +17778,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5803714343951218272, guid: a7157aa127c531d4db91cf7926eb7596, type: 3}
       propertyPath: clickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: 
+      value: CreateNewWorld
       objectReference: {fileID: 0}
     - target: {fileID: 5803714343951218272, guid: a7157aa127c531d4db91cf7926eb7596, type: 3}
       propertyPath: clickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName

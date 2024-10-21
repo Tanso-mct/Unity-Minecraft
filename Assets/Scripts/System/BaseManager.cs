@@ -11,6 +11,7 @@ public class BaseManager : MonoBehaviour
     // Managerクラスを継承したクラスを持つゲームオブジェクトを設定
     [SerializeField] private GameObject managerObject;
     private Manager manager;
+    [SerializeField] private McOption option;
 
     private void Awake()
     {
@@ -26,6 +27,9 @@ public class BaseManager : MonoBehaviour
 
     void Start()
     {
+        // 各種設定の初期化
+        option.Init();
+
         // メッセージ処理のためのパラメータを初期化
         Param.Init();
 
@@ -76,6 +80,8 @@ public class BaseManager : MonoBehaviour
 
     public void QuitGame()
     {
+        option.Save();
+
     #if UNITY_EDITOR
         EditorApplication.isPlaying = false;
     #else

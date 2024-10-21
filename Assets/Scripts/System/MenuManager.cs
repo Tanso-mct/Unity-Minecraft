@@ -165,4 +165,19 @@ public class MenuManager : Manager
     {
         Param.msg = Constants.MSG_QUIT_GAME;
     }
+
+    public void PlaySelectWorld()
+    {
+        Debug.Log("PlaySelectWorld");
+    }
+
+    public void CreateNewWorld()
+    {
+        Debug.Log("CreateNewWorld");
+    }
+
+    public void DestroySelectWorld()
+    {
+        Debug.Log("DestroySelectWorld");
+    }
 }

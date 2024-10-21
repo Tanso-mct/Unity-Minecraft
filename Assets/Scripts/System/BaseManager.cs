@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 public class BaseManager : MonoBehaviour
 {
     // Managerクラスを継承したクラスを持つゲームオブジェクトを設定
@@ -37,6 +41,9 @@ public class BaseManager : MonoBehaviour
 
     void Update()
     {
+        // メッセージ処理
+        ProcessParam();
+
         // メッセージ処理のためのパラメータを初期化
         Param.Init();
 
@@ -49,6 +56,31 @@ public class BaseManager : MonoBehaviour
     {
         // Managerクラスを継承したクラスのExit関数を実行
         manager.BaseExit();
+    }
+
+    public void ProcessParam()
+    {
+        switch (Param.msg)
+        {
+            case Constants.MSG_NULL:
+                break;
+            case Constants.MSG_CHANGE_SCENE:
+                break;
+            case Constants.MSG_QUIT_GAME:
+                QuitGame();
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void QuitGame()
+    {
+    #if UNITY_EDITOR
+        EditorApplication.isPlaying = false;
+    #else
+        Application.Quit();
+    #endif
     }
 
     // 各シーンで必ず一度実行する。FPSの設定を行う。

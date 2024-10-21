@@ -11,10 +11,13 @@ public class MenuManager : Manager
     [SerializeField] private GameObject wndSoundSetting;
     [SerializeField] private GameObject wndControlSetting;
     [SerializeField] private GameObject wndControlSettingScroll;
+    [SerializeField] private GameObject wndSinglePlayer;
+    [SerializeField] private GameObject wndSinglePlayerScroll;
 
     [SerializeField] private int loadingShowFrame = 120;
 
-    [SerializeField] private float scrollBottom;
+    [SerializeField] private float controlScrollBottom;
+    [SerializeField] private float singlePlayerScrollBottom;
 
     private int loadingFrame = 0;
 
@@ -33,7 +36,14 @@ public class MenuManager : Manager
         ExecuteWindows();
 
         // スクロールされている場合、ウィンドウを移動
-        ScrollWindows(scrollBottom);
+        if (wndControlSetting.GetComponent<MenuWindow>().IsOpening)
+        {
+            ScrollWindows(controlScrollBottom);
+        }
+        else if (wndSinglePlayer.GetComponent<MenuWindow>().IsOpening)
+        {
+            ScrollWindows(singlePlayerScrollBottom);
+        }
     }
 
     public override void BaseUpdate()
@@ -41,8 +51,15 @@ public class MenuManager : Manager
         // 各ウィンドウの処理を実行
         ExecuteWindows();
 
-        // 各ウィンドウの処理を実行
-        ScrollWindows(scrollBottom);
+        // スクロールされている場合、ウィンドウを移動
+        if (wndControlSetting.GetComponent<MenuWindow>().IsOpening)
+        {
+            ScrollWindows(controlScrollBottom);
+        }
+        else if (wndSinglePlayer.GetComponent<MenuWindow>().IsOpening)
+        {
+            ScrollWindows(singlePlayerScrollBottom);
+        }
 
         if (loadingFrame < loadingShowFrame)
         {
@@ -122,5 +139,30 @@ public class MenuManager : Manager
         ShowWindow(wndOption.name);
 
         Param.popUpWindowDone = true;
+    }
+
+    public void ShowSinglePlayer()
+    {
+        Debug.Log("ShowSinglePlayer");
+        CloseWindow(wndTitle.name);
+
+        ShowWindow(wndSinglePlayer.name);
+        ShowWindow(wndSinglePlayerScroll.name);
+    }
+
+    public void CloseSinglePlayer()
+    {
+        Debug.Log("CloseSinglePlayer");
+        CloseWindow(wndSinglePlayer.name);
+        CloseWindow(wndSinglePlayerScroll.name);
+
+        ShowWindow(wndTitle.name);
+
+        Param.popUpWindowDone = true;
+    }
+
+    public void QuitGame()
+    {
+        Param.msg = Constants.MSG_QUIT_GAME;
     }
 }

@@ -13,8 +13,6 @@ public class MenuWindow : GameWindow
     protected Dictionary<string, Element> diButtonEl;
     protected Dictionary<string, Element> diSelectBarEl;
 
-    [SerializeField] private McOption option;
-
     public override void Init()
     {
         // 各キャンバスとパネルを非表示にする

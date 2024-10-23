@@ -41,18 +41,21 @@ public class BaseManager : MonoBehaviour
 
         // Managerクラスを継承したクラスのStart関数を実行
         manager.BaseStart();
+
+        // メッセージ処理
+        ProcessParam();
     }
 
     void Update()
     {
-        // メッセージ処理
-        ProcessParam();
-
         // メッセージ処理のためのパラメータを初期化
         Param.Init();
 
         // Managerクラスを継承したクラスのUpdate関数を実行
         manager.BaseUpdate();
+
+        // メッセージ処理
+        ProcessParam();
     }
 
     // シーンが切り替わる際に呼び出される関数

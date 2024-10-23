@@ -144,8 +144,6 @@ abstract public class Manager : MonoBehaviour
         }
     }
 
-
-
     // UnityのAwake関数の代わりに使用する関数
     abstract public void BaseAwake();
 

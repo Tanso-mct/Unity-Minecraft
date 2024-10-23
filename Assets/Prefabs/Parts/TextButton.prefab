@@ -106,8 +106,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9147682866379111758}
-  - component: {fileID: 7209006835919426416}
   - component: {fileID: 5803714343951218272}
+  - component: {fileID: 7209006835919426416}
   m_Layer: 0
   m_Name: TextButton
   m_TagString: Untagged
@@ -133,6 +133,24 @@ Transform:
   - {fileID: 8689831518243939533}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5803714343951218272
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5864153204543547644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 131f7d72ad8dc9e4db576605c71179c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clickEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  textEl: {fileID: 7209006835919426416}
+  hoverImageGroup: {fileID: 2953714974142166810}
+  hoverText: {fileID: 5891937548305738486}
 --- !u!114 &7209006835919426416
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -196,21 +214,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &5803714343951218272
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5864153204543547644}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 131f7d72ad8dc9e4db576605c71179c8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  textEl: {fileID: 7209006835919426416}
-  hoverImageGroup: {fileID: 2953714974142166810}
-  hoverText: {fileID: 5891937548305738486}
+  unClickEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &8210864102746134712
 GameObject:
   m_ObjectHideFlags: 0

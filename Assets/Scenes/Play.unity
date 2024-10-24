@@ -250,6 +250,10 @@ PrefabInstance:
       propertyPath: m_Color.a
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7906296116025432687, guid: d716ee1b83c741f47a459c06bf39d256, type: 3}
+      propertyPath: world
+      value: 
+      objectReference: {fileID: 1744933562}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 3038134735460781164, guid: d716ee1b83c741f47a459c06bf39d256, type: 3}
@@ -1616,7 +1620,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e40a564c43becc4a9fe343037c4b0af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dataObj: {fileID: 1745704619}
+  data: {fileID: 0}
 --- !u!1 &1745704619
 GameObject:
   m_ObjectHideFlags: 0

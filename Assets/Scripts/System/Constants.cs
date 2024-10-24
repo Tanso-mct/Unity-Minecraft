@@ -56,6 +56,9 @@ public class Constants : MonoBehaviour
     public const string CONTROL_BACK = "Back";
     public const string CONTROL_FORWARD = "Forward";
 
+    // Game mode
+    public const string GAME_MODE_CREATIVE = "Creative";
+    public const string GAME_MODE_SURVIVAL = "Survival";
 
     // Window name
     public const string WND_MENU = "WindowMenu";
@@ -65,6 +68,13 @@ public class Constants : MonoBehaviour
     public const string VAXEL_STATE_ITEM = "Item";
     public const string VAXEL_STATE_BLOCK = "Block";
     public const string VAXEL_STATE_ENTITY = "Entity";
+
+    // Block state
+    public const int BLOCK_STATE_NULL = -1;
+
+    // World size
+    public const int WORLD_SIZE = 513;
+    public const int WORLD_HEIGHT = 320;
 
 
 

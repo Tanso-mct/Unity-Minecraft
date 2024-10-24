@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class PlayWindow : GameWindow
 {
+    [SerializeField] World world;   
+
     public override void Init()
     {
         // 各キャンバスとパネルを非表示にする
@@ -23,6 +25,12 @@ public class PlayWindow : GameWindow
         ElementsInit(ref diImageEl);
         ElementsInit(ref diTextEl);
 
+        // Paramの値からワールドを生成
+        if (Param.createWorld) world.Create();
+        //else if (Param.loadWorld) world.LoadFromJson();
+
+        // Paramのワールドに関係する値の初期化
+        Param.InitWorldParam();
     }
 
     public override void Show()
@@ -60,9 +68,7 @@ public class PlayWindow : GameWindow
         // 開いていない場合は処理しない
         if (!isOpening) return;
 
-        // 各要素を実行
-        ElementsExecute(ref diImageEl);
-        ElementsExecute(ref diTextEl);
+        world.Execute();
     }
 
     public override void Move(ref Vector2 moveVec)

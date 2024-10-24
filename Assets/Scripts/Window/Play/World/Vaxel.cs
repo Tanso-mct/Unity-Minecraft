@@ -4,5 +4,8 @@ using UnityEngine;
 
 public class Vaxel : MonoBehaviour
 {
-    
+    public void Init()
+    {
+
+    }
 }

@@ -20,9 +20,9 @@ public class PlayManager : Manager
         Init();
 
         // PlayWindowを表示
-        //ShowWindow(wndPlay.name);
+        ShowWindow(wndPlay.name);
 
-        ShowWindow(wndOption.name);
+        //ShowWindow(wndOption.name);
     }
 
     public override void BaseStart()
@@ -36,14 +36,13 @@ public class PlayManager : Manager
 
     public override void BaseUpdate()
     {
+        if (Input.GetKeyUp(KeyCode.Escape) && wndPlay.gameObject.GetComponent<PlayWindow>().IsOpening) ShowOption();
+
         // 各ウィンドウの処理を実行
         ExecuteWindows();
 
         // スクロールされている場合、ウィンドウを移動
-        if (wndControlSetting.GetComponent<MenuWindow>().IsOpening)
-        {
-            ScrollWindows(controlScrollBottom);
-        }
+        if (wndControlSetting.GetComponent<MenuWindow>().IsOpening) ScrollWindows(controlScrollBottom);
     }
 
     public override void BaseExit()

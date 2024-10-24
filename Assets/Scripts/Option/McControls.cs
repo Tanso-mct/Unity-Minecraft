@@ -10,8 +10,30 @@ public class McControls : MonoBehaviour
     private static int sen = 0;
     private static Vector2 senSbPos;
 
-    private KeyCode attackKey = KeyCode.Mouse0;
-    private KeyCode dropKey = KeyCode.Q;
+    static private KeyCode attackKey = KeyCode.Mouse0;
+    static private KeyCode dropKey = KeyCode.Q;
+    static private KeyCode useKey = KeyCode.Mouse1;
+
+    static private KeyCode hotBar1Key = KeyCode.Alpha1;
+    static private KeyCode hotBar2Key = KeyCode.Alpha2;
+    static private KeyCode hotBar3Key = KeyCode.Alpha3;
+    static private KeyCode hotBar4Key = KeyCode.Alpha4;
+    static private KeyCode hotBar5Key = KeyCode.Alpha5;
+    static private KeyCode hotBar6Key = KeyCode.Alpha6;
+    static private KeyCode hotBar7Key = KeyCode.Alpha7;
+    static private KeyCode hotBar8Key = KeyCode.Alpha8;
+    static private KeyCode hotBar9Key = KeyCode.Alpha9;
+
+    static private KeyCode inventoryKey = KeyCode.E;
+    static private KeyCode perspectiveKey = KeyCode.F5;
+
+    static private KeyCode jumpKey = KeyCode.Space;
+    static private KeyCode sprintKey = KeyCode.LeftControl;
+    static private KeyCode leftKey = KeyCode.A;
+    static private KeyCode rightKey = KeyCode.D;
+    static private KeyCode backKey = KeyCode.S;
+    static private KeyCode forwardKey = KeyCode.W;
+
 
     public void Init()
     {
@@ -55,6 +77,76 @@ public class McControls : MonoBehaviour
     {
         Debug.Log("BindResetAll");
         Param.popUpWindowDone = true;
+    }
+
+    static public bool IsKeyDown(string control)
+    {
+        switch (control)
+        {
+            case Constants.CONTROL_ATTACK:
+                return Input.GetKeyDown(attackKey);
+
+            case Constants.CONTROL_DROP_ITEM:
+                return Input.GetKeyDown(dropKey);
+
+            case Constants.CONTROL_USE:
+                return Input.GetKeyDown(useKey);
+
+            case Constants.CONTROL_HS1:
+                return Input.GetKeyDown(hotBar1Key);
+
+            case Constants.CONTROL_HS2:
+                return Input.GetKeyDown(hotBar2Key);
+
+            case Constants.CONTROL_HS3:
+                return Input.GetKeyDown(hotBar3Key);
+
+            case Constants.CONTROL_HS4:
+                return Input.GetKeyDown(hotBar4Key);
+
+            case Constants.CONTROL_HS5:
+                return Input.GetKeyDown(hotBar5Key);
+
+            case Constants.CONTROL_HS6:
+                return Input.GetKeyDown(hotBar6Key);
+
+            case Constants.CONTROL_HS7:
+                return Input.GetKeyDown(hotBar7Key);
+
+            case Constants.CONTROL_HS8:
+                return Input.GetKeyDown(hotBar8Key);
+
+            case Constants.CONTROL_HS9:
+                return Input.GetKeyDown(hotBar9Key);
+
+            case Constants.CONTROL_INVENTORY:
+                return Input.GetKeyDown(inventoryKey);
+
+            case Constants.CONTROL_PERSPECTIVE:
+                return Input.GetKeyDown(perspectiveKey);
+
+            case Constants.CONTROL_JUMP:
+                return Input.GetKeyDown(jumpKey);
+
+            case Constants.CONTROL_SPRINT:
+                return Input.GetKeyDown(sprintKey);
+
+            case Constants.CONTROL_LEFT:
+                return Input.GetKeyDown(leftKey);
+
+            case Constants.CONTROL_RIGHT:
+                return Input.GetKeyDown(rightKey);
+
+            case Constants.CONTROL_BACK:
+                return Input.GetKeyDown(backKey);
+
+            case Constants.CONTROL_FORWARD:
+                return Input.GetKeyDown(forwardKey);
+
+
+
+            default: return false;
+        }
     }
     
 }

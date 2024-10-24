@@ -377,9 +377,15 @@ class Entities
     - List<Voxel> existingVoxel
 }
 
+class Items
+{
+    - List<Voxel> existingVoxel
+}
+
 WorldData *-- Blocks
 WorldData *-- Entities
 WorldData *-- Vaxel
+WorldData *-- Player
 class WorldData
 {
     - List<Voxel> voxels
@@ -389,7 +395,6 @@ class WorldData
     + void SaveVaxels()
 }
 
-World *-- Player
 World *-- WorldData
 class World
 {

@@ -35,6 +35,7 @@ public class Constants : MonoBehaviour
     public const string CONTROL_ATTACK = "Attack";
     public const string CONTROL_DROP_ITEM = "DropItem";
     public const string CONTROL_USE = "Use";
+
     public const string CONTROL_HS1 = "HS1";
     public const string CONTROL_HS2 = "HS2";
     public const string CONTROL_HS3 = "HS3";
@@ -44,8 +45,10 @@ public class Constants : MonoBehaviour
     public const string CONTROL_HS7 = "HS7";
     public const string CONTROL_HS8 = "HS8";
     public const string CONTROL_HS9 = "HS9";
+
     public const string CONTROL_INVENTORY = "Inventory";
     public const string CONTROL_PERSPECTIVE = "Perspective";
+
     public const string CONTROL_JUMP = "Jump";
     public const string CONTROL_SPRINT = "Sprint";
     public const string CONTROL_LEFT = "Left";

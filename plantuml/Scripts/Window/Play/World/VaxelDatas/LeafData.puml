@@ -1,0 +1,7 @@
+@startuml
+class LeafData {
+    - Start() : void
+    - Update() : void
+}
+MonoBehaviour <|-- LeafData
+@enduml

@@ -1,0 +1,7 @@
+@startuml
+class FoodData {
+    - Start() : void
+    - Update() : void
+}
+MonoBehaviour <|-- FoodData
+@enduml

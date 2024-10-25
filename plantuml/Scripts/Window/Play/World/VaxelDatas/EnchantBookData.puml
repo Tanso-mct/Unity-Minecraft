@@ -1,0 +1,7 @@
+@startuml
+class EnchantBookData {
+    - Start() : void
+    - Update() : void
+}
+MonoBehaviour <|-- EnchantBookData
+@enduml

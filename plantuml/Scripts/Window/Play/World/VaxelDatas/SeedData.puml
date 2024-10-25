@@ -1,0 +1,7 @@
+@startuml
+class SeedData {
+    - Start() : void
+    - Update() : void
+}
+MonoBehaviour <|-- SeedData
+@enduml

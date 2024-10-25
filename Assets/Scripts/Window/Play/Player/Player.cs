@@ -4,7 +4,14 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField] private PlayerData data;
+
     public void Init()
+    {
+        Debug.Log("Player Init");
+    }
+
+    public void Create()
     {
 
     }

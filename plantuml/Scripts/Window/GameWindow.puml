@@ -1,0 +1,37 @@
+@startuml
+abstract class GameWindow {
+    # isCreated : bool = false
+    + IsCreated : bool <<get>>
+    # isOpening : bool = false
+    + IsOpening : bool <<get>>
+    # isScroll : bool = false
+    + IsScroll : bool <<get>>
+    # isPopUp : bool = false
+    + IsPopUp : bool <<get>>
+    # GetAllChildren(parent:GameObject) : List<GameObject>
+    # GetElements(parents:List<GameObject>, diEl:Dictionary<string, Element>) : void
+    # ElementsInit(diEl:Dictionary<string, Element>) : void
+    # ShowCanvases(val:bool) : void
+    # ShowBackgrounds(val:bool) : void
+    {abstract} + Init() : void
+    # ElementsShow(diEl:Dictionary<string, Element>) : void
+    {abstract} + Show() : void
+    # ElementsClose(diEl:Dictionary<string, Element>) : void
+    {abstract} + Close() : void
+    # ElementsExecute(diEl:Dictionary<string, Element>) : void
+    {abstract} + Execute() : void
+    # ElementsMove(diEl:Dictionary<string, Element>, vec:Vector2) : void
+    {abstract} + Move(moveVec:Vector2) : void
+}
+class "List`1"<T> {
+}
+class "Dictionary`2"<T1,T2> {
+}
+MonoBehaviour <|-- GameWindow
+GameWindow --> "canvas" Canvas
+GameWindow --> "background" Image
+GameWindow o-> "images<GameObject>" "List`1"
+GameWindow o-> "texts<GameObject>" "List`1"
+GameWindow --> "diImageEl<string,Element>" "Dictionary`2"
+GameWindow --> "diTextEl<string,Element>" "Dictionary`2"
+@enduml

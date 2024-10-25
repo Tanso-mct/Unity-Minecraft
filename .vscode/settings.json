@@ -3,6 +3,8 @@
     "commentTranslate.targetLanguage": "en",
     "dotnet.preferCSharpExtension": true,
     "cSpell.words": [
-        "Raycast"
+        "Raycast",
+        "Vaxel",
+        "vaxels"
     ]
 }

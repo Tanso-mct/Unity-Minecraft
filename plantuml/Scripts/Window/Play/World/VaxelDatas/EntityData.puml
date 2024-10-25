@@ -1,0 +1,7 @@
+@startuml
+class EntityData {
+    - Start() : void
+    - Update() : void
+}
+MonoBehaviour <|-- EntityData
+@enduml

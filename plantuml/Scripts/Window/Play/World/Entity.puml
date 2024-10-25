@@ -1,0 +1,11 @@
+@startuml
+class Entity {
+    + isMob : bool = false
+    + Init(worldData:WorldData) : void
+}
+class "LinkedList`1"<T> {
+}
+MonoBehaviour <|-- Entity
+Entity --> "worldData" WorldData
+Entity --> "vaxelIds<int>" "LinkedList`1"
+@enduml

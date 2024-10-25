@@ -1,0 +1,38 @@
+@startuml
+abstract class Element {
+    - type : string = ""
+    + Type : string <<get>>
+    - isShow : bool = false
+    + IsShow : bool <<get>>
+    # BaseInit() : void
+    # GetAllChildren(parent:GameObject) : List<GameObject>
+    - InitImages() : void
+    + ShowImages(val:bool, groupName:string) : void
+    + ShowAllImages(val:bool) : void
+    + ShowText(val:bool, name:string) : void
+    # ShowAllTexts(val:bool) : void
+    {abstract} + Init() : void
+    {abstract} + Show() : void
+    {abstract} + Close() : void
+    {abstract} + Execute() : void
+    + Move(vec:Vector2) : void
+    + Move(vec:Vector2, image:Image) : void
+    + Transfer(vec:Vector2, image:Image) : void
+    - IsUnderMouse() : bool
+    + IsUnderMouse(image:Image) : bool
+    # IsClick() : bool
+    # IsClick(image:Image) : bool
+    # IsHover() : bool
+}
+class "Dictionary`2"<T1,T2> {
+}
+MonoBehaviour <|-- Element
+Element --> "eventSystem" EventSystem
+Element --> "raycaster" GraphicRaycaster
+Element --> "frame" GameObject
+Element --> "initGroup" GameObject
+Element --> "imageGroups" GameObject
+Element --> "diImageGroups<string,List<Image>>" "Dictionary`2"
+Element --> "diTexts<string,Text>" "Dictionary`2"
+Element --> "diGroupShow<string,bool>" "Dictionary`2"
+@enduml

@@ -64,13 +64,10 @@ public class Constants : MonoBehaviour
     public const string WND_MENU = "WindowMenu";
 
     // Vaxel state
-    public const string VAXEL_STATE_NULL = "Null";
-    public const string VAXEL_STATE_ITEM = "Item";
-    public const string VAXEL_STATE_BLOCK = "Block";
-    public const string VAXEL_STATE_ENTITY = "Entity";
-
-    // Block state
-    public const int BLOCK_STATE_NULL = -1;
+    public const int VAXEL_STATE_NULL = 0;
+    public const int VAXEL_STATE_ITEM = 1;
+    public const int VAXEL_STATE_BLOCK = 2;
+    public const int VAXEL_STATE_ENTITY = 3;
 
     // World size
     public const int WORLD_SIZE = 513;

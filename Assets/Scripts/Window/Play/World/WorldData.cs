@@ -6,30 +6,26 @@ public class WorldData : MonoBehaviour
 {
     public LinkedList<Vaxel> vaxels;
 
-    private Block[,,] blocks;
-    private Entity[,,] entities;
-    private Item[,,] items;
-
-    public void Init(Block[,,] blocks, Entity[,,] entities, Item[,,] items)
+    public void Init(ref int[,,] blocksID, ref int[,,] entitiesID, ref int[,,] itemsID)
     {
         vaxels = new LinkedList<Vaxel>();
 
-        this.blocks = blocks;
-        this.entities = entities;
-        this.items = items;
+        blocksID[0, 0, 0] = 1;
+        entitiesID[0, 0, 0] = 1;
+        itemsID[0, 0, 0] = 1;
     }
 
-    public void Create(ref Block[,,] blocks)
+    public void Create(ref int[,,] blocksID)
     {
-        
+        Debug.Log("Create World");
     }
 
-    public void SpawnMob(ref Entity[,,] entities)
+    public void SpawnMob(ref int[,,] entitiesID)
     {
-
+        Debug.Log("Spawn Mob");
     }
 
-    public void Load(WorldInfo info)
+    public void Load(ref WorldInfo info)
     {
 
     }

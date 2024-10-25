@@ -1,0 +1,24 @@
+@startuml
+class PlayManager {
+    - controlScrollBottom : float
+    + <<override>> BaseAwake() : void
+    + <<override>> BaseStart() : void
+    + <<override>> BaseUpdate() : void
+    + <<override>> BaseExit() : void
+    + ShowOption() : void
+    + CloseOption() : void
+    + ShowVideoSetting() : void
+    + CloseVideoSetting() : void
+    + ShowSoundSetting() : void
+    + CloseSoundSetting() : void
+    + ShowControlSetting() : void
+    + CloseControlSetting() : void
+}
+Manager <|-- PlayManager
+PlayManager --> "wndPlay" GameObject
+PlayManager --> "wndOption" GameObject
+PlayManager --> "wndVideoSetting" GameObject
+PlayManager --> "wndSoundSetting" GameObject
+PlayManager --> "wndControlSetting" GameObject
+PlayManager --> "wndControlSettingScroll" GameObject
+@enduml

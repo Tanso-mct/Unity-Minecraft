@@ -1,0 +1,12 @@
+@startuml
+class ImageEl {
+    - isHover : bool = false
+    + <<override>> Init() : void
+    + <<override>> Show() : void
+    + <<override>> Close() : void
+    + <<override>> Execute() : void
+}
+Element <|-- ImageEl
+ImageEl o-> "hoverEvent" UnityEvent
+ImageEl o-> "unHoverEvent" UnityEvent
+@enduml

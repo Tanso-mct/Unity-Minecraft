@@ -1,0 +1,37 @@
+@startuml
+class McControls {
+    - {static} hasSaveData : bool = false
+    - {static} sen : int = 0
+    + Init() : void
+    + Save() : void
+    + ControlBackground() : void
+    + SenEdit() : void
+    + BindEdit(name:string) : void
+    + BindReset(name:string) : void
+    + BindResetAll() : void
+    {static} + IsKeyDown(control:string) : bool
+}
+MonoBehaviour <|-- McControls
+McControls --> "senSb" SelectBarParts
+McControls --> "senSbPos" Vector2
+McControls o-> "attackKey" KeyCode
+McControls o-> "dropKey" KeyCode
+McControls o-> "useKey" KeyCode
+McControls o-> "hotBar1Key" KeyCode
+McControls o-> "hotBar2Key" KeyCode
+McControls o-> "hotBar3Key" KeyCode
+McControls o-> "hotBar4Key" KeyCode
+McControls o-> "hotBar5Key" KeyCode
+McControls o-> "hotBar6Key" KeyCode
+McControls o-> "hotBar7Key" KeyCode
+McControls o-> "hotBar8Key" KeyCode
+McControls o-> "hotBar9Key" KeyCode
+McControls o-> "inventoryKey" KeyCode
+McControls o-> "perspectiveKey" KeyCode
+McControls o-> "jumpKey" KeyCode
+McControls o-> "sprintKey" KeyCode
+McControls o-> "leftKey" KeyCode
+McControls o-> "rightKey" KeyCode
+McControls o-> "backKey" KeyCode
+McControls o-> "forwardKey" KeyCode
+@enduml

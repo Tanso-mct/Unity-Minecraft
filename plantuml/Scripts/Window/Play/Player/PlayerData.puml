@@ -1,0 +1,6 @@
+@startuml
+class PlayerData {
+    + Init() : void
+}
+MonoBehaviour <|-- PlayerData
+@enduml

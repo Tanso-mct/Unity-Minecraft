@@ -370,46 +370,25 @@ class Player
 
 }
 
-class Block
-{
-    - List<Voxel> existingVoxel
-}
-
-class Entity
-{
-    - List<Voxel> existingVoxel
-}
-
-class Item
-{
-    - List<Voxel> existingVoxel
-}
-
-
 WorldData *-- Vaxel
 class WorldData
 {
     - List<Voxel> voxels
-    - Block[,,] Block = new Block[size, height, size]
-    - Entity[,,] Entity = new Entity[size, height, size]
-
     + void SaveVaxels()
 }
 
 World *-- Player
-World *-- Block
-World *-- Entity
-World *-- Item
 World *-- WorldData
 class World
 {
     - int size = 513
     - int height = 320
 
-    - [SerializeField] GameObject parentVaxelPrefabs
-    - Dictionary<string, GameObject> vaxelPrefabs
-
     - WorldData data
+
+    - int[,,] blocksID = new int[size, height, size]
+    - int[,,] entitiesID = new int[size, height, size]
+    - int[,,] itemsID = new int[size, height, size]
 
     + void Load()
     + void Create()

@@ -1,0 +1,11 @@
+@startuml
+class PlayWindow {
+    + <<override>> Init() : void
+    + <<override>> Show() : void
+    + <<override>> Close() : void
+    + <<override>> Execute() : void
+    + <<override>> Move(moveVec:Vector2) : void
+}
+GameWindow <|-- PlayWindow
+PlayWindow --> "world" World
+@enduml

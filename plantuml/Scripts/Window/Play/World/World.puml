@@ -1,0 +1,21 @@
+@startuml
+class World {
+    - WorldInit() : void
+    + Create() : void
+    + LoadFromJson() : void
+    + SaveToJson() : void
+    + DestoroyJson() : void
+    + {static} LoadInfoFromJson() : void
+    + Execute() : void
+}
+class "List`1"<T> {
+}
+class "Dictionary`2"<T1,T2> {
+}
+MonoBehaviour <|-- World
+World --> "WorldInfos<WorldInfo>" "List`1"
+World --> "currentWorldInfo" WorldInfo
+World --> "entitiesIdToIndex<int,int>" "Dictionary`2"
+World --> "itemsIdToIndex<int,int>" "Dictionary`2"
+World --> "data" WorldData
+@enduml

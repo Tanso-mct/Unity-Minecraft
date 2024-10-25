@@ -1,0 +1,10 @@
+@startuml
+class McOption {
+    + Init() : void
+    + Save() : void
+}
+MonoBehaviour <|-- McOption
+McOption --> "videos" McVideos
+McOption --> "controls" McControls
+McOption --> "sounds" McSounds
+@enduml

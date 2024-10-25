@@ -1,0 +1,19 @@
+@startuml
+class TextEl {
+    - isHover : bool = false
+    - clicked : bool = false
+    + <<override>> Init() : void
+    + <<override>> Show() : void
+    + <<override>> Close() : void
+    + <<override>> Execute() : void
+}
+class "UnityEvent`1"<T> {
+}
+Element <|-- TextEl
+TextEl --> "initText" Text
+TextEl --> "texts" GameObject
+TextEl o-> "hoverEvent" UnityEvent
+TextEl o-> "unHoverEvent" UnityEvent
+TextEl o-> "clickEvent<string>" "UnityEvent`1"
+TextEl o-> "unClickEvent<string>" "UnityEvent`1"
+@enduml

@@ -48,7 +48,7 @@ public class BaseManager : MonoBehaviour
 
     void Update()
     {
-        // メッセージ処理のためのパラメータを初期化
+        // メッセージ処理のためのパラメータを初期化a
         Param.Init();
 
         // Managerクラスを継承したクラスのUpdate関数を実行

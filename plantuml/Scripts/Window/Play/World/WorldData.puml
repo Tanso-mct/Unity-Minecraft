@@ -1,0 +1,12 @@
+@startuml
+class WorldData {
+    + Init(blocksID:int[,,], entitiesID:int[,,], itemsID:int[,,]) : void
+    + Create(blocks:List<Block>) : void
+    + SpawnMob(entities:List<Entity>) : void
+    + Load(info:WorldInfo) : void
+}
+class "LinkedList`1"<T> {
+}
+MonoBehaviour <|-- WorldData
+WorldData --> "vaxels<Vaxel>" "LinkedList`1"
+@enduml

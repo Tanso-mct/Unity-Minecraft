@@ -27,7 +27,7 @@ public class PlayWindow : GameWindow
 
         // Paramの値からワールドを生成
         if (Param.createWorld) world.Create();
-        //else if (Param.loadWorld) world.LoadFromJson();
+        else if (Param.loadWorld) world.LoadFromJson();
 
         // Paramのワールドに関係する値の初期化
         Param.InitWorldParam();

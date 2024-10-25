@@ -10,42 +10,34 @@ public class World : MonoBehaviour
     // 現在のワールド情報
     private WorldInfo currentWorldInfo;
 
-    // ブロック、エンティティ、アイテムのIDとインデックスの対応
-    private Dictionary<int, int> entitiesIdToIndex;
-    private Dictionary<int, int> itemsIdToIndex;
+    // エンティティ、アイテムの指定ブロックに居るVaxelIdの辞書
+    // Keyには3次元ブロック座標が入り、ValueにはVaxelIdのリストが入る
+    private Dictionary<int, List<int>> entitiesIDToVaxelIDs;
+    private Dictionary<int, List<int>> itemsIDToVaxelIDs;
 
-    // 現在のワールドデータと結びつく各タイプのデータ
-    private Block[,,] blocks;
-    private Entity[,,] entities;
-    private Item[,,] items;
+    // ワールドデータと結びつく各VaxelID。初期値は0
+    private int[,,] blocksID;
+    private int[,,] entitiesID;
+    private int[,,] itemsID;
 
     // ワールドデータ
     [SerializeField] private WorldData data;
 
+    // プレイヤー
+    [SerializeField] private Player player;
+
     private void WorldInit()
     {
+        // ID変換辞書の初期化
+        entitiesIDToVaxelIDs = new Dictionary<int, List<int>>();
+        itemsIDToVaxelIDs = new Dictionary<int, List<int>>();
+
         // ワールドの初期化
-        blocks = new Block[Constants.WORLD_SIZE, Constants.WORLD_HEIGHT, Constants.WORLD_SIZE];
-        entities = new Entity[Constants.WORLD_SIZE, Constants.WORLD_HEIGHT, Constants.WORLD_SIZE];
-        items = new Item[Constants.WORLD_SIZE, Constants.WORLD_HEIGHT, Constants.WORLD_SIZE];
-        for (int i = 0; i < Constants.WORLD_SIZE; i++)
-        {
-        }
+        blocksID = new int[Constants.WORLD_SIZE, Constants.WORLD_HEIGHT, Constants.WORLD_SIZE];
+        entitiesID = new int[Constants.WORLD_SIZE, Constants.WORLD_HEIGHT, Constants.WORLD_SIZE];
+        itemsID = new int[Constants.WORLD_SIZE, Constants.WORLD_HEIGHT, Constants.WORLD_SIZE];
 
-        //Parallel.For(0, Constants.WORLD_SIZE, x =>
-        //{
-        //    for (int y = 0; y < Constants.WORLD_HEIGHT; y++)
-        //    {
-        //        for (int z = 0; z < Constants.WORLD_SIZE; z++)
-        //        {
-        //            blocks[x, y, z] = new Block(data);
-        //            entities[x, y, z] = new Entity(data);
-        //            items[x, y, z] = new Item(data);
-        //        }
-        //    }
-        //});
-
-        data.Init(blocks, entities, items);
+        data.Init(ref blocksID, ref entitiesID, ref itemsID);
     }
 
     public void Create()
@@ -53,7 +45,16 @@ public class World : MonoBehaviour
         // Paramに保存されているワールド情報を使用してワールドの生成
 
         // ワールドの初期化
-        //WorldInit();
+        WorldInit();
+
+        // ワールドの生成
+        data.Create(ref blocksID);
+
+        // モブのスポーン
+        data.SpawnMob(ref entitiesID);
+
+        // プレイヤーの生成及び配置
+        player.Init();
     }
 
     public void LoadFromJson()
@@ -83,6 +84,6 @@ public class World : MonoBehaviour
 
     public void Execute()
     {
-        Debug.Log("World Execute");
+
     }
 }

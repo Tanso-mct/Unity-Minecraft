@@ -1,0 +1,7 @@
+@startuml
+class FluidData {
+    - Start() : void
+    - Update() : void
+}
+MonoBehaviour <|-- FluidData
+@enduml

@@ -1,0 +1,14 @@
+@startuml
+class Param {
+    + {static} msg : int
+    + {static} floPar : float = 0
+    + {static} strPar : string = ""
+    + {static} popUpWindowDone : bool = false
+    + {static} createWorld : bool = true
+    + {static} loadWorld : bool = false
+    + {static} worldInfoId : int
+    + {static} Init() : void
+    + {static} InitWorldParam() : void
+}
+MonoBehaviour <|-- Param
+@enduml

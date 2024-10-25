@@ -1,0 +1,7 @@
+@startuml
+class OreData {
+    - Start() : void
+    - Update() : void
+}
+MonoBehaviour <|-- OreData
+@enduml

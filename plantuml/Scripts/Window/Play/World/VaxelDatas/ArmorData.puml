@@ -1,0 +1,7 @@
+@startuml
+class ArmorData {
+    - Start() : void
+    - Update() : void
+}
+MonoBehaviour <|-- ArmorData
+@enduml

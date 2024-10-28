@@ -7,7 +7,7 @@ public class McControls : MonoBehaviour
     private static bool hasSaveData = false;
 
     [SerializeField] private SelectBarParts senSb;
-    private static int sen = 0;
+    private static int sen = 50;
     private static Vector2 senSbPos;
 
     static private KeyCode attackKey = KeyCode.Mouse0;
@@ -79,6 +79,96 @@ public class McControls : MonoBehaviour
         Param.popUpWindowDone = true;
     }
 
+    static public void CursorLock(bool symbol)
+    {
+        if (symbol)
+        {
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+        else
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
+    }
+
+    public static Vector2 GetMouseAxis()
+    {
+        Vector2 rtVec = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+        rtVec.x *= sen;
+        rtVec.y *= sen;
+        return rtVec;
+    }
+
+    static public bool IsKey(string control)
+    {
+        switch (control)
+        {
+            case Constants.CONTROL_ATTACK:
+                return Input.GetKey(attackKey);
+
+            case Constants.CONTROL_DROP_ITEM:
+                return Input.GetKey(dropKey);
+
+            case Constants.CONTROL_USE:
+                return Input.GetKey(useKey);
+
+            case Constants.CONTROL_HS1:
+                return Input.GetKey(hotBar1Key);
+
+            case Constants.CONTROL_HS2:
+                return Input.GetKey(hotBar2Key);
+
+            case Constants.CONTROL_HS3:
+                return Input.GetKey(hotBar3Key);
+
+            case Constants.CONTROL_HS4:
+                return Input.GetKey(hotBar4Key);
+
+            case Constants.CONTROL_HS5:
+                return Input.GetKey(hotBar5Key);
+
+            case Constants.CONTROL_HS6:
+                return Input.GetKey(hotBar6Key);
+
+            case Constants.CONTROL_HS7:
+                return Input.GetKey(hotBar7Key);
+
+            case Constants.CONTROL_HS8:
+                return Input.GetKey(hotBar8Key);
+
+            case Constants.CONTROL_HS9:
+                return Input.GetKey(hotBar9Key);
+
+            case Constants.CONTROL_INVENTORY:
+                return Input.GetKey(inventoryKey);
+
+            case Constants.CONTROL_PERSPECTIVE:
+                return Input.GetKey(perspectiveKey);
+
+            case Constants.CONTROL_JUMP:
+                return Input.GetKey(jumpKey);
+
+            case Constants.CONTROL_SPRINT:
+                return Input.GetKey(sprintKey);
+
+            case Constants.CONTROL_LEFT:
+                return Input.GetKey(leftKey);
+
+            case Constants.CONTROL_RIGHT:
+                return Input.GetKey(rightKey);
+
+            case Constants.CONTROL_BACK:
+                return Input.GetKey(backKey);
+
+            case Constants.CONTROL_FORWARD:
+                return Input.GetKey(forwardKey);
+
+            default: return false;
+        }
+    }
+
     static public bool IsKeyDown(string control)
     {
         switch (control)
@@ -143,7 +233,73 @@ public class McControls : MonoBehaviour
             case Constants.CONTROL_FORWARD:
                 return Input.GetKeyDown(forwardKey);
 
+            default: return false;
+        }
+    }
 
+    static public bool IsKeyUp(string control)
+    {
+        switch (control)
+        {
+            case Constants.CONTROL_ATTACK:
+                return Input.GetKeyUp(attackKey);
+
+            case Constants.CONTROL_DROP_ITEM:
+                return Input.GetKeyUp(dropKey);
+
+            case Constants.CONTROL_USE:
+                return Input.GetKeyUp(useKey);
+
+            case Constants.CONTROL_HS1:
+                return Input.GetKeyUp(hotBar1Key);
+
+            case Constants.CONTROL_HS2:
+                return Input.GetKeyUp(hotBar2Key);
+
+            case Constants.CONTROL_HS3:
+                return Input.GetKeyUp(hotBar3Key);
+
+            case Constants.CONTROL_HS4:
+                return Input.GetKeyUp(hotBar4Key);
+
+            case Constants.CONTROL_HS5:
+                return Input.GetKeyUp(hotBar5Key);
+
+            case Constants.CONTROL_HS6:
+                return Input.GetKeyUp(hotBar6Key);
+
+            case Constants.CONTROL_HS7:
+                return Input.GetKeyUp(hotBar7Key);
+
+            case Constants.CONTROL_HS8:
+                return Input.GetKeyUp(hotBar8Key);
+
+            case Constants.CONTROL_HS9:
+                return Input.GetKeyUp(hotBar9Key);
+
+            case Constants.CONTROL_INVENTORY:
+                return Input.GetKeyUp(inventoryKey);
+
+            case Constants.CONTROL_PERSPECTIVE:
+                return Input.GetKeyUp(perspectiveKey);
+
+            case Constants.CONTROL_JUMP:
+                return Input.GetKeyUp(jumpKey);
+
+            case Constants.CONTROL_SPRINT:
+                return Input.GetKeyUp(sprintKey);
+
+            case Constants.CONTROL_LEFT:
+                return Input.GetKeyUp(leftKey);
+
+            case Constants.CONTROL_RIGHT:
+                return Input.GetKeyUp(rightKey);
+
+            case Constants.CONTROL_BACK:
+                return Input.GetKeyUp(backKey);
+
+            case Constants.CONTROL_FORWARD:
+                return Input.GetKeyUp(forwardKey);
 
             default: return false;
         }

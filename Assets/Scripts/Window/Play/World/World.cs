@@ -26,7 +26,7 @@ public class World : MonoBehaviour
     // プレイヤー
     [SerializeField] private Player player;
 
-    private void WorldInit()
+    private void Init()
     {
         // ID変換辞書の初期化
         entitiesIDToVaxelIDs = new Dictionary<int, List<int>>();
@@ -45,7 +45,7 @@ public class World : MonoBehaviour
         // Paramに保存されているワールド情報を使用してワールドの生成
 
         // ワールドの初期化
-        WorldInit();
+        Init();
 
         // ワールドの生成
         data.Create(ref blocksID);
@@ -55,6 +55,7 @@ public class World : MonoBehaviour
 
         // プレイヤーの生成及び配置
         player.Init();
+        player.Create();
     }
 
     public void LoadFromJson()
@@ -62,7 +63,7 @@ public class World : MonoBehaviour
         // Paramに保存されているワールド情報から指定のJsonファイルを使用して読み込む
 
         // ワールドの初期化
-        WorldInit();
+        Init();
     }
 
     public void SaveToJson()
@@ -84,6 +85,7 @@ public class World : MonoBehaviour
 
     public void Execute()
     {
-
+        // プレイヤーの実行
+        player.Execute();
     }
 }

@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class PlayerData : MonoBehaviour
 {
-    public void Init()
-    {
-
-    }
+    // プレイヤーの位置と回転角度
+    public Vector3 pos;
+    public Quaternion rot;
 }

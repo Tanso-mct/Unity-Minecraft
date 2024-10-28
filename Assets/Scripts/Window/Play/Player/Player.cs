@@ -4,57 +4,90 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ãƒ‘ãƒ¼ãƒ„ã‚‰
+    // ƒvƒŒƒCƒ„[‚Ìƒp[ƒc‚ç
     [SerializeField] private GameObject parts;
 
-    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®HeadGameObject
+    // ƒvƒŒƒCƒ„[‚ÌHeadGameObject
     [SerializeField] private GameObject head;
 
-    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ãƒ‡ãƒ¼ã‚¿
+    // ƒvƒŒƒCƒ„[‚Ìƒf[ƒ^
     [SerializeField] private PlayerData data;
 
-    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã‚«ãƒ¡ãƒ©
+    // ƒvƒŒƒCƒ„[‚ÌƒJƒƒ‰
     [SerializeField] private Camera cam;
 
-    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å›è»¢è§’åº¦
+    // ƒvƒŒƒCƒ„[‚Ìƒ}ƒeƒŠƒAƒ‹
+    [SerializeField] private Material mat;
+
+    // ‚PlÌ‹“_‚Å‚ÌƒeƒNƒXƒ`ƒƒ
+    [SerializeField] private Texture2D firstPersonTexture;
+
+    // 2A3lÌ‹“_‚Å‚ÌƒeƒNƒXƒ`ƒƒ
+    [SerializeField] private Texture2D otherPersonTexture;
+
+    // ƒvƒŒƒCƒ„[‚Ì‰ñ“]Šp“x
     private Vector2 rot;
 
-    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ç¾åœ¨åº§æ¨™
+    // ƒvƒŒƒCƒ„[‚ÌŒ»İÀ•W
     private Vector3 pos;
 
-    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®BoxCollider
+    // ƒvƒŒƒCƒ„[‚ÌBoxCollider
     private BoxCollider bc;
 
-    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®Rigidbody
+    // ƒvƒŒƒCƒ„[‚ÌRigidbody
     private Rigidbody rb;
 
-    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ç¾åœ¨ã®ã‚¹ãƒ”ãƒ¼ãƒ‰
+    // ƒvƒŒƒCƒ„[‚ÌŒ»İ‚ÌƒXƒs[ƒh
     private float speed = 0.0f;
 
-    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å„ç¨®ã‚¹ãƒ”ãƒ¼ãƒ‰
+    // ƒvƒŒƒCƒ„[‚ÌŠeíƒXƒs[ƒh
     [SerializeField] private float walkingSpeed = 7.0f;
     [SerializeField] private float runningSpeed = 10.0f;
+    [SerializeField] private float jumpingSpeedAspect = 0.5f;
 
-    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã‚¸ãƒ£ãƒ³ãƒ—åŠ›
+    // ƒvƒŒƒCƒ„[‚ÌƒWƒƒƒ“ƒv—Í
     [SerializeField] private float jumpForce = 5.0f;
 
-    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®åœ°é¢ã«æ¥åœ°ã—ã¦ã„ã‚‹ã‹ã©ã†ã‹
+    // ƒvƒŒƒCƒ„[‚Ì’n–Ê‚ÉÚ’n‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©
     private bool isGrounded = true;
 
-    // èµ°ã£ã¦ã„ã‚‹éš›ã®è¦–é‡è§’
+    // ƒvƒŒƒCƒ„[‚ª‘–‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚©
+    private bool isRunning = false;
+
+    // ‘–‚Á‚Ä‚¢‚éÛ‚Ì‹–ìŠp
     [SerializeField] private float diffRunningFov = 10.0f;
+
+    // ƒvƒŒƒCƒ„[‚ÌˆÚ“®•ûŒü‚ğ‰ñ“]
+    Quaternion p180Rot = Quaternion.Euler(0, 180f, 0);
+    Quaternion p90Rot = Quaternion.Euler(0, 90f, 0);
+    Quaternion p45Rot = Quaternion.Euler(0, 45f, 0);
+    Quaternion m90Rot = Quaternion.Euler(0, -90f, 0);
+    Quaternion m45Rot = Quaternion.Euler(0, -45f, 0);
+
+    // ƒAƒjƒ[ƒ^[
+    private Animator anim;
 
     public void Init()
     {
-        // å„ç¨®ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã®å–å¾—
+        // ŠeíƒRƒ“ƒ|[ƒlƒ“ƒg‚Ìæ“¾
         bc = GetComponent<BoxCollider>();
         rb = GetComponent<Rigidbody>();
 
-        // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®åˆæœŸä½ç½®ã¨å›è»¢è§’åº¦
+        // ƒvƒŒƒCƒ„[‚Ì‰ŠúˆÊ’u‚Æ‰ñ“]Šp“x
         pos = transform.position;
         rot = parts.transform.rotation.eulerAngles;
 
+        // ƒJ[ƒ\ƒ‹‚ğƒƒbƒN
         McControls.CursorLock(true);
+
+        // ƒAƒjƒ[ƒ^[‚Ì‰Šú‰»
+        anim = parts.GetComponent<Animator>();
+
+        // 1lÌ‹“_‚Å‚ÌƒeƒNƒXƒ`ƒƒ‚ğİ’è
+        // mat.mainTexture = firstPersonTexture;
+
+        // Debug
+        mat.mainTexture = otherPersonTexture;
     }
 
     public void Create()
@@ -69,18 +102,83 @@ public class Player : MonoBehaviour
 
     public void ViewUpdate()
     {
-        // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®è¦–ç‚¹ç§»å‹•
+        // ƒvƒŒƒCƒ„[‚Ì‹“_ˆÚ“®
         Vector2 mouseAxis = McControls.GetMouseAxis();
 
         rot.x = Mathf.Clamp(rot.x + mouseAxis.y, -90f, 90f);
         rot.y += mouseAxis.x;
 
         parts.transform.rotation = Quaternion.Euler(0.0f, rot.y, 0.0f);
-        head.transform.rotation = Quaternion.Euler(-rot.x, parts.transform.rotation.y, parts.transform.rotation.z);
+        head.transform.localRotation = Quaternion.Euler(rot.x, 0.0f, 0.0f);
     }
 
     public void MoveUpdate()
     {
+        if (McControls.IsKeyDown(Constants.CONTROL_SPRINT)) isRunning = true;
+
+        int isFor = (McControls.IsKey(Constants.CONTROL_FOR)) ? 1 : 0;
+        int isBack = (McControls.IsKey(Constants.CONTROL_BACK)) ? 1 : 0;
+        int isLeft = (McControls.IsKey(Constants.CONTROL_LEFT)) ? 1 : 0;
+        int isRight = (McControls.IsKey(Constants.CONTROL_RIGHT)) ? 1 : 0;
+
+        if (isRunning) cam.fieldOfView = McVideos.Fov + diffRunningFov;
+        else cam.fieldOfView = McVideos.Fov;
+
+        // ˆÚ“®•ûŒü‚ğæ“¾
+        int vertical = isFor + isBack;
+        int horizontal = isLeft + isRight;
+        int diagonal = vertical + horizontal;
+
+        // ˆÚ“®ƒxƒNƒgƒ‹
+        Vector3 movement = Vector3.zero;
+
+        // ˆÚ“®ƒxƒNƒgƒ‹‚ÌZ¬•ª‚ğİ’è
+        if (diagonal != 0) // ˆÚ“®
+        {
+            if (isRunning) speed = runningSpeed;
+            else speed = walkingSpeed;
+
+            if (isGrounded) movement.z = -speed;
+            else movement.z = -speed * jumpingSpeedAspect;
+        }
+        else // ’â~
+        {
+            isRunning = false;
+        }
+
+        // ˆÚ“®ƒxƒNƒgƒ‹‚ğİ’è
+        if (vertical == 2 || horizontal == 2) // ’â~
+        {
+            movement = Vector3.zero;
+        }
+        else if (diagonal == 2) // Î‚ßˆÚ“®
+        {
+            if (isFor == 1)
+            {
+                if (isLeft == 1) movement = m45Rot * movement;
+                else if (isRight == 1) movement = p45Rot * movement;
+            }
+            else if (isBack == 1)
+            {
+                movement = p180Rot * movement;
+                if (isLeft == 1) movement = p45Rot * movement;
+                else if (isRight == 1) movement = m45Rot * movement;
+            }
+        }
+        else if (vertical == 1)
+        {
+            if (isBack == 1) movement = p180Rot * movement;
+        }
+        else if (horizontal == 1)
+        {
+            if (isLeft == 1) movement = m90Rot * movement;
+            else if (isRight == 1) movement = p90Rot * movement;
+        }
+
+        Quaternion rotate = Quaternion.Euler(0, parts.transform.eulerAngles.y, 0);
+        movement = rotate * movement;
+
+        if (isGrounded) rb.velocity = new Vector3(movement.x, rb.velocity.y, movement.z);
 
     }
 
@@ -93,11 +191,14 @@ public class Player : MonoBehaviour
     {
         ViewUpdate();
         MoveUpdate();
+
+        // ƒAƒjƒ[ƒVƒ‡ƒ“
+        anim.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_WALK);
     }
 
     public void LoadFromJson()
     {
-        
+
     }
 
     public void SaveToJson()

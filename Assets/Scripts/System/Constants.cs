@@ -54,7 +54,7 @@ public class Constants : MonoBehaviour
     public const string CONTROL_LEFT = "Left";
     public const string CONTROL_RIGHT = "Right";
     public const string CONTROL_BACK = "Back";
-    public const string CONTROL_FORWARD = "Forward";
+    public const string CONTROL_FOR = "Forward";
 
     // Game mode
     public const string GAME_MODE_CREATIVE = "Creative";
@@ -72,6 +72,13 @@ public class Constants : MonoBehaviour
     // World size
     public const int WORLD_SIZE = 513;
     public const int WORLD_HEIGHT = 320;
+
+    // Animation
+    public const string ANIM_TYPE = "AnimType";
+    public const int ANIM_PLAYER_BREATH = 1;
+    public const int ANIM_PLAYER_WALK = 2;
+    public const int ANIM_PLAYER_RUN = 3;
+    public const int ANIM_PLAYER_USE = 4;
 
 
 

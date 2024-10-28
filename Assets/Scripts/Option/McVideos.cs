@@ -11,12 +11,17 @@ public class McVideos : MonoBehaviour
     [SerializeField] SelectBarParts brightnessSb;
 
     private static int fov = 70;
+    public static int Fov { get { return fov; } }
     private static Vector2 fovSbPos;
 
     private static int renderDistance = 8;
+    public static int RenderDistance { get { return renderDistance; } }
+    
     private static Vector2 renderDistanceSbPos;
 
     private static int brightness = 50;
+    public static int Brightness { get { return brightness; } }
+    
     private static Vector2 brightnessSbPos;
 
     public void Init()

@@ -7,7 +7,7 @@ public class McControls : MonoBehaviour
     private static bool hasSaveData = false;
 
     [SerializeField] private SelectBarParts senSb;
-    private static int sen = 50;
+    private static int sen = 2;
     private static Vector2 senSbPos;
 
     static private KeyCode attackKey = KeyCode.Mouse0;
@@ -162,7 +162,7 @@ public class McControls : MonoBehaviour
             case Constants.CONTROL_BACK:
                 return Input.GetKey(backKey);
 
-            case Constants.CONTROL_FORWARD:
+            case Constants.CONTROL_FOR:
                 return Input.GetKey(forwardKey);
 
             default: return false;
@@ -230,7 +230,7 @@ public class McControls : MonoBehaviour
             case Constants.CONTROL_BACK:
                 return Input.GetKeyDown(backKey);
 
-            case Constants.CONTROL_FORWARD:
+            case Constants.CONTROL_FOR:
                 return Input.GetKeyDown(forwardKey);
 
             default: return false;
@@ -298,7 +298,7 @@ public class McControls : MonoBehaviour
             case Constants.CONTROL_BACK:
                 return Input.GetKeyUp(backKey);
 
-            case Constants.CONTROL_FORWARD:
+            case Constants.CONTROL_FOR:
                 return Input.GetKeyUp(forwardKey);
 
             default: return false;

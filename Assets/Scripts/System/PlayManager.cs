@@ -55,6 +55,8 @@ public class PlayManager : Manager
     {
         Debug.Log("ShowOption");
         CloseWindow(wndPlay.name);
+
+        McControls.CursorLock(false);
         ShowWindow(wndOption.name);
     }
 
@@ -62,7 +64,9 @@ public class PlayManager : Manager
     {
         Debug.Log("CloseOption");
         CloseWindow(wndOption.name);
+
         ShowWindow(wndPlay.name);
+        McControls.CursorLock(true);
     }
 
     public void ShowVideoSetting()

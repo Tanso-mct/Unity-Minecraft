@@ -71,7 +71,7 @@ public class World : MonoBehaviour
         // 現在のワールド情報、データをJsonファイルに保存
     }
 
-    public void DestoroyJson()
+    public void DestroyJson()
     {
         // Paramに保存されているワールド情報を使用してワールドを削除
     }

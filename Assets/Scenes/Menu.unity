@@ -1074,7 +1074,7 @@ MonoBehaviour:
   wndSinglePlayer: {fileID: 232882759}
   wndSinglePlayerScroll: {fileID: 650124269}
   loadingShowFrame: 60
-  controlScrollBottom: -1775
+  controlScrollBottom: -1575
   singlePlayerScrollBottom: -300
 --- !u!114 &200861476 stripped
 MonoBehaviour:

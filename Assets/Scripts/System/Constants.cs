@@ -47,7 +47,6 @@ public class Constants : MonoBehaviour
     public const string CONTROL_HS9 = "HS9";
 
     public const string CONTROL_INVENTORY = "Inventory";
-    public const string CONTROL_PERSPECTIVE = "Perspective";
 
     public const string CONTROL_JUMP = "Jump";
     public const string CONTROL_SPRINT = "Sprint";

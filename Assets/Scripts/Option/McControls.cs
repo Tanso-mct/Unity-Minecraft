@@ -28,7 +28,7 @@ public class McControls : MonoBehaviour
     static private KeyCode perspectiveKey = KeyCode.F5;
 
     static private KeyCode jumpKey = KeyCode.Space;
-    static private KeyCode sprintKey = KeyCode.LeftControl;
+    static private KeyCode sprintKey = KeyCode.LeftShift;
     static private KeyCode leftKey = KeyCode.A;
     static private KeyCode rightKey = KeyCode.D;
     static private KeyCode backKey = KeyCode.S;
@@ -144,9 +144,6 @@ public class McControls : MonoBehaviour
             case Constants.CONTROL_INVENTORY:
                 return Input.GetKey(inventoryKey);
 
-            case Constants.CONTROL_PERSPECTIVE:
-                return Input.GetKey(perspectiveKey);
-
             case Constants.CONTROL_JUMP:
                 return Input.GetKey(jumpKey);
 
@@ -212,9 +209,6 @@ public class McControls : MonoBehaviour
             case Constants.CONTROL_INVENTORY:
                 return Input.GetKeyDown(inventoryKey);
 
-            case Constants.CONTROL_PERSPECTIVE:
-                return Input.GetKeyDown(perspectiveKey);
-
             case Constants.CONTROL_JUMP:
                 return Input.GetKeyDown(jumpKey);
 
@@ -279,9 +273,6 @@ public class McControls : MonoBehaviour
 
             case Constants.CONTROL_INVENTORY:
                 return Input.GetKeyUp(inventoryKey);
-
-            case Constants.CONTROL_PERSPECTIVE:
-                return Input.GetKeyUp(perspectiveKey);
 
             case Constants.CONTROL_JUMP:
                 return Input.GetKeyUp(jumpKey);

@@ -43,7 +43,7 @@ public class Player : MonoBehaviour
     // プレイヤーの各種スピード
     [SerializeField] private float walkingSpeed = 7.0f;
     [SerializeField] private float runningSpeed = 10.0f;
-    [SerializeField] private float jumpingSpeedAspect = 0.5f;
+    [SerializeField] private float jumpingSpeedAspect = 1.2f;
 
     // プレイヤーのジャンプ力
     [SerializeField] private float jumpForce = 5.0f;
@@ -55,7 +55,7 @@ public class Player : MonoBehaviour
     private bool isRunning = false;
 
     // 走っている際の視野角
-    [SerializeField] private float diffRunningFov = 10.0f;
+    [SerializeField] private float diffRunningFov = 30.0f;
 
     // プレイヤーの移動方向を回転
     Quaternion p180Rot = Quaternion.Euler(0, 180f, 0);
@@ -114,20 +114,27 @@ public class Player : MonoBehaviour
 
     public void MoveUpdate()
     {
-        if (McControls.IsKeyDown(Constants.CONTROL_SPRINT)) isRunning = true;
+        if (McControls.IsKey(Constants.CONTROL_SPRINT)) isRunning = true;
 
         int isFor = (McControls.IsKey(Constants.CONTROL_FOR)) ? 1 : 0;
         int isBack = (McControls.IsKey(Constants.CONTROL_BACK)) ? 1 : 0;
         int isLeft = (McControls.IsKey(Constants.CONTROL_LEFT)) ? 1 : 0;
         int isRight = (McControls.IsKey(Constants.CONTROL_RIGHT)) ? 1 : 0;
 
-        if (isRunning) cam.fieldOfView = McVideos.Fov + diffRunningFov;
-        else cam.fieldOfView = McVideos.Fov;
-
         // 移動方向を取得
         int vertical = isFor + isBack;
         int horizontal = isLeft + isRight;
         int diagonal = vertical + horizontal;
+
+        if (isRunning && isFor == 1 && vertical == 1)
+        {
+            cam.fieldOfView = McVideos.Fov + diffRunningFov;
+        }
+        else
+        {
+            isRunning = false;
+            cam.fieldOfView = McVideos.Fov;
+        }
 
         // 移動ベクトル
         Vector3 movement = Vector3.zero;
@@ -135,7 +142,7 @@ public class Player : MonoBehaviour
         // 移動ベクトルのZ成分を設定
         if (diagonal != 0) // 移動
         {
-            if (isRunning) speed = runningSpeed;
+            if (isRunning && isFor == 1 && vertical == 1) speed = runningSpeed;
             else speed = walkingSpeed;
 
             if (isGrounded) movement.z = -speed;
@@ -144,6 +151,7 @@ public class Player : MonoBehaviour
         else // 停止
         {
             isRunning = false;
+            cam.fieldOfView = McVideos.Fov;
         }
 
         // 移動ベクトルを設定
@@ -178,7 +186,7 @@ public class Player : MonoBehaviour
         Quaternion rotate = Quaternion.Euler(0, parts.transform.eulerAngles.y, 0);
         movement = rotate * movement;
 
-        if (isGrounded) rb.velocity = new Vector3(movement.x, rb.velocity.y, movement.z);
+        rb.velocity = new Vector3(movement.x, rb.velocity.y, movement.z);
 
     }
 

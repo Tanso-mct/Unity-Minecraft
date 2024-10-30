@@ -142,8 +142,16 @@ public class Player : MonoBehaviour
         // 移動ベクトルのZ成分を設定
         if (diagonal != 0) // 移動
         {
-            if (isRunning && isFor == 1 && vertical == 1) speed = runningSpeed;
-            else speed = walkingSpeed;
+            if (isRunning && isFor == 1 && vertical == 1)
+            {
+                speed = runningSpeed;
+                anim.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_WALK);
+            }
+            else
+            {
+                speed = walkingSpeed;
+                anim.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_WALK);
+            }
 
             if (isGrounded) movement.z = -speed;
             else movement.z = -speed * jumpingSpeedAspect;
@@ -152,6 +160,9 @@ public class Player : MonoBehaviour
         {
             isRunning = false;
             cam.fieldOfView = McVideos.Fov;
+
+            speed = 0.0f;
+            anim.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_BREATH);
         }
 
         // 移動ベクトルを設定
@@ -192,16 +203,13 @@ public class Player : MonoBehaviour
 
     public void Jump()
     {
-
+        
     }
 
     public void Execute()
     {
         ViewUpdate();
         MoveUpdate();
-
-        // アニメーション
-        anim.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_WALK);
     }
 
     public void LoadFromJson()

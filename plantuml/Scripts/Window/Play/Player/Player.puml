@@ -1,6 +1,48 @@
 @startuml
 class Player {
+    - speed : float = 0.0f
+    - walkingSpeed : float = 7.0f
+    - runningSpeed : float = 10.0f
+    - jumpingSpeedAspect : float = 1.2f
+    - jumpForce : float = 5.0f
+    - isGrounded : bool = true
+    - groundCount : int = 0
+    - notGroundingFrame : int = 0
+    - isRunning : bool = false
+    - isFlying : bool = false
+    - diffRunningFov : float = 30.0f
     + Init() : void
+    + Create() : void
+    + Load() : void
+    + ViewUpdate() : void
+    + MoveUpdate() : void
+    + FlyUpdate() : void
+    + Jump() : void
+    + Execute() : void
+    + FrameStart() : void
+    + FrameFinish() : void
+    + LoadFromJson() : void
+    + SaveToJson() : void
+    + DestoroyJson() : void
+    - OnCollisionEnter(collision:Collision) : void
+    - OnCollisionStay(collision:Collision) : void
+    - OnCollisionExit(collision:Collision) : void
 }
 MonoBehaviour <|-- Player
+Player --> "parts" GameObject
+Player --> "head" GameObject
+Player --> "data" PlayerData
+Player --> "cam" Camera
+Player --> "mat" Material
+Player --> "firstPersonTexture" Texture2D
+Player --> "otherPersonTexture" Texture2D
+Player --> "rot" Vector2
+Player --> "pos" Vector3
+Player o-> "flyMovement" Vector3
+Player o-> "p180Rot" Quaternion
+Player o-> "p90Rot" Quaternion
+Player o-> "p45Rot" Quaternion
+Player o-> "m90Rot" Quaternion
+Player o-> "m45Rot" Quaternion
+Player --> "anim" Animator
 @enduml

@@ -1,6 +1,7 @@
 @startuml
 class PlayerData {
-    + Init() : void
 }
 MonoBehaviour <|-- PlayerData
+PlayerData --> "pos" Vector3
+PlayerData --> "rot" Quaternion
 @enduml

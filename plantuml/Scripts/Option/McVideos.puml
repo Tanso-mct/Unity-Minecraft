@@ -2,8 +2,11 @@
 class McVideos {
     - {static} hasSaveData : bool = false
     - {static} fov : int = 70
+    + {static} Fov : int <<get>>
     - {static} renderDistance : int = 8
+    + {static} RenderDistance : int <<get>>
     - {static} brightness : int = 50
+    + {static} Brightness : int <<get>>
     + Init() : void
     + Save() : void
     + SetFov() : void

@@ -30,23 +30,28 @@ class Constants {
     + <<const>> CONTROL_HS8 : string = "HS8"
     + <<const>> CONTROL_HS9 : string = "HS9"
     + <<const>> CONTROL_INVENTORY : string = "Inventory"
-    + <<const>> CONTROL_PERSPECTIVE : string = "Perspective"
     + <<const>> CONTROL_JUMP : string = "Jump"
     + <<const>> CONTROL_SPRINT : string = "Sprint"
     + <<const>> CONTROL_LEFT : string = "Left"
     + <<const>> CONTROL_RIGHT : string = "Right"
     + <<const>> CONTROL_BACK : string = "Back"
-    + <<const>> CONTROL_FORWARD : string = "Forward"
+    + <<const>> CONTROL_FOR : string = "Forward"
     + <<const>> GAME_MODE_CREATIVE : string = "Creative"
     + <<const>> GAME_MODE_SURVIVAL : string = "Survival"
     + <<const>> WND_MENU : string = "WindowMenu"
-    + <<const>> VAXEL_STATE_NULL : string = "Null"
-    + <<const>> VAXEL_STATE_ITEM : string = "Item"
-    + <<const>> VAXEL_STATE_BLOCK : string = "Block"
-    + <<const>> VAXEL_STATE_ENTITY : string = "Entity"
-    + <<const>> BLOCK_STATE_NULL : int
+    + <<const>> VAXEL_STATE_NULL : int = 0
+    + <<const>> VAXEL_STATE_ITEM : int = 1
+    + <<const>> VAXEL_STATE_BLOCK : int = 2
+    + <<const>> VAXEL_STATE_ENTITY : int = 3
     + <<const>> WORLD_SIZE : int = 513
     + <<const>> WORLD_HEIGHT : int = 320
+    + <<const>> ANIM_TYPE : string = "AnimType"
+    + <<const>> ANIM_PLAYER_BREATH : int = 1
+    + <<const>> ANIM_PLAYER_WALK : int = 2
+    + <<const>> ANIM_PLAYER_RUN : int = 3
+    + <<const>> ANIM_PLAYER_USE : int = 4
+    + <<const>> TAG_PLAYER : string = "Player"
+    + <<const>> TAG_BLOCK_TOP : string = "Block_Top"
 }
 MonoBehaviour <|-- Constants
 @enduml

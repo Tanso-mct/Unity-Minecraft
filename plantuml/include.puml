@@ -1,4 +1,4 @@
-@startuml Class
+@startuml classes
 class ButtonEl {
     - isHover : bool = false
     + <<override>> Init() : void
@@ -102,7 +102,7 @@ TextEl o-> "clickEvent<string>" "UnityEvent`1"
 TextEl o-> "unClickEvent<string>" "UnityEvent`1"
 class McControls {
     - {static} hasSaveData : bool = false
-    - {static} sen : int = 0
+    - {static} sen : int = 2
     + Init() : void
     + Save() : void
     + ControlBackground() : void
@@ -110,7 +110,11 @@ class McControls {
     + BindEdit(name:string) : void
     + BindReset(name:string) : void
     + BindResetAll() : void
+    {static} + CursorLock(symbol:bool) : void
+    + {static} GetMouseAxis() : Vector2
+    {static} + IsKey(control:string) : bool
     {static} + IsKeyDown(control:string) : bool
+    {static} + IsKeyUp(control:string) : bool
 }
 MonoBehaviour <|-- McControls
 McControls --> "senSb" SelectBarParts
@@ -180,8 +184,11 @@ McSounds --> "friendlySbPos" Vector2
 class McVideos {
     - {static} hasSaveData : bool = false
     - {static} fov : int = 70
+    + {static} Fov : int <<get>>
     - {static} renderDistance : int = 8
+    + {static} RenderDistance : int <<get>>
     - {static} brightness : int = 50
+    + {static} Brightness : int <<get>>
     + Init() : void
     + Save() : void
     + SetFov() : void
@@ -281,23 +288,28 @@ class Constants {
     + <<const>> CONTROL_HS8 : string = "HS8"
     + <<const>> CONTROL_HS9 : string = "HS9"
     + <<const>> CONTROL_INVENTORY : string = "Inventory"
-    + <<const>> CONTROL_PERSPECTIVE : string = "Perspective"
     + <<const>> CONTROL_JUMP : string = "Jump"
     + <<const>> CONTROL_SPRINT : string = "Sprint"
     + <<const>> CONTROL_LEFT : string = "Left"
     + <<const>> CONTROL_RIGHT : string = "Right"
     + <<const>> CONTROL_BACK : string = "Back"
-    + <<const>> CONTROL_FORWARD : string = "Forward"
+    + <<const>> CONTROL_FOR : string = "Forward"
     + <<const>> GAME_MODE_CREATIVE : string = "Creative"
     + <<const>> GAME_MODE_SURVIVAL : string = "Survival"
     + <<const>> WND_MENU : string = "WindowMenu"
-    + <<const>> VAXEL_STATE_NULL : string = "Null"
-    + <<const>> VAXEL_STATE_ITEM : string = "Item"
-    + <<const>> VAXEL_STATE_BLOCK : string = "Block"
-    + <<const>> VAXEL_STATE_ENTITY : string = "Entity"
-    + <<const>> BLOCK_STATE_NULL : int
+    + <<const>> VAXEL_STATE_NULL : int = 0
+    + <<const>> VAXEL_STATE_ITEM : int = 1
+    + <<const>> VAXEL_STATE_BLOCK : int = 2
+    + <<const>> VAXEL_STATE_ENTITY : int = 3
     + <<const>> WORLD_SIZE : int = 513
     + <<const>> WORLD_HEIGHT : int = 320
+    + <<const>> ANIM_TYPE : string = "AnimType"
+    + <<const>> ANIM_PLAYER_BREATH : int = 1
+    + <<const>> ANIM_PLAYER_WALK : int = 2
+    + <<const>> ANIM_PLAYER_RUN : int = 3
+    + <<const>> ANIM_PLAYER_USE : int = 4
+    + <<const>> TAG_PLAYER : string = "Player"
+    + <<const>> TAG_BLOCK_TOP : string = "Block_Top"
 }
 MonoBehaviour <|-- Constants
 abstract class Manager {
@@ -455,37 +467,56 @@ class PlayWindow {
 GameWindow <|-- PlayWindow
 PlayWindow --> "world" World
 class Player {
+    - speed : float = 0.0f
+    - walkingSpeed : float = 7.0f
+    - runningSpeed : float = 10.0f
+    - jumpingSpeedAspect : float = 1.2f
+    - jumpForce : float = 5.0f
+    - isGrounded : bool = true
+    - groundCount : int = 0
+    - notGroundingFrame : int = 0
+    - isRunning : bool = false
+    - isFlying : bool = false
+    - diffRunningFov : float = 30.0f
     + Init() : void
+    + Create() : void
+    + Load() : void
+    + ViewUpdate() : void
+    + MoveUpdate() : void
+    + FlyUpdate() : void
+    + Jump() : void
+    + Execute() : void
+    + FrameStart() : void
+    + FrameFinish() : void
+    + LoadFromJson() : void
+    + SaveToJson() : void
+    + DestoroyJson() : void
+    - OnCollisionEnter(collision:Collision) : void
+    - OnCollisionStay(collision:Collision) : void
+    - OnCollisionExit(collision:Collision) : void
 }
 MonoBehaviour <|-- Player
+Player --> "parts" GameObject
+Player --> "head" GameObject
+Player --> "data" PlayerData
+Player --> "cam" Camera
+Player --> "mat" Material
+Player --> "firstPersonTexture" Texture2D
+Player --> "otherPersonTexture" Texture2D
+Player --> "rot" Vector2
+Player --> "pos" Vector3
+Player o-> "flyMovement" Vector3
+Player o-> "p180Rot" Quaternion
+Player o-> "p90Rot" Quaternion
+Player o-> "p45Rot" Quaternion
+Player o-> "m90Rot" Quaternion
+Player o-> "m45Rot" Quaternion
+Player --> "anim" Animator
 class PlayerData {
-    + Init() : void
 }
 MonoBehaviour <|-- PlayerData
-class Block {
-    + vaxelId : int
-    + Init(worldData:WorldData) : void
-}
-MonoBehaviour <|-- Block
-Block --> "worldData" WorldData
-class Entity {
-    + isMob : bool = false
-    + Init(worldData:WorldData) : void
-}
-class "LinkedList`1"<T> {
-}
-MonoBehaviour <|-- Entity
-Entity --> "worldData" WorldData
-Entity --> "vaxelIds<int>" "LinkedList`1"
-class Item {
-    + isMob : bool = false
-    + Init(worldData:WorldData) : void
-}
-class "LinkedList`1"<T> {
-}
-MonoBehaviour <|-- Item
-Item --> "worldData" WorldData
-Item --> "vaxelIds<int>" "LinkedList`1"
+PlayerData --> "pos" Vector3
+PlayerData --> "rot" Quaternion
 class Vaxel {
     + Init() : void
 }
@@ -495,11 +526,11 @@ class VaxelData {
 }
 MonoBehaviour <|-- VaxelData
 class World {
-    - WorldInit() : void
+    - Init() : void
     + Create() : void
     + LoadFromJson() : void
     + SaveToJson() : void
-    + DestoroyJson() : void
+    + DestroyJson() : void
     + {static} LoadInfoFromJson() : void
     + Execute() : void
 }
@@ -510,13 +541,14 @@ class "Dictionary`2"<T1,T2> {
 MonoBehaviour <|-- World
 World --> "WorldInfos<WorldInfo>" "List`1"
 World --> "currentWorldInfo" WorldInfo
-World --> "entitiesIdToIndex<int,int>" "Dictionary`2"
-World --> "itemsIdToIndex<int,int>" "Dictionary`2"
+World --> "entitiesIDToVaxelIDs<int,List<int>>" "Dictionary`2"
+World --> "itemsIDToVaxelIDs<int,List<int>>" "Dictionary`2"
 World --> "data" WorldData
+World --> "player" Player
 class WorldData {
     + Init(blocksID:int[,,], entitiesID:int[,,], itemsID:int[,,]) : void
-    + Create(blocks:List<Block>) : void
-    + SpawnMob(entities:List<Entity>) : void
+    + Create(blocksID:int[,,]) : void
+    + SpawnMob(entitiesID:int[,,]) : void
     + Load(info:WorldInfo) : void
 }
 class "LinkedList`1"<T> {

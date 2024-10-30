@@ -1,7 +1,7 @@
 @startuml
 class McControls {
     - {static} hasSaveData : bool = false
-    - {static} sen : int = 0
+    - {static} sen : int = 2
     + Init() : void
     + Save() : void
     + ControlBackground() : void
@@ -9,7 +9,11 @@ class McControls {
     + BindEdit(name:string) : void
     + BindReset(name:string) : void
     + BindResetAll() : void
+    {static} + CursorLock(symbol:bool) : void
+    + {static} GetMouseAxis() : Vector2
+    {static} + IsKey(control:string) : bool
     {static} + IsKeyDown(control:string) : bool
+    {static} + IsKeyUp(control:string) : bool
 }
 MonoBehaviour <|-- McControls
 McControls --> "senSb" SelectBarParts

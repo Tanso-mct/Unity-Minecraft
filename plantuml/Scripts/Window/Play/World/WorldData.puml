@@ -1,8 +1,8 @@
 @startuml
 class WorldData {
     + Init(blocksID:int[,,], entitiesID:int[,,], itemsID:int[,,]) : void
-    + Create(blocks:List<Block>) : void
-    + SpawnMob(entities:List<Entity>) : void
+    + Create(blocksID:int[,,]) : void
+    + SpawnMob(entitiesID:int[,,]) : void
     + Load(info:WorldInfo) : void
 }
 class "LinkedList`1"<T> {

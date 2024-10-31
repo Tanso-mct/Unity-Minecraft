@@ -4,7 +4,10 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Block_Top
+  - Block
+  - BlockSide
+  - BlockTop
+  - BlockBottom
   layers:
   - Default
   - TransparentFX

@@ -2678,6 +2678,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1586971685}
   - component: {fileID: 1586971688}
+  - component: {fileID: 1586971690}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -2721,11 +2722,32 @@ MonoBehaviour:
   mat: {fileID: 2100000, guid: bdbad945551d6bf48babd9fdaabd76f0, type: 2}
   firstPersonTexture: {fileID: 2800000, guid: 757b376d5014fe14e994951816d1bf5f, type: 3}
   otherPersonTexture: {fileID: 2800000, guid: 166fea76460a8bb4dbc3dee4b3f4750e, type: 3}
-  walkingSpeed: 7
-  runningSpeed: 10
+  walkingSpeed: 0.1
+  runningSpeed: 0.12
   jumpingSpeedAspect: 1.2
   jumpForce: 1
   diffRunningFov: 10
+--- !u!65 &1586971690
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1586971684}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.75, y: 1.9217002, z: 0.75}
+  m_Center: {x: 0, y: 0.96140254, z: 0}
 --- !u!4 &1609503884 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1883744164666102377, guid: 23e3cc76e38a43641a83164eba025781, type: 3}

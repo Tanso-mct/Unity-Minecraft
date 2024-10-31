@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    private BoxCollider bc;
+
     // プレイヤーのパーツら
     [SerializeField] private GameObject parts;
 
@@ -53,8 +55,11 @@ public class Player : MonoBehaviour
     // プレイヤーが空中にいるかどうか
     private bool isFlying = false;
 
-    // 地面を離れた際の移動ベクトル
-    private Vector3 flyMovement = Vector3.zero;
+    // プレイヤーが飛び始めた際の移動ベクトル
+    private Vector3 flyDirection = Vector3.zero;
+
+    // プレイヤーの移動ベクトル
+    private Vector3 movement = Vector3.zero;
 
     // 走っている際の視野角
     [SerializeField] private float diffRunningFov = 30.0f;
@@ -74,6 +79,9 @@ public class Player : MonoBehaviour
         // プレイヤーの初期位置と回転角度
         pos = transform.position;
         rot = parts.transform.rotation.eulerAngles;
+
+        // プレイヤーのBoxColliderを取得
+        bc = GetComponent<BoxCollider>();
 
         // カーソルをロック
         McControls.CursorLock(true);
@@ -135,7 +143,7 @@ public class Player : MonoBehaviour
         }
 
         // 移動ベクトル
-        Vector3 movement = Vector3.zero;
+        movement = Vector3.zero;
 
         // 移動ベクトルのZ成分を設定
         if (diagonal != 0) // 移動
@@ -159,7 +167,7 @@ public class Player : MonoBehaviour
             cam.fieldOfView = McVideos.Fov;
 
             speed = 0.0f;
-            rb.velocity = new Vector3(0, 0, 0);
+            movement = Vector3.zero;
             anim.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_BREATH);
         }
 
@@ -194,9 +202,6 @@ public class Player : MonoBehaviour
 
         Quaternion rotate = Quaternion.Euler(0, parts.transform.eulerAngles.y, 0);
         movement = rotate * movement;
-
-        rb.velocity = new Vector3(movement.x, 0, movement.z);
-
     }
 
     public void FlyUpdate()
@@ -204,7 +209,7 @@ public class Player : MonoBehaviour
         // 飛び始めた際の移動ベクトルを設定
         if (!isFlying)
         {
-            flyMovement = rb.velocity;
+            flyDirection = movement;
             isFlying = true;
         }
         
@@ -214,9 +219,14 @@ public class Player : MonoBehaviour
     {
         if (McControls.IsKey(Constants.CONTROL_JUMP) && isGrounded)
         {
-            rb.AddForce(new Vector3(0, jumpForce, 0), ForceMode.Impulse);
-            isFlying = true;
+            
         }
+    }
+
+    public void Transfer()
+    {
+        // プレイヤーの移動を行う。当たり判定もここで行う
+        gameObject.transform.position += movement;
     }
 
     public void Execute()
@@ -227,16 +237,17 @@ public class Player : MonoBehaviour
         // プレイヤーの視点更新
         ViewUpdate();
 
-        Debug.Log("isGrounded: " + isGrounded + ", isFlying: " + isFlying);
-
         // プレイヤーの着地中移動更新
-        MoveUpdate();
+        if (isGrounded) MoveUpdate();
 
         // プレイヤーのジャンプ
         Jump();
 
         // プレイヤーの飛行中移動更新
-        // if (!isGrounded) FlyUpdate();
+        if (!isGrounded) FlyUpdate();
+
+        // プレイヤーの移動
+        Transfer();
 
         // フレーム終了
         FrameFinish();
@@ -244,26 +255,12 @@ public class Player : MonoBehaviour
 
     public void FrameStart()
     {
-        if (groundCount != 0)
-        {
-            isGrounded = true;
-            isFlying = false;
-            notGroundingFrame = 0;
-        }
-        else
-        {
-            notGroundingFrame++;
-            if (notGroundingFrame > 1)
-            {
-                isGrounded = false;
-                isFlying = true;
-            }
-        }
+        
     }
 
     public void FrameFinish()
     {
-        groundCount = 0;
+
     }
 
     public void LoadFromJson()
@@ -276,28 +273,8 @@ public class Player : MonoBehaviour
 
     }
 
-    public void DestoroyJson()
+    public void DestroyJson()
     {
 
     }
-
-    void OnCollisionEnter(Collision collision)
-    {
-        
-    }
-
-    void OnCollisionStay(Collision collision)
-    {
-        if (!collision.gameObject.CompareTag(Constants.TAG_BLOCK_TOP))
-        {
-            groundCount++;
-        }
-    }
-
-    void OnCollisionExit(Collision collision)
-    {
-        
-    }
-
-    
 }

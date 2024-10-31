@@ -277,4 +277,19 @@ public class Player : MonoBehaviour
     {
 
     }
+
+    void OnTriggerEnter(Collider collider)
+    {
+        // Debug.Log(collider.gameObject.name);
+    }
+
+    void OnTriggerStay(Collider collider)
+    {
+        Debug.Log(collider.gameObject.name);
+    }
+
+    void OnTriggerExit(Collider collider)
+    {
+        // Debug.Log(collider.gameObject.name);
+    }
 }

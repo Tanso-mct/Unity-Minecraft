@@ -418,6 +418,8 @@ World *-- Player
 World *-- WorldData
 World *-- WorldInfo
 World *-- McHitManager
+World *-- BlockManager
+World *-- ItemManager
 World *-- EntityManager
 class World 
 {
@@ -445,18 +447,14 @@ class World
 class McHitBox 
 {
     - vaxelId : int
-    - center : Vector3
-    - size : Vector3
+    - transform : Transform
+    - bc : BoxCollider
 
     - origin : Vector3
     - opposite : Vector3
     - vertices : Vector3[]
 
-    + Init(center:Vector3, size:Vector3) : void
     + Init(obj:GameObject) : void
-
-    + EditCenter(center:Vector3) : void
-    + EditSize(size:Vector3) : void
 }
 
 McHitManager *-- McHitBox
@@ -491,7 +489,6 @@ class WorldInfo {
 Player *-- PlayerData
 class Player 
 {
-
     - speed : float = 0.0f
     - walkingSpeed : float = 7.0f
     - runningSpeed : float = 10.0f
@@ -526,33 +523,56 @@ class PlayerData
 
 }
 
-class Entity
+interface IBlock
 {
 
 }
 
-EntityManager *-- Entity
-class EntityManager
+BlockManager *-- IBlock
+class BlockManager
 {
-    - entities : List<Entity>
-    - entitiesId : int
-    - entitiesIdToVaxelId : Dictionary<int, List<int>>
+    - blocks : Dictionary<Vector3, IBlock>
 
     + Init() : void
-    + Create() : void
-    + Load() : void
-    + Save() : void
-    + Destroy() : void
     + Execute() : void
-    + AddEntity(entity:Entity) : void
-    + RemoveEntity(entity:Entity) : void
-    + GetEntity(id:int) : Entity
-    + GetEntities() : List<Entity>
-    + GetEntitiesIdToVaxelId() : Dictionary<int, List<int>>
+
+    + Register(obj:GameObject) : void
+    + Unregister(obj:GameObject) : void
 }
 
+interface IItem
+{
 
+}
 
+ItemManager *-- IItem
+class ItemManager
+{
+    - items : Dictionary<Vector3, LinkedList<IItem>>
+
+    + Init() : void
+    + Execute() : void
+
+    + Register(obj:GameObject) : void
+    + Unregister(obj:GameObject) : void
+}
+
+interface IEntity
+{
+
+}
+
+EntityManager *-- IEntity
+class EntityManager
+{
+    - entities : Dictionary<Vector3, LinkedList<IEntity>>
+
+    + Init() : void
+    + Execute() : void
+
+    + Register(obj:GameObject) : void
+    + Unregister(obj:GameObject) : void
+}
 
 
 Vaxel *-- VaxelData
@@ -561,113 +581,145 @@ class Vaxel
     + Init() : void
 }
 
-class VaxelData 
+abstract class VaxelData 
 {
     + Init() : void
 }
 
 ArmorData --|> VaxelData
+ArmorData --|> IItem
+ArmorData --|> IEntity
 class ArmorData {
-    - Start() : void
-    - Update() : void
+    
 }
 
 BuildBlockData --|> VaxelData
+BuildBlockData --|> IBlock
+BuildBlockData --|> IItem
+BuildBlockData --|> IEntity
 class BuildBlockData 
 {
-    - Start() : void
-    - Update() : void
+    
 }
 
 EnchantBookData --|> VaxelData
+EnchantBookData --|> IItem
+EnchantBookData --|> IEntity
 class EnchantBookData 
 {
-    - Start() : void
-    - Update() : void
+    
 }
 
 EntityData --|> VaxelData
+EntityData --|> IEntity
 class EntityData 
 {
-    - Start() : void
-    - Update() : void
+    
 }
 
 FallData --|> VaxelData
+FallData --|> IBlock
+FallData --|> IItem
+FallData --|> IEntity
 class FallData 
 {
-    - Start() : void
-    - Update() : void
+    
 }
 
 FenceData --|> VaxelData
+FenceData --|> IBlock
+FenceData --|> IItem
+FenceData --|> IEntity
 class FenceData 
 {
-    - Start() : void
-    - Update() : void
+    
 }
 
 FluidData --|> VaxelData
+FluidData --|> IBlock
+FluidData --|> IItem
+FluidData --|> IEntity
 class FluidData 
 {
-    - Start() : void
-    - Update() : void
+    
 }
 
 FoodData --|> VaxelData
+FoodData --|> IItem
+FoodData --|> IEntity
 class FoodData 
 {
-    - Start() : void
-    - Update() : void
+    
 }
 
 FurunitureData --|> VaxelData
+FurunitureData --|> IBlock
+FurunitureData --|> IItem
+FurunitureData --|> IEntity
 class FurunitureData 
 {
-    - Start() : void
-    - Update() : void
+    
 }
 
 GlassData --|> VaxelData
+GlassData --|> IBlock
+GlassData --|> IItem
+GlassData --|> IEntity
 class GlassData 
 {
-    - Start() : void
-    - Update() : void
+    
 }
 
 GrassData --|> VaxelData
+GrassData --|> IBlock
+GrassData --|> IItem
+GrassData --|> IEntity
 class GrassData 
 {
-    - Start() : void
-    - Update() : void
+    
 }
 
 LeafData --|> VaxelData
+LeafData --|> IBlock
+LeafData --|> IItem
+LeafData --|> IEntity
 class LeafData 
 {
-    - Start() : void
-    - Update() : void
+    
 }
 
 OreData --|> VaxelData
+OreData --|> IBlock
+OreData --|> IItem
+OreData --|> IEntity
 class OreData 
 {
-    - Start() : void
-    - Update() : void
+    
 }
 
 SeedData --|> VaxelData
+SeedData --|> IBlock
+SeedData --|> IItem
+SeedData --|> IEntity
 class SeedData 
 {
-    - Start() : void
-    - Update() : void
+    
 }
 
 ToolData --|> VaxelData
+ToolData --|> IItem
+ToolData --|> IEntity
 class ToolData 
 {
-    - Start() : void
-    - Update() : void
+    
+}
+
+TreeData --|> VaxelData
+CraftData --|> IItem
+CraftData --|> IEntity
+class CraftData 
+{
+    
 }
 
 

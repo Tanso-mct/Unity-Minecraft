@@ -10,34 +10,45 @@ public class World : MonoBehaviour
     // 現在のワールド情報
     private WorldInfo currentWorldInfo;
 
-    // エンティティ、アイテムの指定ブロックに居るVaxelIdの辞書
-    // Keyには3次元ブロック座標が入り、ValueにはVaxelIdのリストが入る
-    private Dictionary<int, List<int>> entitiesIDToVaxelIDs;
-    private Dictionary<int, List<int>> itemsIDToVaxelIDs;
-
-    // ワールドデータと結びつく各VaxelID。初期値は0
+    // ワールドデータと結びつく各VaxelID。初期値は0。その座標ブロックに存在しているかを示す。
     private int[,,] blocksID;
     private int[,,] entitiesID;
     private int[,,] itemsID;
 
     // ワールドデータ
-    [SerializeField] private WorldData data;
+    [SerializeField] private GameObject dataObj;
+    private WorldData data;
 
     // プレイヤー
     [SerializeField] private Player player;
 
+    // 各種形態のマネージャー
+    private BlockManager blockMgr;
+    private ItemManager itemMgr;
+    private EntityManager entityMgr;
+
+
     private void Init()
     {
-        // ID変換辞書の初期化
-        entitiesIDToVaxelIDs = new Dictionary<int, List<int>>();
-        itemsIDToVaxelIDs = new Dictionary<int, List<int>>();
+        // データの取得
+        data = dataObj.GetComponent<WorldData>();
 
         // ワールドの初期化
         blocksID = new int[Constants.WORLD_SIZE, Constants.WORLD_HEIGHT, Constants.WORLD_SIZE];
         entitiesID = new int[Constants.WORLD_SIZE, Constants.WORLD_HEIGHT, Constants.WORLD_SIZE];
         itemsID = new int[Constants.WORLD_SIZE, Constants.WORLD_HEIGHT, Constants.WORLD_SIZE];
 
-        data.Init(ref blocksID, ref entitiesID, ref itemsID);
+        // マネージャーの初期化
+        blockMgr = new BlockManager();
+        blockMgr.Init();
+
+        itemMgr = new ItemManager();
+        itemMgr.Init();
+
+        entityMgr = new EntityManager();
+        entityMgr.Init();
+
+        data.Init();
     }
 
     public void Create()
@@ -48,7 +59,7 @@ public class World : MonoBehaviour
         Init();
 
         // ワールドの生成
-        data.Create(ref blocksID);
+        data.Create(dataObj, ref blocksID, ref entitiesID, ref itemsID, ref blockMgr, ref itemMgr, ref entityMgr);
 
         // モブのスポーン
         data.SpawnMob(ref entitiesID);

@@ -68,8 +68,19 @@ public class Constants : MonoBehaviour
     public const int VAXEL_STATE_BLOCK = 2;
     public const int VAXEL_STATE_ENTITY = 3;
 
+    // Vaxel type
+    public enum VAXEL_TYPE
+    {
+        STONE
+    }
+
+    // World Prefab path
+    public const string PREFAB_VAXEL = "World/Vaxel";
+    public const string PREFAB_BLOCK = "World/Block";
+
     // World size
     public const int WORLD_SIZE = 513;
+    public const int WORLD_HALF_SIZE = 256;
     public const int WORLD_HEIGHT = 320;
 
     // Animation
@@ -82,6 +93,7 @@ public class Constants : MonoBehaviour
     // Unity Tags
     public const string TAG_PLAYER = "Player";
     public const string TAG_BLOCK_TOP = "Block_Top";
+    
 
 
 

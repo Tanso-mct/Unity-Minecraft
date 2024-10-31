@@ -25,7 +25,6 @@ public class McControls : MonoBehaviour
     static private KeyCode hotBar9Key = KeyCode.Alpha9;
 
     static private KeyCode inventoryKey = KeyCode.E;
-    static private KeyCode perspectiveKey = KeyCode.F5;
 
     static private KeyCode jumpKey = KeyCode.Space;
     static private KeyCode sprintKey = KeyCode.LeftShift;

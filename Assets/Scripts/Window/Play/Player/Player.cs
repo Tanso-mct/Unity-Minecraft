@@ -92,7 +92,7 @@ public class Player : MonoBehaviour
         // 1人称視点でのテクスチャを設定
         // mat.mainTexture = firstPersonTexture;
 
-        // Debug
+        // 2、3人称視点でのテクスチャを設定
         mat.mainTexture = otherPersonTexture;
     }
 

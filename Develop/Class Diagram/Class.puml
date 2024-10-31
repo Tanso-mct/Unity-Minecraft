@@ -714,7 +714,7 @@ class ToolData
     
 }
 
-TreeData --|> VaxelData
+CraftData --|> VaxelData
 CraftData --|> IItem
 CraftData --|> IEntity
 class CraftData 

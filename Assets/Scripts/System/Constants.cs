@@ -71,8 +71,44 @@ public class Constants : MonoBehaviour
     // Vaxel type
     public enum VAXEL_TYPE
     {
-        STONE
+        DIRT,
+        GRASS,
+        STONE, COBBLESTONE, STONE_ANDESITE, STONE_DIORITE, STONE_GRANITE,
+        COAL_ORE,
+        IRON_ORE,
+        GOLD_ORE,
+        DIAMOND_ORE,
+        EMERALD_ORE,
+        REDSTONE_ORE,
+        LAPIC_ORE
     }
+
+    // Texture face
+    public const int TEXTURE_FACE_FULL = 0;
+    public const int TEXTURE_FACE_FRONT = 0;
+    public const int TEXTURE_FACE_BACK = 1;
+    public const int TEXTURE_FACE_LEFT = 2;
+    public const int TEXTURE_FACE_RIGHT = 3;
+    public const int TEXTURE_FACE_TOP = 4;
+    public const int TEXTURE_FACE_BOTTOM = 5;
+
+    // Texture path
+    public const string TEXTURE_DIRT = "Textures/blocks/dirt";
+    public const string TEXTURE_GRASS_TOP = "Textures/blocks/grass_top";
+    public const string TEXTURE_GRASS_SIDE = "Textures/blocks/grass_side";
+    public const string TEXTURE_GRASS_BOTTOM = "Textures/blocks/dirt";
+    public const string TEXTURE_STONE = "Textures/blocks/stone";
+    public const string TEXTURE_COBBLESTONE = "Textures/blocks/cobblestone";
+    public const string TEXTURE_STONE_ANDESITE = "Textures/blocks/stone_andesite";
+    public const string TEXTURE_STONE_DIORITE = "Textures/blocks/stone_diorite";
+    public const string TEXTURE_STONE_GRANITE = "Textures/blocks/stone_granite";
+    public const string TEXTURE_COAL_ORE = "Textures/blocks/coal_ore";
+    public const string TEXTURE_IRON_ORE = "Textures/blocks/iron_ore";
+    public const string TEXTURE_GOLD_ORE = "Textures/blocks/gold_ore";
+    public const string TEXTURE_DIAMOND_ORE = "Textures/blocks/diamond_ore";
+    public const string TEXTURE_EMERALD_ORE = "Textures/blocks/emerald_ore";
+    public const string TEXTURE_REDSTONE_ORE = "Textures/blocks/redstone_ore";
+    public const string TEXTURE_LAPIS_ORE = "Textures/blocks/lapis_ore";
 
     // World Prefab path
     public const string PREFAB_VAXEL = "World/Vaxel";

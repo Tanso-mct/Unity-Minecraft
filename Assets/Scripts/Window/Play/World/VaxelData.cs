@@ -4,10 +4,18 @@ using UnityEngine;
 
 abstract public class VaxelData
 {
-    protected string prefabPath;
     protected GameObject vaxelObj;
 
-    abstract public void Create(ref Vector3 coords, ref BlockManager blockMgr, GameObject vaxelObj);
-    abstract public void Create(ref Vector3 coords, ref ItemManager itemMgr, GameObject vaxelObj);
-    abstract public void Create(ref Vector3 coords, ref EntityManager entityMgr, GameObject vaxelObj);
+    protected List<GameObject> GetChildren(GameObject parent)
+    {
+        List<GameObject> children = new List<GameObject>();
+
+        foreach (Transform child in parent.transform)
+        {
+            children.Add(child.gameObject);
+        }
+
+        return children;
+    }
+    
 }

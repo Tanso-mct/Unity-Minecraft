@@ -80,17 +80,27 @@ public class Constants : MonoBehaviour
         DIAMOND_ORE,
         EMERALD_ORE,
         REDSTONE_ORE,
-        LAPIC_ORE
+        LAPIS_ORE
     }
+
+    // Block object type
+    public const string BLOCK_OBJ_FRONT = "Front";
+    public const string BLOCK_OBJ_BACK = "Back";
+    public const string BLOCK_OBJ_LEFT = "Left";
+    public const string BLOCK_OBJ_RIGHT = "Right";
+    public const string BLOCK_OBJ_TOP = "Top";
+    public const string BLOCK_OBJ_BOTTOM = "Bottom";
+    
 
     // Texture face
     public const int TEXTURE_FACE_FULL = 0;
-    public const int TEXTURE_FACE_FRONT = 0;
-    public const int TEXTURE_FACE_BACK = 1;
-    public const int TEXTURE_FACE_LEFT = 2;
-    public const int TEXTURE_FACE_RIGHT = 3;
-    public const int TEXTURE_FACE_TOP = 4;
-    public const int TEXTURE_FACE_BOTTOM = 5;
+    public const int TEXTURE_FACE_TOP = 0;
+    public const int TEXTURE_FACE_SIDE = 2;
+    public const int TEXTURE_FACE_BOTTOM = 1;
+    public const int TEXTURE_FACE_FRONT = 2;
+    public const int TEXTURE_FACE_BACK = 3;
+    public const int TEXTURE_FACE_LEFT = 4;
+    public const int TEXTURE_FACE_RIGHT = 5;
 
     // Texture path
     public const string TEXTURE_DIRT = "Textures/blocks/dirt";

@@ -28,11 +28,10 @@ public class WorldData : MonoBehaviour
         CreateVaxel(Constants.VAXEL_TYPE.DIAMOND_ORE, new Vector3(5, 0, 0), ref blocksID, ref blockMgr, dataObj);
         CreateVaxel(Constants.VAXEL_TYPE.EMERALD_ORE, new Vector3(6, 0, 0), ref blocksID, ref blockMgr, dataObj);
         CreateVaxel(Constants.VAXEL_TYPE.REDSTONE_ORE, new Vector3(7, 0, 0), ref blocksID, ref blockMgr, dataObj);
-        CreateVaxel(Constants.VAXEL_TYPE.LAPIC_ORE, new Vector3(8, 0, 0), ref blocksID, ref blockMgr, dataObj);
+        CreateVaxel(Constants.VAXEL_TYPE.LAPIS_ORE, new Vector3(8, 0, 0), ref blocksID, ref blockMgr, dataObj);
 
-        CreateVaxel(Constants.VAXEL_TYPE.DIRT, new Vector3(0, 0, 2), ref blocksID, ref blockMgr, dataObj);
-
-
+        CreateVaxel(Constants.VAXEL_TYPE.GRASS, new Vector3(0, 0, 2), ref blocksID, ref blockMgr, dataObj);
+        CreateVaxel(Constants.VAXEL_TYPE.DIRT, new Vector3(2, 0, 2), ref blocksID, ref blockMgr, dataObj);
     }
 
     private Vector3 CoordsIntConvert(Vector3 coords)
@@ -63,10 +62,10 @@ public class WorldData : MonoBehaviour
 
         if (prefab != null)
         {
-            // ãƒ—ãƒ¬ãƒãƒ–ã‚’ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹åŒ–
+            // ƒvƒŒƒnƒu‚ğƒCƒ“ƒXƒ^ƒ“ƒX‰»
             GameObject newObj =  GameObject.Instantiate(prefab);
 
-            // ãƒ–ãƒ­ãƒƒã‚¯ã®ã‚²ãƒ¼ãƒ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ãƒ‡ãƒ¼ã‚¿ã®ã‚²ãƒ¼ãƒ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å­ã«ã™ã‚‹
+            // ƒuƒƒbƒN‚ÌƒQ[ƒ€ƒIƒuƒWƒFƒNƒg‚ğƒf[ƒ^‚ÌƒQ[ƒ€ƒIƒuƒWƒFƒNƒg‚Ìq‚É‚·‚é
             newObj.transform.SetParent(dataObj.transform);
 
             return newObj.GetComponent<Vaxel>();
@@ -75,52 +74,77 @@ public class WorldData : MonoBehaviour
         return null;
     }
 
-    private void CreateOre(string texturePath, ref Vector3 coords, ref int[,,] blocks, ref BlockManager blockMgr, GameObject dataObj)
+    private void CreateGrass(ref Vector3 coords, ref int[,,] blocks, ref BlockManager blockMgr, GameObject dataObj)
     {
-        // Vaxelã‚’ç”Ÿæˆ
+        // Vaxel‚ğ¶¬
         Vaxel vaxel = CreateVaxel(dataObj);
             
-        // Vaxelã®ãƒ‡ãƒ¼ã‚¿ã‚’åˆæœŸåŒ–
-        vaxel.data = new OreData();
+        // Vaxel‚Ìƒf[ƒ^‚ğ‰Šú‰»
+        vaxel.data = new GrassData();
 
-        // ãƒ–ãƒ­ãƒƒã‚¯ã«è¨­å®š
+        // ƒuƒƒbƒN‚Éİ’è
         IBlock block = vaxel.data as IBlock;
 
-        // ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’èª­ã¿è¾¼ã‚€
-        block.LoadTexture(new List<string>{texturePath});
+        // ƒeƒNƒXƒ`ƒƒ‚ğ“Ç‚İ‚Ş
+        block.LoadTexture(new List<string>{Constants.TEXTURE_GRASS_TOP, Constants.TEXTURE_GRASS_BOTTOM, Constants.TEXTURE_GRASS_SIDE});
 
-        // ãƒ‡ãƒ¼ã‚¿ã‚’ç”Ÿæˆ
+        // ƒf[ƒ^‚ğ¶¬
         block.Create(ref coords, ref blockMgr, vaxel.gameObject);
 
-        // Vaxelã‚’ãƒªã‚¹ãƒˆã«è¿½åŠ 
+        // Vaxel‚ğƒŠƒXƒg‚É’Ç‰Á
         vaxels.AddLast(vaxel);
 
-        // ãƒ–ãƒ­ãƒƒã‚¯IDã‚’è¨­å®š
+        // ƒuƒƒbƒNID‚ğİ’è
+        Vector3 convertedCoords = CoordsIntConvert(coords);
+        blocks[(int)convertedCoords.x, (int)convertedCoords.y, (int)convertedCoords.z] = vaxels.Count - 1;
+    }
+
+    private void CreateOre(string texturePath, ref Vector3 coords, ref int[,,] blocks, ref BlockManager blockMgr, GameObject dataObj)
+    {
+         // Vaxel‚ğ¶¬
+        Vaxel vaxel = CreateVaxel(dataObj);
+            
+        // Vaxel‚Ìƒf[ƒ^‚ğ‰Šú‰»
+        vaxel.data = new BuildBlockData();
+
+        // ƒuƒƒbƒN‚Éİ’è
+        IBlock block = vaxel.data as IBlock;
+
+        // ƒeƒNƒXƒ`ƒƒ‚ğ“Ç‚İ‚Ş
+        block.LoadTexture(new List<string>{texturePath});
+
+        // ƒf[ƒ^‚ğ¶¬
+        block.Create(ref coords, ref blockMgr, vaxel.gameObject);
+
+        // Vaxel‚ğƒŠƒXƒg‚É’Ç‰Á
+        vaxels.AddLast(vaxel);
+
+        // ƒuƒƒbƒNID‚ğİ’è
         Vector3 convertedCoords = CoordsIntConvert(coords);
         blocks[(int)convertedCoords.x, (int)convertedCoords.y, (int)convertedCoords.z] = vaxels.Count - 1;
     }
 
     private void CreateBuildBlock(string texturePath, ref Vector3 coords, ref int[,,] blocks, ref BlockManager blockMgr, GameObject dataObj)
     {
-        // Vaxelã‚’ç”Ÿæˆ
+         // Vaxel‚ğ¶¬
         Vaxel vaxel = CreateVaxel(dataObj);
             
-        // Vaxelã®ãƒ‡ãƒ¼ã‚¿ã‚’åˆæœŸåŒ–
+        // Vaxel‚Ìƒf[ƒ^‚ğ‰Šú‰»
         vaxel.data = new BuildBlockData();
 
-        // ãƒ–ãƒ­ãƒƒã‚¯ã«è¨­å®š
+        // ƒuƒƒbƒN‚Éİ’è
         IBlock block = vaxel.data as IBlock;
 
-        // ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’èª­ã¿è¾¼ã‚€
+        // ƒeƒNƒXƒ`ƒƒ‚ğ“Ç‚İ‚Ş
         block.LoadTexture(new List<string>{texturePath});
 
-        // ãƒ‡ãƒ¼ã‚¿ã‚’ç”Ÿæˆ
+        // ƒf[ƒ^‚ğ¶¬
         block.Create(ref coords, ref blockMgr, vaxel.gameObject);
 
-        // Vaxelã‚’ãƒªã‚¹ãƒˆã«è¿½åŠ 
+        // Vaxel‚ğƒŠƒXƒg‚É’Ç‰Á
         vaxels.AddLast(vaxel);
 
-        // ãƒ–ãƒ­ãƒƒã‚¯IDã‚’è¨­å®š
+        // ƒuƒƒbƒNID‚ğİ’è
         Vector3 convertedCoords = CoordsIntConvert(coords);
         blocks[(int)convertedCoords.x, (int)convertedCoords.y, (int)convertedCoords.z] = vaxels.Count - 1;
     }
@@ -129,6 +153,10 @@ public class WorldData : MonoBehaviour
     {
         switch (type)
         {
+        case Constants.VAXEL_TYPE.GRASS:
+            CreateGrass(ref coords, ref blocks, ref blockMgr, dataObj);
+            break;
+
         case Constants.VAXEL_TYPE.DIRT:
             CreateBuildBlock(Constants.TEXTURE_DIRT, ref coords, ref blocks, ref blockMgr, dataObj);
             break;
@@ -165,7 +193,7 @@ public class WorldData : MonoBehaviour
             CreateOre(Constants.TEXTURE_REDSTONE_ORE, ref coords, ref blocks, ref blockMgr, dataObj);
             break;
 
-        case Constants.VAXEL_TYPE.LAPIC_ORE:
+        case Constants.VAXEL_TYPE.LAPIS_ORE:
             CreateOre(Constants.TEXTURE_LAPIS_ORE, ref coords, ref blocks, ref blockMgr, dataObj);
             break;
 

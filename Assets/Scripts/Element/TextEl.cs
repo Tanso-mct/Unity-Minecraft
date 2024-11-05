@@ -14,8 +14,8 @@ public class TextEl : Element
     public UnityEvent unHoverEvent = null;
 
     private bool clicked = false;
-    public UnityEvent<string> clickEvent = null;
-    public UnityEvent<string> unClickEvent = null;
+    public UnityEvent clickEvent = null;
+    public UnityEvent unClickEvent = null;
 
     public override void Init()
     {
@@ -67,12 +67,12 @@ public class TextEl : Element
         
         if (IsClick() && clickEvent != null)
         {
-            clickEvent.Invoke("");
+            clickEvent.Invoke();
             clicked = true;
         }
         else if (clicked && Input.GetMouseButtonDown(0) && unClickEvent != null)
         {
-            unClickEvent.Invoke("");
+            unClickEvent.Invoke();
             clicked = false;
         }
     }

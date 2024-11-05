@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class TextButtonParts : MonoBehaviour
 {
@@ -32,5 +33,35 @@ public class TextButtonParts : MonoBehaviour
     public void ClickEvent()
     {
         clickEvent.Invoke();
+    }
+
+    public void ShowInitText(bool isShow)
+    {
+        textEl.ShowText(isShow, textEl.initText.name);
+    }
+
+    public void ShowHoverText(bool isShow)
+    {
+        textEl.ShowText(isShow, hoverText.name);
+    }
+
+    public void EditInitText(string text)
+    {
+        textEl.initText.text = text;
+    }
+
+    public void EditHoverText(string text)
+    {
+        hoverText.GetComponent<Text>().text = text;
+    }
+
+    public string GetInitText()
+    {
+        return textEl.initText.text;
+    }
+
+    public string GetHoverText()
+    {
+        return hoverText.GetComponent<Text>().text;
     }
 }

@@ -33,6 +33,10 @@ public class McControls : MonoBehaviour
     static private KeyCode backKey = KeyCode.S;
     static private KeyCode forwardKey = KeyCode.W;
 
+    private TextButtonParts editingBtnParts = null;
+    private int editingFrame = 0;
+    private bool isEditing = false;
+    private string editingBtnName;
 
     public void Init()
     {
@@ -62,20 +66,133 @@ public class McControls : MonoBehaviour
         Param.popUpWindowDone = true;
     }
 
-    public void BindEdit(string name)
+    private bool GetInputKey(ref KeyCode target)
     {
-        Debug.Log("BindEdit [" + name + "]");
+        if (Input.anyKeyDown)
+        {
+            foreach (KeyCode vKey in System.Enum.GetValues(typeof(KeyCode)))
+            {
+                if (Input.GetKey(vKey))
+                {
+                    target = vKey;
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
-    public void BindReset(string name)
+    public void BindEdit(GameObject btnObj)
     {
-        Debug.Log("BindReset [" + name + "]");
+        if (isEditing) return;
+
+        editingBtnName = btnObj.name.Substring(0, btnObj.name.IndexOf("_"));
+
+        editingBtnParts =  btnObj.GetComponent<TextButtonParts>();
+
+        editingBtnParts.ShowInitText(false);
+        editingBtnParts.ShowHoverText(true);
+
+        string strEditing = "<  " + editingBtnParts.GetHoverText() + "  >";
+        editingBtnParts.EditHoverText(strEditing);
+
+        isEditing = true;
+        editingFrame = 0;
     }
 
-    public void BindResetAll()
+    private void Update()
     {
-        Debug.Log("BindResetAll");
-        Param.popUpWindowDone = true;
+        if (editingFrame == 0 && isEditing)
+        {
+            editingFrame++;
+        }
+        else if (editingFrame == 1 && isEditing)
+        {
+            BindSet();
+        }
+    }
+
+    private void BindSet()
+    {
+        switch (editingBtnName)
+        {
+            case Constants.CONTROL_ATTACK:
+                if (GetInputKey(ref attackKey))
+                {
+                    editingBtnParts.EditInitText(attackKey.ToString());
+                    editingBtnParts.EditHoverText(attackKey.ToString());
+                    editingBtnParts.ShowInitText(true);
+                    editingBtnParts.ShowHoverText(false);
+                    isEditing = false;
+                    editingFrame = 0;
+                }
+                
+                return;
+
+            case Constants.CONTROL_DROP_ITEM:
+                return;
+
+            case Constants.CONTROL_USE:
+                return;
+
+            case Constants.CONTROL_HS1:
+                return;
+
+            case Constants.CONTROL_HS2:
+                return;
+
+            case Constants.CONTROL_HS3:
+                return;
+
+            case Constants.CONTROL_HS4:
+                return;
+
+            case Constants.CONTROL_HS5:
+                return;
+
+            case Constants.CONTROL_HS6:
+                return;
+
+            case Constants.CONTROL_HS7:
+                return;
+
+            case Constants.CONTROL_HS8:
+                return;
+
+            case Constants.CONTROL_HS9:
+                return;
+
+            case Constants.CONTROL_INVENTORY:
+                return;
+
+            case Constants.CONTROL_JUMP:
+                return;
+
+            case Constants.CONTROL_SPRINT:
+                return;
+
+            case Constants.CONTROL_LEFT:
+                return;
+
+            case Constants.CONTROL_RIGHT:
+                return;
+
+            case Constants.CONTROL_BACK:
+                return;
+
+            case Constants.CONTROL_FOR:
+                return;
+
+            default: 
+                return;
+        }
+    }
+
+    public void BindReset(GameObject btnObj)
+    {
+        string btnName = btnObj.name.Substring(0, btnObj.name.IndexOf("_"));
+        
     }
 
     static public void CursorLock(bool symbol)

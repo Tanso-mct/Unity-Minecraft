@@ -38,6 +38,29 @@ public class McControls : MonoBehaviour
     private bool isEditing = false;
     private string editingBtnName;
 
+    [SerializeField] private TextButtonParts attackBtnParts = null;
+    [SerializeField] private TextButtonParts dropBtnParts = null;
+    [SerializeField] private TextButtonParts useBtnParts = null;
+
+    [SerializeField] private TextButtonParts hotBar1BtnParts = null;
+    [SerializeField] private TextButtonParts hotBar2BtnParts = null;
+    [SerializeField] private TextButtonParts hotBar3BtnParts = null;
+    [SerializeField] private TextButtonParts hotBar4BtnParts = null;
+    [SerializeField] private TextButtonParts hotBar5BtnParts = null;
+    [SerializeField] private TextButtonParts hotBar6BtnParts = null;
+    [SerializeField] private TextButtonParts hotBar7BtnParts = null;
+    [SerializeField] private TextButtonParts hotBar8BtnParts = null;
+    [SerializeField] private TextButtonParts hotBar9BtnParts = null;
+
+    [SerializeField] private TextButtonParts inventoryBtnParts = null;
+    
+    [SerializeField] private TextButtonParts jumpBtnParts = null;
+    [SerializeField] private TextButtonParts sprintBtnParts = null;
+    [SerializeField] private TextButtonParts leftBtnParts = null;
+    [SerializeField] private TextButtonParts rightBtnParts = null;
+    [SerializeField] private TextButtonParts backBtnParts = null;
+    [SerializeField] private TextButtonParts forwardBtnParts = null;
+
     public void Init()
     {
         if (hasSaveData)
@@ -113,75 +136,97 @@ public class McControls : MonoBehaviour
         }
     }
 
+    private void BindInput(ref KeyCode target)
+    {
+        if (GetInputKey(ref target))
+        {
+            editingBtnParts.EditInitText(target.ToString());
+            editingBtnParts.EditHoverText(target.ToString());
+            editingBtnParts.ShowInitText(true);
+            editingBtnParts.ShowHoverText(false);
+            isEditing = false;
+            editingFrame = 0;
+        }
+    }
+
     private void BindSet()
     {
         switch (editingBtnName)
         {
             case Constants.CONTROL_ATTACK:
-                if (GetInputKey(ref attackKey))
-                {
-                    editingBtnParts.EditInitText(attackKey.ToString());
-                    editingBtnParts.EditHoverText(attackKey.ToString());
-                    editingBtnParts.ShowInitText(true);
-                    editingBtnParts.ShowHoverText(false);
-                    isEditing = false;
-                    editingFrame = 0;
-                }
-                
+                BindInput(ref attackKey);
                 return;
 
             case Constants.CONTROL_DROP_ITEM:
+                BindInput(ref dropKey);
                 return;
 
             case Constants.CONTROL_USE:
+                BindInput(ref useKey);
                 return;
 
             case Constants.CONTROL_HS1:
+                BindInput(ref hotBar1Key);
                 return;
 
             case Constants.CONTROL_HS2:
+                BindInput(ref hotBar2Key);
                 return;
 
             case Constants.CONTROL_HS3:
+                BindInput(ref hotBar3Key);
                 return;
 
             case Constants.CONTROL_HS4:
+                BindInput(ref hotBar4Key);
                 return;
 
             case Constants.CONTROL_HS5:
+                BindInput(ref hotBar5Key);
                 return;
 
             case Constants.CONTROL_HS6:
+                BindInput(ref hotBar6Key);
                 return;
 
             case Constants.CONTROL_HS7:
+                BindInput(ref hotBar7Key);
                 return;
 
             case Constants.CONTROL_HS8:
+                BindInput(ref hotBar8Key);
                 return;
 
             case Constants.CONTROL_HS9:
+                BindInput(ref hotBar9Key);
                 return;
 
             case Constants.CONTROL_INVENTORY:
+                BindInput(ref inventoryKey);
                 return;
 
             case Constants.CONTROL_JUMP:
+                BindInput(ref jumpKey);
                 return;
 
             case Constants.CONTROL_SPRINT:
+                BindInput(ref sprintKey);
                 return;
 
             case Constants.CONTROL_LEFT:
+                BindInput(ref leftKey);
                 return;
 
             case Constants.CONTROL_RIGHT:
+                BindInput(ref rightKey);
                 return;
 
             case Constants.CONTROL_BACK:
+                BindInput(ref backKey);
                 return;
 
             case Constants.CONTROL_FOR:
+                BindInput(ref forwardKey);
                 return;
 
             default: 
@@ -189,10 +234,124 @@ public class McControls : MonoBehaviour
         }
     }
 
+    private void KeyReset(ref TextButtonParts txtBtnParts, ref KeyCode key, KeyCode defKey)
+    {
+        txtBtnParts.EditInitText(defKey.ToString());
+        txtBtnParts.EditHoverText(defKey.ToString());
+        key = defKey;
+    }
+
     public void BindReset(GameObject btnObj)
     {
         string btnName = btnObj.name.Substring(0, btnObj.name.IndexOf("_"));
-        
+
+        switch (btnName)
+        {
+            case Constants.CONTROL_ATTACK:
+                KeyReset(ref attackBtnParts, ref attackKey, Constants.KEY_ATTACK);
+                return;
+
+            case Constants.CONTROL_DROP_ITEM:
+                KeyReset(ref dropBtnParts, ref dropKey, Constants.KEY_DROP);
+                return;
+
+            case Constants.CONTROL_USE:
+                KeyReset(ref useBtnParts, ref useKey, Constants.KEY_USE);
+                return;
+
+            case Constants.CONTROL_HS1:
+                KeyReset(ref hotBar1BtnParts, ref hotBar1Key, Constants.KEY_HOT_BAR_1);
+                return;
+
+            case Constants.CONTROL_HS2:
+                KeyReset(ref hotBar2BtnParts, ref hotBar2Key, Constants.KEY_HOT_BAR_2);
+                return;
+
+            case Constants.CONTROL_HS3:
+                KeyReset(ref hotBar3BtnParts, ref hotBar3Key, Constants.KEY_HOT_BAR_3);
+                return;
+
+            case Constants.CONTROL_HS4:
+                KeyReset(ref hotBar4BtnParts, ref hotBar4Key, Constants.KEY_HOT_BAR_4);
+                return;
+
+            case Constants.CONTROL_HS5:
+                KeyReset(ref hotBar5BtnParts, ref hotBar5Key, Constants.KEY_HOT_BAR_5);
+                return;
+
+            case Constants.CONTROL_HS6:
+                KeyReset(ref hotBar6BtnParts, ref hotBar6Key, Constants.KEY_HOT_BAR_6);
+                return;
+
+            case Constants.CONTROL_HS7:
+                KeyReset(ref hotBar7BtnParts, ref hotBar7Key, Constants.KEY_HOT_BAR_7);
+                return;
+
+            case Constants.CONTROL_HS8:
+                KeyReset(ref hotBar8BtnParts, ref hotBar8Key, Constants.KEY_HOT_BAR_8);
+                return;
+
+            case Constants.CONTROL_HS9:
+                KeyReset(ref hotBar9BtnParts, ref hotBar9Key, Constants.KEY_HOT_BAR_9);
+                return;
+
+            case Constants.CONTROL_INVENTORY:
+                KeyReset(ref inventoryBtnParts, ref inventoryKey, Constants.KEY_INVENTORY);
+                return;
+
+            case Constants.CONTROL_JUMP:
+                KeyReset(ref jumpBtnParts, ref jumpKey, Constants.KEY_JUMP);
+                return;
+
+            case Constants.CONTROL_SPRINT:
+                KeyReset(ref sprintBtnParts, ref sprintKey, Constants.KEY_SPRINT);
+                return;
+
+            case Constants.CONTROL_LEFT:
+                KeyReset(ref leftBtnParts, ref leftKey, Constants.KEY_LEFT);
+                return;
+
+            case Constants.CONTROL_RIGHT:
+                KeyReset(ref rightBtnParts, ref rightKey, Constants.KEY_RIGHT);
+                return;
+
+            case Constants.CONTROL_BACK:
+                KeyReset(ref backBtnParts, ref backKey, Constants.KEY_BACK);
+                return;
+
+            case Constants.CONTROL_FOR:
+                KeyReset(ref forwardBtnParts, ref forwardKey, Constants.KEY_FORWARD);
+                return;
+
+            default: 
+                return;
+        }
+    }
+
+    public void BindResetAll()
+    {
+        KeyReset(ref attackBtnParts, ref attackKey, Constants.KEY_ATTACK);
+        KeyReset(ref dropBtnParts, ref dropKey, Constants.KEY_DROP);
+        KeyReset(ref useBtnParts, ref useKey, Constants.KEY_USE);
+
+        KeyReset(ref hotBar1BtnParts, ref hotBar1Key, Constants.KEY_HOT_BAR_1);
+        KeyReset(ref hotBar2BtnParts, ref hotBar2Key, Constants.KEY_HOT_BAR_2);
+        KeyReset(ref hotBar3BtnParts, ref hotBar3Key, Constants.KEY_HOT_BAR_3);
+        KeyReset(ref hotBar4BtnParts, ref hotBar4Key, Constants.KEY_HOT_BAR_4);
+        KeyReset(ref hotBar5BtnParts, ref hotBar5Key, Constants.KEY_HOT_BAR_5);
+        KeyReset(ref hotBar6BtnParts, ref hotBar6Key, Constants.KEY_HOT_BAR_6);
+        KeyReset(ref hotBar7BtnParts, ref hotBar7Key, Constants.KEY_HOT_BAR_7);
+        KeyReset(ref hotBar8BtnParts, ref hotBar8Key, Constants.KEY_HOT_BAR_8);
+        KeyReset(ref hotBar9BtnParts, ref hotBar9Key, Constants.KEY_HOT_BAR_9);
+
+        KeyReset(ref inventoryBtnParts, ref inventoryKey, Constants.KEY_INVENTORY);
+
+        KeyReset(ref jumpBtnParts, ref jumpKey, Constants.KEY_JUMP);
+        KeyReset(ref sprintBtnParts, ref sprintKey, Constants.KEY_SPRINT);
+        KeyReset(ref leftBtnParts, ref leftKey, Constants.KEY_LEFT);
+        KeyReset(ref rightBtnParts, ref rightKey, Constants.KEY_RIGHT);
+        KeyReset(ref backBtnParts, ref backKey, Constants.KEY_BACK);
+        KeyReset(ref forwardBtnParts, ref forwardKey, Constants.KEY_FORWARD);
     }
 
     static public void CursorLock(bool symbol)

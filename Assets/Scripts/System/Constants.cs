@@ -20,6 +20,30 @@ public class Constants : MonoBehaviour
     public const int MSG_CHANGE_SCENE = 5;
     public const int MSG_QUIT_GAME = 6;
 
+    // Key bind
+    public const  KeyCode KEY_ATTACK = KeyCode.Mouse0;
+    public const  KeyCode KEY_DROP = KeyCode.Q;
+    public const  KeyCode KEY_USE = KeyCode.Mouse1;
+
+    public const  KeyCode KEY_HOT_BAR_1 = KeyCode.Alpha1;
+    public const  KeyCode KEY_HOT_BAR_2 = KeyCode.Alpha2;
+    public const  KeyCode KEY_HOT_BAR_3 = KeyCode.Alpha3;
+    public const  KeyCode KEY_HOT_BAR_4 = KeyCode.Alpha4;
+    public const  KeyCode KEY_HOT_BAR_5 = KeyCode.Alpha5;
+    public const  KeyCode KEY_HOT_BAR_6 = KeyCode.Alpha6;
+    public const  KeyCode KEY_HOT_BAR_7 = KeyCode.Alpha7;
+    public const  KeyCode KEY_HOT_BAR_8 = KeyCode.Alpha8;
+    public const  KeyCode KEY_HOT_BAR_9 = KeyCode.Alpha9;
+
+    public const  KeyCode KEY_INVENTORY = KeyCode.E;
+
+    public const  KeyCode KEY_JUMP = KeyCode.Space;
+    public const  KeyCode KEY_SPRINT = KeyCode.LeftShift;
+    public const  KeyCode KEY_LEFT = KeyCode.A;
+    public const  KeyCode KEY_RIGHT = KeyCode.D;
+    public const  KeyCode KEY_BACK = KeyCode.S;
+    public const  KeyCode KEY_FORWARD = KeyCode.W;
+
     // Scene name
     public const string SCENE_MENU = "Menu";
     public const string SCENE_PLAY = "Play";

@@ -4,7 +4,7 @@ using UnityEngine;
 
 abstract public class VaxelData
 {
-    protected GameObject vaxelObj;
+    [HideInInspector] public GameObject vaxelObj;
 
     protected List<GameObject> GetChildren(GameObject parent)
     {
@@ -20,17 +20,17 @@ abstract public class VaxelData
 
     protected void ResourceInstantiatePrefab
     (
-        ref GameObject prefab, string prefabPath, ref GameObject vaxelObj, ref GameObject target, Vector3 coords
+        ref GameObject prefab, string prefabPath, ref GameObject parent, Vector3 coords
     ){
         prefab = Resources.Load<GameObject>(prefabPath);
 
         if (prefab != null)
         {
-            target = GameObject.Instantiate(prefab, coords, Quaternion.identity);
+            vaxelObj = GameObject.Instantiate(prefab, coords, Quaternion.identity);
 
-            if (target != null)
+            if (vaxelObj != null)
             {
-                target.transform.SetParent(vaxelObj.transform);
+                vaxelObj.transform.SetParent(parent.transform);
             }
             else
             {

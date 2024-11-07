@@ -6,7 +6,6 @@ using UnityEngine.UI;
 public class OreData : VaxelData, IBlock, IItem, IEntity
 {
     private GameObject blockPrefab;
-    private GameObject blockObj;
     private Texture blockTexture;
 
     void IBlock.LoadTexture(List<string> texturePaths)
@@ -14,15 +13,13 @@ public class OreData : VaxelData, IBlock, IItem, IEntity
         ResourceTextureLoad(ref blockTexture, texturePaths[Constants.TEXTURE_FACE_FULL]);
     }
 
-    void IBlock.Create(ref Vector3 coords, ref BlockManager blockMgr, GameObject vaxelObj)
+    void IBlock.Create(ref Vector3 coords, ref BlockManager blockMgr, GameObject parent)
     {
         // プレハブを読み込み作成
-        ResourceInstantiatePrefab(ref blockPrefab, Constants.PREFAB_BLOCK, ref vaxelObj, ref blockObj, coords);
-
-        blockObj.transform.SetParent(vaxelObj.transform);
+        ResourceInstantiatePrefab(ref blockPrefab, Constants.PREFAB_BLOCK, ref parent, coords);
 
         // テクスチャを設定
-        List<GameObject> children = GetChildren(blockObj);
+        List<GameObject> children = GetChildren(vaxelObj);
         for (int i = 0; i < children.Count; i++)
         {
             MeshRenderer meshRenderer = children[i].GetComponent<MeshRenderer>();

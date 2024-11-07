@@ -8,5 +8,5 @@ public interface IBlock
     void LoadTexture(List<string> texturePaths);
 
     // ブロックの生成
-    void Create(ref Vector3 coords, ref BlockManager blockMgr, GameObject vaxelObj);
+    void Create(ref Vector3 coords, ref BlockManager blockMgr, GameObject parent);
 }

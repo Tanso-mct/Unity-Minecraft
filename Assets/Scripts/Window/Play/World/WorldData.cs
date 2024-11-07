@@ -19,19 +19,29 @@ public class WorldData : MonoBehaviour
     ){
         Debug.Log("Create World");
 
-        CreateVaxel(Constants.VAXEL_TYPE.STONE, new Vector3(0, 0, 0), ref blocksID, ref blockMgr, dataObj);
-        CreateVaxel(Constants.VAXEL_TYPE.COBBLESTONE, new Vector3(1, 0, 0), ref blocksID, ref blockMgr, dataObj);
+        // CreateVaxel(Constants.VAXEL_TYPE.STONE, new Vector3(0, 0, 0), ref blocksID, ref blockMgr, dataObj);
+        // CreateVaxel(Constants.VAXEL_TYPE.COBBLESTONE, new Vector3(1, 0, 0), ref blocksID, ref blockMgr, dataObj);
 
-        CreateVaxel(Constants.VAXEL_TYPE.COAL_ORE, new Vector3(2, 0, 0), ref blocksID, ref blockMgr, dataObj);
-        CreateVaxel(Constants.VAXEL_TYPE.IRON_ORE, new Vector3(3, 0, 0), ref blocksID, ref blockMgr, dataObj);
-        CreateVaxel(Constants.VAXEL_TYPE.GOLD_ORE, new Vector3(4, 0, 0), ref blocksID, ref blockMgr, dataObj);
-        CreateVaxel(Constants.VAXEL_TYPE.DIAMOND_ORE, new Vector3(5, 0, 0), ref blocksID, ref blockMgr, dataObj);
-        CreateVaxel(Constants.VAXEL_TYPE.EMERALD_ORE, new Vector3(6, 0, 0), ref blocksID, ref blockMgr, dataObj);
-        CreateVaxel(Constants.VAXEL_TYPE.REDSTONE_ORE, new Vector3(7, 0, 0), ref blocksID, ref blockMgr, dataObj);
-        CreateVaxel(Constants.VAXEL_TYPE.LAPIS_ORE, new Vector3(8, 0, 0), ref blocksID, ref blockMgr, dataObj);
+        // CreateVaxel(Constants.VAXEL_TYPE.COAL_ORE, new Vector3(2, 0, 0), ref blocksID, ref blockMgr, dataObj);
+        // CreateVaxel(Constants.VAXEL_TYPE.IRON_ORE, new Vector3(3, 0, 0), ref blocksID, ref blockMgr, dataObj);
+        // CreateVaxel(Constants.VAXEL_TYPE.GOLD_ORE, new Vector3(4, 0, 0), ref blocksID, ref blockMgr, dataObj);
+        // CreateVaxel(Constants.VAXEL_TYPE.DIAMOND_ORE, new Vector3(5, 0, 0), ref blocksID, ref blockMgr, dataObj);
+        // CreateVaxel(Constants.VAXEL_TYPE.EMERALD_ORE, new Vector3(6, 0, 0), ref blocksID, ref blockMgr, dataObj);
+        // CreateVaxel(Constants.VAXEL_TYPE.REDSTONE_ORE, new Vector3(7, 0, 0), ref blocksID, ref blockMgr, dataObj);
+        // CreateVaxel(Constants.VAXEL_TYPE.LAPIS_ORE, new Vector3(8, 0, 0), ref blocksID, ref blockMgr, dataObj);
 
-        CreateVaxel(Constants.VAXEL_TYPE.GRASS, new Vector3(0, 0, 2), ref blocksID, ref blockMgr, dataObj);
-        CreateVaxel(Constants.VAXEL_TYPE.DIRT, new Vector3(2, 0, 2), ref blocksID, ref blockMgr, dataObj);
+        // CreateVaxel(Constants.VAXEL_TYPE.GRASS, new Vector3(0, 0, 2), ref blocksID, ref blockMgr, dataObj);
+        // CreateVaxel(Constants.VAXEL_TYPE.DIRT, new Vector3(2, 0, 2), ref blocksID, ref blockMgr, dataObj);
+        // CreateVaxel(Constants.VAXEL_TYPE.BEDROCK, new Vector3(4, 0, 2), ref blocksID, ref blockMgr, dataObj);
+
+        // Create super flat world
+        // for (int x = -McVideos.RenderDistance * Constants.CHUCK_SIZE; x < McVideos.RenderDistance * Constants.CHUCK_SIZE; x++)
+        // {
+        //     for (int z = -McVideos.RenderDistance * Constants.CHUCK_SIZE; z < McVideos.RenderDistance * Constants.CHUCK_SIZE; z++)
+        //     {
+        //         CreateVaxel(Constants.VAXEL_TYPE.BEDROCK, new Vector3(x, 0, z), ref blocksID, ref blockMgr, dataObj);
+        //     }
+        // }
     }
 
     private Vector3 CoordsIntConvert(Vector3 coords)
@@ -76,20 +86,23 @@ public class WorldData : MonoBehaviour
 
     private void CreateGrass(ref Vector3 coords, ref int[,,] blocks, ref BlockManager blockMgr, GameObject dataObj)
     {
-        // Vaxelを生成
-        Vaxel vaxel = CreateVaxel(dataObj);
-            
-        // Vaxelのデータを初期化
-        vaxel.data = new GrassData();
+        // VaxelDataを初期化
+        VaxelData buildBlockData = new OreData();
 
         // ブロックに設定
-        IBlock block = vaxel.data as IBlock;
+        IBlock block = buildBlockData as IBlock;
 
         // テクスチャを読み込む
         block.LoadTexture(new List<string>{Constants.TEXTURE_GRASS_TOP, Constants.TEXTURE_GRASS_BOTTOM, Constants.TEXTURE_GRASS_SIDE});
 
         // データを生成
-        block.Create(ref coords, ref blockMgr, vaxel.gameObject);
+        block.Create(ref coords, ref blockMgr, dataObj);
+
+        // Vaxel取得
+        Vaxel vaxel = buildBlockData.vaxelObj.GetComponent<Vaxel>();
+
+        // データを登録
+        vaxel.data = buildBlockData;
 
         // Vaxelをリストに追加
         vaxels.AddLast(vaxel);
@@ -101,20 +114,23 @@ public class WorldData : MonoBehaviour
 
     private void CreateOre(string texturePath, ref Vector3 coords, ref int[,,] blocks, ref BlockManager blockMgr, GameObject dataObj)
     {
-         // Vaxelを生成
-        Vaxel vaxel = CreateVaxel(dataObj);
-            
-        // Vaxelのデータを初期化
-        vaxel.data = new BuildBlockData();
+        // VaxelDataを初期化
+        VaxelData buildBlockData = new OreData();
 
         // ブロックに設定
-        IBlock block = vaxel.data as IBlock;
+        IBlock block = buildBlockData as IBlock;
 
         // テクスチャを読み込む
         block.LoadTexture(new List<string>{texturePath});
 
         // データを生成
-        block.Create(ref coords, ref blockMgr, vaxel.gameObject);
+        block.Create(ref coords, ref blockMgr, dataObj);
+
+        // Vaxel取得
+        Vaxel vaxel = buildBlockData.vaxelObj.GetComponent<Vaxel>();
+
+        // データを登録
+        vaxel.data = buildBlockData;
 
         // Vaxelをリストに追加
         vaxels.AddLast(vaxel);
@@ -126,20 +142,23 @@ public class WorldData : MonoBehaviour
 
     private void CreateBuildBlock(string texturePath, ref Vector3 coords, ref int[,,] blocks, ref BlockManager blockMgr, GameObject dataObj)
     {
-         // Vaxelを生成
-        Vaxel vaxel = CreateVaxel(dataObj);
-            
-        // Vaxelのデータを初期化
-        vaxel.data = new BuildBlockData();
+        // VaxelDataを初期化
+        VaxelData buildBlockData = new BuildBlockData();
 
         // ブロックに設定
-        IBlock block = vaxel.data as IBlock;
+        IBlock block = buildBlockData as IBlock;
 
         // テクスチャを読み込む
         block.LoadTexture(new List<string>{texturePath});
 
         // データを生成
-        block.Create(ref coords, ref blockMgr, vaxel.gameObject);
+        block.Create(ref coords, ref blockMgr, dataObj);
+
+        // Vaxel取得
+        Vaxel vaxel = buildBlockData.vaxelObj.GetComponent<Vaxel>();
+
+        // データを登録
+        vaxel.data = buildBlockData;
 
         // Vaxelをリストに追加
         vaxels.AddLast(vaxel);
@@ -153,6 +172,10 @@ public class WorldData : MonoBehaviour
     {
         switch (type)
         {
+        case Constants.VAXEL_TYPE.BEDROCK:
+            CreateBuildBlock(Constants.TEXTURE_BEDROCK, ref coords, ref blocks, ref blockMgr, dataObj);
+            break;
+
         case Constants.VAXEL_TYPE.GRASS:
             CreateGrass(ref coords, ref blocks, ref blockMgr, dataObj);
             break;

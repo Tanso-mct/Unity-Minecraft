@@ -27,6 +27,8 @@ public class World : MonoBehaviour
     private ItemManager itemMgr;
     private EntityManager entityMgr;
 
+    private int debugNum = 0;
+
 
     private void Init()
     {
@@ -98,5 +100,19 @@ public class World : MonoBehaviour
     {
         // プレイヤーの実行
         player.Execute();
+
+        if (Input.GetKeyDown(KeyCode.F1))
+        {
+            // デバッグ用
+            for (int x = -McVideos.RenderDistance * 8; x < McVideos.RenderDistance * 8; x++)
+            {
+                for (int z = -McVideos.RenderDistance * 8; z < McVideos.RenderDistance * 8; z++)
+                {
+                    data.CreateVaxel(Constants.VAXEL_TYPE.BEDROCK, new Vector3(x, debugNum, z), ref blocksID, ref blockMgr, dataObj);
+                }
+            }
+
+            debugNum++;
+        }
     }
 }

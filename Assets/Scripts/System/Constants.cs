@@ -95,6 +95,7 @@ public class Constants : MonoBehaviour
     // Vaxel type
     public enum VAXEL_TYPE
     {
+        BEDROCK,
         DIRT,
         GRASS,
         STONE, COBBLESTONE, STONE_ANDESITE, STONE_DIORITE, STONE_GRANITE,
@@ -107,13 +108,15 @@ public class Constants : MonoBehaviour
         LAPIS_ORE
     }
 
-    // Block object type
+    // Block object type    
     public const string BLOCK_OBJ_FRONT = "Front";
     public const string BLOCK_OBJ_BACK = "Back";
     public const string BLOCK_OBJ_LEFT = "Left";
     public const string BLOCK_OBJ_RIGHT = "Right";
     public const string BLOCK_OBJ_TOP = "Top";
     public const string BLOCK_OBJ_BOTTOM = "Bottom";
+
+    public const int CHUCK_SIZE = 16;
     
 
     // Texture face
@@ -127,6 +130,7 @@ public class Constants : MonoBehaviour
     public const int TEXTURE_FACE_RIGHT = 5;
 
     // Texture path
+    public const string TEXTURE_BEDROCK = "Textures/blocks/bedrock";
     public const string TEXTURE_DIRT = "Textures/blocks/dirt";
     public const string TEXTURE_GRASS_TOP = "Textures/blocks/grass_top";
     public const string TEXTURE_GRASS_SIDE = "Textures/blocks/grass_side";

@@ -11,10 +11,10 @@ public class GrassData : VaxelData, IBlock, IItem, IEntity
     private Texture blockSideTexture;
     private Texture blockBottomTexture;
 
-    void IBlock.Create(ref Vector3 coords, ref BlockManager blockMgr, GameObject vaxelObj)
+    void IBlock.Create(ref Vector3 coords, ref BlockManager blockMgr, GameObject parent)
     {
         // プレハブを読み込み作成
-        ResourceInstantiatePrefab(ref blockPrefab, Constants.PREFAB_BLOCK, ref vaxelObj, ref blockObj, coords);
+        ResourceInstantiatePrefab(ref blockPrefab, Constants.PREFAB_BLOCK, ref parent, coords);
 
         // テクスチャを設定
         List<GameObject> children = GetChildren(blockObj);

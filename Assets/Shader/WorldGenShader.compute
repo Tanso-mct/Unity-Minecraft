@@ -1,0 +1,36 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+int CHUCK_SIZE;
+int WORLD_SIZE;
+int WORLD_HALF_SIZE;
+int WORLD_HEIGHT;
+
+int BLOCK_VERTEX_COUNT;
+int STAIR_VERTEX_COUNT;
+int SLAB_VERTEX_COUNT;
+
+int VAXEL_BEDROCK;
+int VAXEL_DIRT;
+int VAXEL_GRASS;
+int VAXEL_STONE;
+int VAXEL_COBBLESTONE;
+int VAXEL_STONE_ANDESITE;
+int VAXEL_STONE_DIORITE;
+int VAXEL_STONE_GRANITE;
+
+int VAXEL_COAL_ORE;
+int VAXEL_IRON_ORE;
+int VAXEL_GOLD_ORE;
+int VAXEL_DIAMOND_ORE;
+int VAXEL_EMERALD_ORE;
+int VAXEL_LAPIS_ORE;
+
+RWStructuredBuffer<float3> blocksID;
+StructuredBuffer<float3> baseBlockVs;
+
+[numthreads(8,8,8)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    
+}

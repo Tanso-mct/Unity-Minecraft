@@ -10,23 +10,11 @@ public class Param : MonoBehaviour
 
     [HideInInspector] public static bool popUpWindowDone = false;
 
-    [HideInInspector] public static bool createWorld = true;
-    [HideInInspector] public static bool loadWorld = false;
-
-    [HideInInspector] public static int worldInfoId = -1;
-
     public static void Init()
     {
         msg = Constants.MSG_NULL;
         floPar = 0;
         strPar = "";
         popUpWindowDone = false;
-    }
-
-    public static void InitWorldParam()
-    {
-        createWorld = false;
-        loadWorld = false;
-        worldInfoId = -1;
     }
 }

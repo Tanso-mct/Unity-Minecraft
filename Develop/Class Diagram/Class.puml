@@ -79,6 +79,11 @@ class Param
     + {static} InitWorldParam() : void
 }
 
+class SupportFunc
+{
+
+}
+
 BaseManager *-- Manager
 BaseManager *-- McOption
 BaseManager *-- Param
@@ -415,7 +420,7 @@ class McControls
 }
 
 World *-- Player
-World *-- WorldData
+World *-- Vaxel
 World *-- WorldInfo
 World *-- McHitManager
 World *-- BlockManager
@@ -444,6 +449,14 @@ class World
     + Execute() : void
 }
 
+class WorldInfo {
+    + worldName : string
+    + createdDate : string
+    + gameMode : string
+    + worldJson : string
+    + worldJsonPath : string
+}
+
 class McHitBox 
 {
     - vaxelId : int
@@ -467,23 +480,6 @@ class McHitManager
     + UnregisterHitBox(hitBox:McHitBox) : void
 
     + IsHit(hitBox:McHitBox) : bool
-}
-
-WorldData *-- Vaxel
-class WorldData 
-{
-    + Init(blocksID:int[,,], entitiesID:int[,,], itemsID:int[,,]) : void
-    + Create(blocksID:int[,,]) : void
-    + SpawnMob(entitiesID:int[,,]) : void
-    + Load(info:WorldInfo) : void
-}
-
-class WorldInfo {
-    + worldName : string
-    + createdDate : string
-    + gameMode : string
-    + worldJson : string
-    + worldJsonPath : string
 }
 
 Player *-- PlayerData
@@ -574,150 +570,137 @@ class EntityManager
     + Unregister(obj:GameObject) : void
 }
 
-
-Vaxel *-- VaxelData
-class Vaxel 
+abstract class Vaxel 
 {
     + Init() : void
 }
 
-abstract class VaxelData 
-{
-    + Init() : void
-}
-
-ArmorData --|> VaxelData
-ArmorData --|> IItem
-ArmorData --|> IEntity
-class ArmorData {
+ArmorVaxel --|> IItem
+ArmorVaxel --|> Vaxel
+class ArmorVaxel {
     
 }
 
-BuildBlockData --|> VaxelData
-BuildBlockData --|> IBlock
-BuildBlockData --|> IItem
-BuildBlockData --|> IEntity
-class BuildBlockData 
+BuildBlockVaxel --|> IBlock
+BuildBlockVaxel --|> IItem
+BuildBlockVaxel --|> Vaxel
+class BuildBlockVaxel 
 {
     
 }
 
-EnchantBookData --|> VaxelData
-EnchantBookData --|> IItem
-EnchantBookData --|> IEntity
-class EnchantBookData 
+EnchantBookVaxel --|> IItem
+EnchantBookVaxel --|> Vaxel
+class EnchantBookVaxel 
 {
     
 }
 
-EntityData --|> VaxelData
-EntityData --|> IEntity
-class EntityData 
+HostileMobVaxel --|> IEntity
+FallVaxel --|> Vaxel
+class HostileMobVaxel 
 {
     
 }
 
-FallData --|> VaxelData
-FallData --|> IBlock
-FallData --|> IItem
-FallData --|> IEntity
-class FallData 
+FriendlyMobVaxel --|> IEntity
+FriendlyMobVaxel --|> Vaxel
+class FriendlyMobVaxel 
 {
     
 }
 
-FenceData --|> VaxelData
-FenceData --|> IBlock
-FenceData --|> IItem
-FenceData --|> IEntity
-class FenceData 
+FallVaxel --|> IBlock
+FallVaxel --|> IItem
+FallVaxel --|> IEntity
+FlowerVaxel --|> Vaxel
+class FallVaxel 
 {
     
 }
 
-FluidData --|> VaxelData
-FluidData --|> IBlock
-FluidData --|> IItem
-FluidData --|> IEntity
-class FluidData 
+FenceVaxel --|> IBlock
+FenceVaxel --|> IItem
+FenceVaxel --|> Vaxel
+class FenceVaxel 
 {
     
 }
 
-FoodData --|> VaxelData
-FoodData --|> IItem
-FoodData --|> IEntity
-class FoodData 
+FluidVaxel --|> IBlock
+FluidVaxel --|> IItem
+FlowerVaxel --|> Vaxel
+class FluidVaxel 
 {
     
 }
 
-FurunitureData --|> VaxelData
-FurunitureData --|> IBlock
-FurunitureData --|> IItem
-FurunitureData --|> IEntity
-class FurunitureData 
+
+FoodVaxel --|> IItem
+FoodVaxel --|> Vaxel
+class FoodVaxel 
 {
     
 }
 
-GlassData --|> VaxelData
-GlassData --|> IBlock
-GlassData --|> IItem
-GlassData --|> IEntity
-class GlassData 
+FurunitureVaxel --|> IBlock
+FurunitureVaxel --|> IItem
+FurunitureVaxel --|> Vaxel
+class FurunitureVaxel 
 {
     
 }
 
-GrassData --|> VaxelData
-GrassData --|> IBlock
-GrassData --|> IItem
-GrassData --|> IEntity
-class GrassData 
+GlassVaxel --|> IBlock
+GlassVaxel --|> IItem
+GlassVaxel --|> Vaxel
+class GlassVaxel 
 {
     
 }
 
-LeafData --|> VaxelData
-LeafData --|> IBlock
-LeafData --|> IItem
-LeafData --|> IEntity
-class LeafData 
+GrassVaxel --|> IBlock
+GrassVaxel --|> IItem
+GrassVaxel --|> Vaxel
+class GrassVaxel 
 {
     
 }
 
-OreData --|> VaxelData
-OreData --|> IBlock
-OreData --|> IItem
-OreData --|> IEntity
-class OreData 
+LeafVaxel --|> IBlock
+LeafVaxel --|> IItem
+LeafVaxel --|> Vaxel
+class LeafVaxel 
 {
     
 }
 
-SeedData --|> VaxelData
-SeedData --|> IBlock
-SeedData --|> IItem
-SeedData --|> IEntity
-class SeedData 
+OreVaxel --|> IBlock
+OreVaxel --|> IItem
+OreVaxel --|> Vaxel
+class OreVaxel 
 {
     
 }
 
-ToolData --|> VaxelData
-ToolData --|> IItem
-ToolData --|> IEntity
-class ToolData 
+SeedVaxel --|> IBlock
+SeedVaxel --|> IItem
+SeedVaxel --|> Vaxel
+class SeedVaxel 
 {
     
 }
 
-CraftData --|> VaxelData
-CraftData --|> IItem
-CraftData --|> IEntity
-class CraftData 
+ToolVaxel --|> IItem
+ToolVaxel --|> Vaxel
+class ToolVaxel 
+{
+    
+}
+
+MaterialVaxel --|> IItem
+MaterialVaxel --|> Vaxel
+class MaterialVaxel 
 {
     
 }

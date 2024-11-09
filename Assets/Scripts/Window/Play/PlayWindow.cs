@@ -25,12 +25,12 @@ public class PlayWindow : GameWindow
         ElementsInit(ref diImageEl);
         ElementsInit(ref diTextEl);
 
-        // Paramの値からワールドを生成
-        if (Param.createWorld) world.Create();
-        else if (Param.loadWorld) world.LoadFromJson();
+        // Debug時のみWorldInfoを生成
+        World.CreateWorldInfo("Test", Constants.WORLD_MODE_CREATIVE, Constants.WORLD_TYPE_FLAT);
+        World.SetWorldInfo(0);
 
-        // Paramのワールドに関係する値の初期化
-        Param.InitWorldParam();
+        // Paramの値からワールドを生成
+        world.Init();
     }
 
     public override void Show()

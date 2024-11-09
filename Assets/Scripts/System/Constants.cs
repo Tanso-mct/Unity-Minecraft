@@ -4,6 +4,34 @@ using UnityEngine;
 
 public class Constants : MonoBehaviour
 {
+    public static void SetShaderConstants(ref ComputeShader shader)
+    {
+        shader.SetInt("CHUCK_SIZE", CHUCK_SIZE);
+        shader.SetInt("WORLD_SIZE", WORLD_SIZE);
+        shader.SetInt("WORLD_HALF_SIZE", WORLD_HALF_SIZE);
+        shader.SetInt("WORLD_HEIGHT", WORLD_HEIGHT);
+
+        shader.SetInt("BLOCK_VERTEX_COUNT", BLOCK_VERTEX_COUNT);
+        shader.SetInt("STAIR_VERTEX_COUNT", STAIR_VERTEX_COUNT);
+        shader.SetInt("SLAB_VERTEX_COUNT", SLAB_VERTEX_COUNT);
+
+        shader.SetInt("VAXEL_BEDROCK", (int)VAXEL_TYPE.BEDROCK);
+        shader.SetInt("VAXEL_DIRT", (int)VAXEL_TYPE.DIRT);
+        shader.SetInt("VAXEL_GRASS", (int)VAXEL_TYPE.GRASS);
+        shader.SetInt("VAXEL_STONE", (int)VAXEL_TYPE.STONE);
+        shader.SetInt("VAXEL_COBBLESTONE", (int)VAXEL_TYPE.COBBLESTONE);
+        shader.SetInt("VAXEL_STONE_ANDESITE", (int)VAXEL_TYPE.STONE_ANDESITE);
+        shader.SetInt("VAXEL_STONE_DIORITE", (int)VAXEL_TYPE.STONE_DIORITE);
+        shader.SetInt("VAXEL_STONE_GRANITE", (int)VAXEL_TYPE.STONE_GRANITE);
+
+        shader.SetInt("VAXEL_COAL_ORE", (int)VAXEL_TYPE.COAL_ORE);
+        shader.SetInt("VAXEL_IRON_ORE", (int)VAXEL_TYPE.IRON_ORE);
+        shader.SetInt("VAXEL_GOLD_ORE", (int)VAXEL_TYPE.GOLD_ORE);
+        shader.SetInt("VAXEL_DIAMOND_ORE", (int)VAXEL_TYPE.DIAMOND_ORE);
+        shader.SetInt("VAXEL_EMERALD_ORE", (int)VAXEL_TYPE.EMERALD_ORE);
+        shader.SetInt("VAXEL_LAPIS_ORE", (int)VAXEL_TYPE.LAPIS_ORE);
+    }
+
     // Set FPS. Make sure that fps is this value.
     public const int SPECIFIED_FPS = 60;
 
@@ -104,7 +132,6 @@ public class Constants : MonoBehaviour
         GOLD_ORE,
         DIAMOND_ORE,
         EMERALD_ORE,
-        REDSTONE_ORE,
         LAPIS_ORE
     }
 
@@ -128,6 +155,9 @@ public class Constants : MonoBehaviour
     public const int TEXTURE_FACE_BACK = 3;
     public const int TEXTURE_FACE_LEFT = 4;
     public const int TEXTURE_FACE_RIGHT = 5;
+
+    // Texture atlas path
+    public const string TEXTURE_ATLAS_BLOCK = "Textures/Atlas/block";
 
     // Texture path
     public const string TEXTURE_BEDROCK = "Textures/blocks/bedrock";
@@ -156,6 +186,18 @@ public class Constants : MonoBehaviour
     public const int WORLD_SIZE = 513;
     public const int WORLD_HALF_SIZE = 256;
     public const int WORLD_HEIGHT = 320;
+
+    // World mesh block vertex count
+    public const int BLOCK_VERTEX_COUNT = 8;
+    public const int STAIR_VERTEX_COUNT = 12;
+    public const int SLAB_VERTEX_COUNT = 8;
+
+    // World Info
+    public const string WORLD_MODE_CREATIVE = "Creative";
+    public const string WORLD_MODE_SURVIVAL = "Survival";
+    public const string WORLD_TYPE_NORMAL = "Normal";
+    public const string WORLD_TYPE_FLAT = "Flat";
+
 
     // Animation
     public const string ANIM_TYPE = "AnimType";

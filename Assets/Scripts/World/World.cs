@@ -10,7 +10,7 @@ public class World : MonoBehaviour
     // 現在のワールド情報
     private static WorldInfo thisInfo;
 
-    // 期値は0。その座標に存在しているブロックの種類を示す。
+    // 初期値は0とし空気を示す。その座標に存在しているブロックの種類を示す。
     private int[,,] blocksID;
 
     // ブロックのバッファー
@@ -41,9 +41,7 @@ public class World : MonoBehaviour
     private VaxelAdmin vaxelAdmin;
 
     // Shader
-    [SerializeField] private ComputeShader worldGenShader;
-    [SerializeField] private ComputeShader worldGenFlatShader;
-    [SerializeField] private ComputeShader worldMeshShader;
+    [SerializeField] private ComputeShader worldShader;
 
     public static void LoadInfoFromJson()
     {
@@ -91,9 +89,9 @@ public class World : MonoBehaviour
         worldMesh = new Mesh();
         objWorldMesh.GetComponent<MeshFilter>().mesh = worldMesh;
 
-        Texture meshAtlasTexture = null;
-        SupportFunc.LoadTexture(ref meshAtlasTexture, Constants.TEXTURE_ATLAS_BLOCK);
-        objWorldMesh.GetComponent<MeshRenderer>().material.mainTexture = meshAtlasTexture;
+        // Texture meshAtlasTexture = null;
+        // SupportFunc.LoadTexture(ref meshAtlasTexture, Constants.TEXTURE_ATLAS_BLOCK);
+        // objWorldMesh.GetComponent<MeshRenderer>().material.mainTexture = meshAtlasTexture;
 
         // ベースとなるブロックの頂点群を生成
         baseBlockVs = new Vector3[Constants.BLOCK_VERTEX_COUNT];
@@ -145,18 +143,6 @@ public class World : MonoBehaviour
         baseSlabVsBuff = new ComputeBuffer(Constants.SLAB_VERTEX_COUNT, sizeof(float) * 3);
         baseSlabVsBuff.SetData(baseSlabVs);
 
-        // 各バッファーをシェーダーにセット
-        worldGenShader.SetBuffer(0, "baseBlockVs", baseBlockVsBuff);
-        worldGenFlatShader.SetBuffer(0, "baseBlockVs", baseBlockVsBuff);
-        worldMeshShader.SetBuffer(0, "baseBlockVs", baseBlockVsBuff);
-        worldMeshShader.SetBuffer(0, "baseStairVs", baseStairVsBuff);
-        worldMeshShader.SetBuffer(0, "baseSlabVs", baseSlabVsBuff);
-
-        // シェーダーの定数をセット
-        Constants.SetShaderConstants(ref worldGenShader);
-        Constants.SetShaderConstants(ref worldGenFlatShader);
-        Constants.SetShaderConstants(ref worldMeshShader);
-
         // ワールドの生成もしくは読み込み
         if(thisInfo.dataJsonPath == "") Create(thisInfo.worldType);
         else LoadFromJson();
@@ -169,16 +155,28 @@ public class World : MonoBehaviour
         int threadGroupsX = Mathf.CeilToInt(Constants.WORLD_SIZE / 8.0f);
         int threadGroupsY = Mathf.CeilToInt(Constants.WORLD_HEIGHT / 8.0f);
         int threadGroupsZ = Mathf.CeilToInt(Constants.WORLD_SIZE / 8.0f);
+
+        // 各バッファーをシェーダーにセット
+        worldShader.SetBuffer(0, "blocksID", blocksIDBuff);
+
+        worldShader.SetBuffer(0, "baseBlockVs", baseBlockVsBuff);
+        worldShader.SetBuffer(0, "baseStairVs", baseStairVsBuff);
+        worldShader.SetBuffer(0, "baseSlabVs", baseSlabVsBuff);
+
+        // シェーダーの定数をセット
+        Constants.SetShaderConstants(ref worldShader);
         
         if (thisInfo.worldType == "Flat")
         {
-            worldGenFlatShader.SetBuffer(0, "blocksID", blocksIDBuff);
-            worldGenFlatShader.Dispatch(0, threadGroupsX, threadGroupsY, threadGroupsZ);
+            // フラットワールドの生成
+            int generateFlatWorld = worldShader.FindKernel("GenerateFlatWorld");
+            worldShader.Dispatch(generateFlatWorld, threadGroupsX, threadGroupsY, threadGroupsZ);
         }
         else 
         {
-            worldGenShader.SetBuffer(0, "blocksID", blocksIDBuff);
-            worldGenShader.Dispatch(0, threadGroupsX, threadGroupsY, threadGroupsZ);
+            // ダイアモンドスクエアアルゴリズムによるワールドの生成
+            int diamondSquareStep = worldShader.FindKernel("DiamondSquareStep");
+            worldShader.Dispatch(diamondSquareStep, threadGroupsX, threadGroupsY, threadGroupsZ);
         }
 
         // プレイヤーの生成及び配置
@@ -247,6 +245,7 @@ public class World : MonoBehaviour
     void OnDestroy()
     {
         // バッファを解放
+        if (blocksIDBuff != null) blocksIDBuff.Release();
         if (baseBlockVsBuff != null) baseBlockVsBuff.Release();
         if (baseStairVsBuff != null) baseStairVsBuff.Release();
         if (baseSlabVsBuff != null) baseSlabVsBuff.Release();

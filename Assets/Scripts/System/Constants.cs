@@ -14,22 +14,6 @@ public class Constants : MonoBehaviour
         shader.SetInt("BLOCK_VERTEX_COUNT", BLOCK_VERTEX_COUNT);
         shader.SetInt("STAIR_VERTEX_COUNT", STAIR_VERTEX_COUNT);
         shader.SetInt("SLAB_VERTEX_COUNT", SLAB_VERTEX_COUNT);
-
-        shader.SetInt("VAXEL_BEDROCK", (int)VAXEL_TYPE.BEDROCK);
-        shader.SetInt("VAXEL_DIRT", (int)VAXEL_TYPE.DIRT);
-        shader.SetInt("VAXEL_GRASS", (int)VAXEL_TYPE.GRASS);
-        shader.SetInt("VAXEL_STONE", (int)VAXEL_TYPE.STONE);
-        shader.SetInt("VAXEL_COBBLESTONE", (int)VAXEL_TYPE.COBBLESTONE);
-        shader.SetInt("VAXEL_STONE_ANDESITE", (int)VAXEL_TYPE.STONE_ANDESITE);
-        shader.SetInt("VAXEL_STONE_DIORITE", (int)VAXEL_TYPE.STONE_DIORITE);
-        shader.SetInt("VAXEL_STONE_GRANITE", (int)VAXEL_TYPE.STONE_GRANITE);
-
-        shader.SetInt("VAXEL_COAL_ORE", (int)VAXEL_TYPE.COAL_ORE);
-        shader.SetInt("VAXEL_IRON_ORE", (int)VAXEL_TYPE.IRON_ORE);
-        shader.SetInt("VAXEL_GOLD_ORE", (int)VAXEL_TYPE.GOLD_ORE);
-        shader.SetInt("VAXEL_DIAMOND_ORE", (int)VAXEL_TYPE.DIAMOND_ORE);
-        shader.SetInt("VAXEL_EMERALD_ORE", (int)VAXEL_TYPE.EMERALD_ORE);
-        shader.SetInt("VAXEL_LAPIS_ORE", (int)VAXEL_TYPE.LAPIS_ORE);
     }
 
     // Set FPS. Make sure that fps is this value.
@@ -121,7 +105,7 @@ public class Constants : MonoBehaviour
     public const int VAXEL_STATE_ENTITY = 3;
 
     // Vaxel type
-    public enum VAXEL_TYPE
+    public enum BLOCK_TYPE
     {
         BEDROCK,
         DIRT,

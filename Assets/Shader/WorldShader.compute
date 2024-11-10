@@ -1,0 +1,43 @@
+#pragma kernel GenerateFlatWorld
+#pragma kernel DiamondSquareStep
+#pragma kernel GetBlocksAdjacentAir
+#pragma kernel MeshUpdate
+
+int CHUCK_SIZE;
+int WORLD_SIZE;
+int WORLD_HALF_SIZE;
+int WORLD_HEIGHT;
+
+int BLOCK_VERTEX_COUNT;
+int STAIR_VERTEX_COUNT;
+int SLAB_VERTEX_COUNT;
+
+RWStructuredBuffer<float3> blocksID;
+
+StructuredBuffer<float3> baseBlockVs;
+StructuredBuffer<float3> baseStairVs;
+StructuredBuffer<float3> baseSlabVs;
+
+[numthreads(8,8,8)]
+void GenerateFlatWorld (uint3 id : SV_DispatchThreadID)
+{
+    int index = id.x + id.y * WORLD_HEIGHT + id.z * WORLD_HEIGHT * WORLD_SIZE;
+}
+
+[numthreads(8,8,8)]
+void DiamondSquareStep (uint3 id : SV_DispatchThreadID)
+{
+    int index = id.x + id.y * WORLD_HEIGHT + id.z * WORLD_HEIGHT * WORLD_SIZE;
+}
+
+[numthreads(8,8,8)]
+void GetBlocksAdjacentAir (uint3 id : SV_DispatchThreadID)
+{
+    int index = id.x + id.y * WORLD_HEIGHT + id.z * WORLD_HEIGHT * WORLD_SIZE;
+}
+
+[numthreads(8,8,8)]
+void MeshUpdate (uint3 id : SV_DispatchThreadID)
+{
+    int index = id.x + id.y * WORLD_HEIGHT + id.z * WORLD_HEIGHT * WORLD_SIZE;
+}

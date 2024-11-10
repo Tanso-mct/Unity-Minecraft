@@ -2601,9 +2601,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objWorldMesh: {fileID: 1745704619}
   player: {fileID: 1586971688}
-  worldGenShader: {fileID: 7200000, guid: 98a8c18187457a74b941a4dcd5fe56dc, type: 3}
-  worldGenFlatShader: {fileID: 7200000, guid: 7317d4dbf3969d14786bed3ef882961e, type: 3}
-  worldMeshShader: {fileID: 7200000, guid: ac3f34db4849a6d4da9868655c09980b, type: 3}
+  worldShader: {fileID: 7200000, guid: 10b320411cf700b49a086142f44534bb, type: 3}
 --- !u!1 &1745704619
 GameObject:
   m_ObjectHideFlags: 0

@@ -14,9 +14,9 @@ int SLAB_VERTEX_COUNT;
 
 RWStructuredBuffer<float3> blocksID;
 
-StructuredBuffer<float3> baseBlockVs;
-StructuredBuffer<float3> baseStairVs;
-StructuredBuffer<float3> baseSlabVs;
+StructuredBuffer<float3> sourceMeshBlockVs;
+StructuredBuffer<float3> sourceMeshBlockUVs;
+StructuredBuffer<float3> sourceMeshBlockTris;
 
 [numthreads(8,8,8)]
 void GenerateFlatWorld (uint3 id : SV_DispatchThreadID)

@@ -96,5 +96,17 @@ public class SquareCombiner : MonoBehaviour
         {
             Debug.Log("Triangle " + i + ": " + triangles[i]);
         }
+
+        // メッシュを移動させる
+        Vector3 offset = new Vector3(2.0f, 0.0f, 0.0f); // 移動量を設定
+        for (int i = 0; i < vertices.Length; i++)
+        {
+            vertices[i] += offset;
+        }
+        combinedMesh.vertices = vertices;
+        
+        combinedMesh.RecalculateBounds(); // 境界を再計算
+        combinedMesh.RecalculateNormals(); // 法線を再計算
+        combinedMesh.RecalculateTangents(); // 接線を再計算
     }
 }

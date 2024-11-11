@@ -25,14 +25,8 @@ public class World : MonoBehaviour
     [SerializeField] private GameObject objWorldMesh;
     private Mesh worldMesh;
 
-    // 各Vaxelのメッシュ状態における頂点群と各バッファー
-    private Vector3[] baseBlockVs;
-    private Vector3[] baseStairVs;
-    private Vector3[] baseSlabVs;
-
-    private ComputeBuffer baseBlockVsBuff;
-    private ComputeBuffer baseStairVsBuff;
-    private ComputeBuffer baseSlabVsBuff;
+    // 各Vaxelのソースメッシュオブジェクト
+    [SerializeField] private WorldMesh meshBlock;
 
     // プレイヤー
     [SerializeField] private Player player;
@@ -93,55 +87,11 @@ public class World : MonoBehaviour
         // SupportFunc.LoadTexture(ref meshAtlasTexture, Constants.TEXTURE_ATLAS_BLOCK);
         // objWorldMesh.GetComponent<MeshRenderer>().material.mainTexture = meshAtlasTexture;
 
-        // ベースとなるブロックの頂点群を生成
-        baseBlockVs = new Vector3[Constants.BLOCK_VERTEX_COUNT];
-        baseBlockVs[0] = new Vector3(-0.5f, 0.5f, -0.5f);
-        baseBlockVs[1] = new Vector3(0.5f, 0.5f, -0.5f);
-        baseBlockVs[2] = new Vector3(0.5f, -0.5f, -0.5f);
-        baseBlockVs[3] = new Vector3(-0.5f, -0.5f, -0.5f);
+        // ソースメッシュオブジェクトの初期化
+        meshBlock.Init();
 
-        baseBlockVs[4] = new Vector3(-0.5f, 0.5f, 0.5f);
-        baseBlockVs[5] = new Vector3(0.5f, 0.5f, 0.5f);
-        baseBlockVs[6] = new Vector3(0.5f, -0.5f, 0.5f);
-        baseBlockVs[7] = new Vector3(-0.5f, -0.5f, 0.5f);
-
-        baseBlockVsBuff = new ComputeBuffer(Constants.BLOCK_VERTEX_COUNT, sizeof(float) * 3, ComputeBufferType.Structured);
-        baseBlockVsBuff.SetData(baseBlockVs);
-
-        // ベースとなる階段の頂点群を生成
-        baseStairVs = new Vector3[Constants.STAIR_VERTEX_COUNT];
-        baseStairVs[0] = new Vector3(-0.5f, 0.5f, 0f);
-        baseStairVs[1] = new Vector3(0.5f, 0.5f, 0f);
-        baseStairVs[2] = new Vector3(0.5f, 0, 0f);
-        baseStairVs[3] = new Vector3(-0.5f, 0, 0f);
-
-        baseStairVs[4] = new Vector3(-0.5f, 0f, -0.5f);
-        baseStairVs[5] = new Vector3(0.5f, 0f, -0.5f);
-        baseStairVs[6] = new Vector3(0.5f, -0.5f, -0.5f);
-        baseStairVs[7] = new Vector3(-0.5f, -0.5f, -0.5f);
-
-        baseStairVs[8] = new Vector3(-0.5f, 0.5f, 0.5f);
-        baseStairVs[9] = new Vector3(0.5f, 0.5f, 0.5f);
-        baseStairVs[10] = new Vector3(0.5f, -0.5f, 0.5f);
-        baseStairVs[11] = new Vector3(-0.5f, -0.5f, 0.5f);
-
-        baseStairVsBuff = new ComputeBuffer(Constants.STAIR_VERTEX_COUNT, sizeof(float) * 3);
-        baseStairVsBuff.SetData(baseStairVs);
-
-        // ベースとなる半ブロックの頂点群を生成
-        baseSlabVs = new Vector3[Constants.SLAB_VERTEX_COUNT];
-        baseSlabVs[0] = new Vector3(-0.5f, 0, -0.5f);
-        baseSlabVs[1] = new Vector3(0.5f, 0, -0.5f);
-        baseSlabVs[2] = new Vector3(0.5f, -0.5f, -0.5f);
-        baseSlabVs[3] = new Vector3(-0.5f, -0.5f, -0.5f);
-
-        baseSlabVs[4] = new Vector3(-0.5f, 0, 0.5f);
-        baseSlabVs[5] = new Vector3(0.5f, 0, 0.5f);
-        baseSlabVs[6] = new Vector3(0.5f, -0.5f, 0.5f);
-        baseSlabVs[7] = new Vector3(-0.5f, -0.5f, 0.5f);
-
-        baseSlabVsBuff = new ComputeBuffer(Constants.SLAB_VERTEX_COUNT, sizeof(float) * 3);
-        baseSlabVsBuff.SetData(baseSlabVs);
+        // ソースメッシュオブジェクトのバッファー作成
+        meshBlock.CreateBuffer();
 
         // ワールドの生成もしくは読み込み
         if(thisInfo.dataJsonPath == "") Create(thisInfo.worldType);
@@ -156,16 +106,13 @@ public class World : MonoBehaviour
         int threadGroupsY = Mathf.CeilToInt(Constants.WORLD_HEIGHT / 8.0f);
         int threadGroupsZ = Mathf.CeilToInt(Constants.WORLD_SIZE / 8.0f);
 
-        // 各バッファーをシェーダーにセット
-        worldShader.SetBuffer(0, "blocksID", blocksIDBuff);
-
-        worldShader.SetBuffer(0, "baseBlockVs", baseBlockVsBuff);
-        worldShader.SetBuffer(0, "baseStairVs", baseStairVsBuff);
-        worldShader.SetBuffer(0, "baseSlabVs", baseSlabVsBuff);
-
         // シェーダーの定数をセット
         Constants.SetShaderConstants(ref worldShader);
-        
+
+        // 各バッファーをシェーダーにセット
+        worldShader.SetBuffer(0, "blocksID", blocksIDBuff);
+        meshBlock.SetBuffer(ref worldShader, "sourceMeshBlockVs", "sourceMeshBlockUVs", "sourceMeshBlockTris");
+
         if (thisInfo.worldType == "Flat")
         {
             // フラットワールドの生成
@@ -246,8 +193,7 @@ public class World : MonoBehaviour
     {
         // バッファを解放
         if (blocksIDBuff != null) blocksIDBuff.Release();
-        if (baseBlockVsBuff != null) baseBlockVsBuff.Release();
-        if (baseStairVsBuff != null) baseStairVsBuff.Release();
-        if (baseSlabVsBuff != null) baseSlabVsBuff.Release();
+        
+        meshBlock.ReleaseBuffer();
     }
 }

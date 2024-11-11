@@ -245,17 +245,6 @@ public class World : MonoBehaviour
             SetBuffer(generateFlatWorld);
             worldShader.Dispatch(generateFlatWorld, threadGroupsX, threadGroupsY, threadGroupsZ);
 
-            // X = 0, Z = 0におけるブロックのIDを表示
-            int[] blocksID = new int[Constants.WORLD_SIZE * Constants.WORLD_HEIGHT * Constants.WORLD_SIZE];
-            blocksIDBuff.GetData(blocksID); 
-            int blockX = Constants.WORLD_HALF_SIZE + 0;
-            int blockZ = Constants.WORLD_HALF_SIZE + 0;
-            Debug.Log("Block ID at (0, 0, 0): " + blocksID[blockX + 0 * Constants.WORLD_HEIGHT + blockZ * Constants.WORLD_HEIGHT * Constants.WORLD_SIZE]);
-            Debug.Log("Block ID at (0, 1, 0): " + blocksID[blockX + 1 * Constants.WORLD_HEIGHT + blockZ * Constants.WORLD_HEIGHT * Constants.WORLD_SIZE]);
-            Debug.Log("Block ID at (0, 2, 0): " + blocksID[blockX + 2 * Constants.WORLD_HEIGHT + blockZ * Constants.WORLD_HEIGHT * Constants.WORLD_SIZE]);
-            Debug.Log("Block ID at (0, 3, 0): " + blocksID[blockX + 3 * Constants.WORLD_HEIGHT + blockZ * Constants.WORLD_HEIGHT * Constants.WORLD_SIZE]);
-            Debug.Log("Block ID at (0, 4, 0): " + blocksID[blockX + 4 * Constants.WORLD_HEIGHT + blockZ * Constants.WORLD_HEIGHT * Constants.WORLD_SIZE]);
-            
             int getBlocksAdjacentAir = worldShader.FindKernel("GetBlocksAdjacentAir");
             SetBuffer(getBlocksAdjacentAir);
             worldShader.Dispatch(getBlocksAdjacentAir, threadGroupsX, threadGroupsY, threadGroupsZ);

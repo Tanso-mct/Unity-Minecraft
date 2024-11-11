@@ -107,13 +107,34 @@ int GetBlockTrisCount(int id)
     return 0;
 }
 
+bool IsInWorldRange(int3 pos)
+{
+    if (
+        pos.x >= 0 && pos.x < WORLD_SIZE &&
+        pos.y >= 0 && pos.y < WORLD_HEIGHT &&
+        pos.z >= 0 && pos.z < WORLD_SIZE
+    ) return true;
+    else return false;
+}
+
+bool CheckIsAir(int3 pos)
+{
+    if (IsInWorldRange(pos))
+    {
+        if (blocksID[pos.x + pos.y * WORLD_HEIGHT + pos.z * WORLD_HEIGHT * WORLD_SIZE] == 0)
+        {
+            return true;
+        }
+        
+    }
+
+    return false;
+}
+
 [numthreads(8,8,8)]
 void GetBlocksAdjacentAir (uint3 id : SV_DispatchThreadID)
 {
     uint index = id.x + id.y * WORLD_HEIGHT + id.z * WORLD_HEIGHT * WORLD_SIZE;
-
-    // インデックスが描画範囲内のとき実行
-    int2 worldCenter = int2(WORLD_HALF_SIZE + 1, WORLD_HALF_SIZE + 1);
 
     // 読み込み範囲をZ軸マイナスからプラス方向へ見たときの正面左下と、背面右上の座標を取得
     int3 worldOrigin = int3
@@ -150,32 +171,14 @@ void GetBlocksAdjacentAir (uint3 id : SV_DispatchThreadID)
 
         // ブロックの周囲をチェック
         bool isNeedDraw = false;
-        for (int i = -1; i <= 1 && !isNeedDraw; i++)
-        {
-            for (int j = -1; j <= 1 && !isNeedDraw; j++)
-            {
-                for (int k = -1; k <= 1 && !isNeedDraw; k++)
-                {
-                    // チェックする座標を取得
-                    int3 check = checkPos + int3(i, j, k);
 
-                    // チェックする座標がワールド範囲内かどうかを判定
-                    if (check.x >= 0 && check.x < WORLD_SIZE &&
-                        check.y >= 0 && check.y < WORLD_HEIGHT &&
-                        check.z >= 0 && check.z < WORLD_SIZE
-                    ){
-                        // チェックする座標のインデックスを取得
-                        int checkIndex = check.x + check.y * WORLD_HEIGHT + check.z * WORLD_HEIGHT * WORLD_SIZE;
-
-                        // チェックする座標が空気ブロックの場合、ブロックの周囲に空気ブロックがあると判定
-                        if (blocksID[checkIndex] == 0)
-                        {
-                            isNeedDraw = true;
-                        }
-                    }
-                }
-            }
-        }
+        // 上下左右前後の6方向をチェック
+        isNeedDraw = CheckIsAir(checkPos + int3(0, 1, 0)) ? true : isNeedDraw; // 上
+        isNeedDraw = CheckIsAir(checkPos + int3(0, -1, 0)) ? true : isNeedDraw; // 下
+        isNeedDraw = CheckIsAir(checkPos + int3(1, 0, 0)) ? true : isNeedDraw; // 右
+        isNeedDraw = CheckIsAir(checkPos + int3(-1, 0, 0)) ? true : isNeedDraw; // 左
+        isNeedDraw = CheckIsAir(checkPos + int3(0, 0, -1)) ? true : isNeedDraw; // 前
+        isNeedDraw = CheckIsAir(checkPos + int3(0, 0, 1)) ? true : isNeedDraw; // 後
 
         // 描画対象のブロック情報を格納
         if (isNeedDraw)

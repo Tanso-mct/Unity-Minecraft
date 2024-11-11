@@ -130,7 +130,7 @@ public class Constants : MonoBehaviour
     public const int TEXTURE_FACE_RIGHT = 5;
 
     // Texture atlas path
-    public const string TEXTURE_ATLAS_BLOCK = "Textures/Atlas/block";
+    public const string TEXTURE_ATLAS_BLOCK = "Textures/Atlas/blocks";
 
     // Texture path
     public const string TEXTURE_BEDROCK = "Textures/blocks/bedrock";

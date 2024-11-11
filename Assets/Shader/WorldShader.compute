@@ -40,7 +40,7 @@ RWStructuredBuffer<float3> sourceMeshBlockTris;
 [numthreads(8,8,8)]
 void GenerateFlatWorld (uint3 id : SV_DispatchThreadID)
 {
-    int index = id.x + id.y * WORLD_HEIGHT + id.z * WORLD_HEIGHT * WORLD_SIZE;
+    uint index = id.x + id.y * WORLD_HEIGHT + id.z * WORLD_HEIGHT * WORLD_SIZE;
 
     if (id.y == 0)
     {
@@ -63,7 +63,7 @@ void GenerateFlatWorld (uint3 id : SV_DispatchThreadID)
 [numthreads(8,8,8)]
 void DiamondSquareStep (uint3 id : SV_DispatchThreadID)
 {
-    int index = id.x + id.y * WORLD_HEIGHT + id.z * WORLD_HEIGHT * WORLD_SIZE;
+    uint index = id.x + id.y * WORLD_HEIGHT + id.z * WORLD_HEIGHT * WORLD_SIZE;
 
     
 }
@@ -77,6 +77,8 @@ int GetBlockVsCount(int id)
         case 3: // GRASS
             return SOURCE_MESH_BLOCK_VS_SIZE;
     }
+
+    return 0;
 }
 
 int GetBlockUVsCount(int id)
@@ -88,6 +90,8 @@ int GetBlockUVsCount(int id)
         case 3: // GRASS
             return SOURCE_MESH_BLOCK_UVS_SIZE;
     }
+
+    return 0;
 }
 
 int GetBlockTrisCount(int id)
@@ -99,12 +103,14 @@ int GetBlockTrisCount(int id)
         case 3: // GRASS
             return SOURCE_MESH_BLOCK_TRIS_SIZE;
     }
+
+    return 0;
 }
 
 [numthreads(8,8,8)]
 void GetBlocksAdjacentAir (uint3 id : SV_DispatchThreadID)
 {
-    int index = id.x + id.y * WORLD_HEIGHT + id.z * WORLD_HEIGHT * WORLD_SIZE;
+    uint index = id.x + id.y * WORLD_HEIGHT + id.z * WORLD_HEIGHT * WORLD_SIZE;
 
     // インデックスが描画範囲内のとき実行
     int2 worldCenter = int2(WORLD_HALF_SIZE + 1, WORLD_HALF_SIZE + 1);
@@ -174,12 +180,19 @@ void GetBlocksAdjacentAir (uint3 id : SV_DispatchThreadID)
         // 描画対象のブロック情報を格納
         if (isNeedDraw)
         {
-            uint blockIndex = atomicAdd(drawBlockCount[0], 1);
-            uint vsIndex = atomicAdd(meshVsCount[0], GetBlockVsCount(blocksID[index]));
-            uint uvsIndex = atomicAdd(meshUVsCount[0], GetBlockUVsCount(blocksID[index]));
-            uint trisIndex = atomicAdd(meshTrisCount[0], GetBlockTrisCount(blocksID[index]));
+            uint blockIndex;
+            InterlockedAdd(drawBlockCount[0], 1, blockIndex);
 
-            drawBlockIndex[blockIndex].x = blocksID[index];
+            uint vsIndex;
+            InterlockedAdd(meshVsCount[0], GetBlockVsCount(blocksID[index]), vsIndex);
+
+            uint uvsIndex;
+            InterlockedAdd(meshUVsCount[0], GetBlockUVsCount(blocksID[index]), uvsIndex);
+
+            uint trisIndex;
+            InterlockedAdd(meshTrisCount[0], GetBlockTrisCount(blocksID[index]), trisIndex);
+
+            drawBlockIndex[blockIndex].x = index;
             drawBlockIndex[blockIndex].y = vsIndex;
             drawBlockIndex[blockIndex].z = uvsIndex;
             drawBlockIndex[blockIndex].w = trisIndex;
@@ -190,5 +203,5 @@ void GetBlocksAdjacentAir (uint3 id : SV_DispatchThreadID)
 [numthreads(8,8,8)]
 void MeshUpdate (uint3 id : SV_DispatchThreadID)
 {
-    int index = id.x + id.y * WORLD_HEIGHT + id.z * WORLD_HEIGHT * WORLD_SIZE;
+    uint index = id.x + id.y * WORLD_HEIGHT + id.z * WORLD_HEIGHT * WORLD_SIZE;
 }

@@ -2,6 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public struct Int4
+{
+    public int x;
+    public int y;
+    public int z;
+    public int w;
+
+    public Int4(int x, int y, int z, int w)
+    {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.w = w;
+    }
+
+    public override string ToString()
+    {
+        return $"({x}, {y}, {z}, {w})";
+    }
+}
+
 public class World : MonoBehaviour
 {
     // ワールド情報のリスト
@@ -39,6 +60,7 @@ public class World : MonoBehaviour
     private ComputeBuffer drawBlockCountBuff;
 
     // 描画するブロックのインデックス番号の配列。y, z, wはそれぞれ頂点、UV、頂点インデックスの書きこみはじめ位置。
+    private Int4[] drawBlockIndex;
     private ComputeBuffer drawBlockIndexBuff;
 
     // メッシュの頂点、UV、頂点インデックスのそれぞれの合計数。
@@ -120,6 +142,13 @@ public class World : MonoBehaviour
         drawBlockCountBuff.SetData(drawBlockCount);
 
         // ブロックの情報のバッファー作成
+        drawBlockIndex = new Int4
+        [
+            McVideos.RenderDistance * Constants.CHUCK_SIZE * 
+            McVideos.RenderDistance * Constants.CHUCK_SIZE * 
+            McVideos.RenderDistance * Constants.CHUCK_SIZE
+        ];
+
         drawBlockIndexBuff = new ComputeBuffer
         (
             McVideos.RenderDistance * Constants.CHUCK_SIZE * 
@@ -173,6 +202,34 @@ public class World : MonoBehaviour
         else LoadFromJson();
     }
 
+    public void SetBuffer(int kernelIndex)
+    {
+        // シェーダーの定数をセット
+        Constants.SetShaderConstants(ref worldShader);
+
+        // 各バッファーをシェーダーにセット
+        worldShader.SetBuffer(kernelIndex, "blocksID", blocksIDBuff);
+
+        worldShader.SetInt("PLAYER_X", Constants.WORLD_HALF_SIZE + 0);
+        worldShader.SetInt("PLAYER_Y", 4);
+        worldShader.SetInt("PLAYER_Z", Constants.WORLD_HALF_SIZE + 0);
+
+        worldShader.SetInt("RENDER_DISTANCE", McVideos.RenderDistance);
+
+        worldShader.SetBuffer(kernelIndex, "drawBlockCount", drawBlockCountBuff);
+        worldShader.SetBuffer(kernelIndex, "drawBlockIndex", drawBlockIndexBuff);
+
+        worldShader.SetBuffer(kernelIndex, "meshVs", meshVsBuff);
+        worldShader.SetBuffer(kernelIndex, "meshUVs", meshUVsBuff);
+        worldShader.SetBuffer(kernelIndex, "meshTris", meshTrisBuff);
+
+        worldShader.SetBuffer(kernelIndex, "meshVsCount", meshVsCountBuff);
+        worldShader.SetBuffer(kernelIndex, "meshUVsCount", meshUVsCountBuff);
+        worldShader.SetBuffer(kernelIndex, "meshTrisCount", meshTrisCountBuff);
+
+        meshBlock.SetBuffer(ref worldShader, "sourceMeshBlockVs", "sourceMeshBlockUVs", "sourceMeshBlockTris");
+    }
+
     // Paramに保存されているワールド情報を使用してワールドの生成
     public void Create(string worldType)
     {
@@ -181,39 +238,45 @@ public class World : MonoBehaviour
         int threadGroupsY = Mathf.CeilToInt(Constants.WORLD_HEIGHT / 8.0f);
         int threadGroupsZ = Mathf.CeilToInt(Constants.WORLD_SIZE / 8.0f);
 
-        // シェーダーの定数をセット
-        Constants.SetShaderConstants(ref worldShader);
-
-        // 各バッファーをシェーダーにセット
-        worldShader.SetBuffer(0, "blocksID", blocksIDBuff);
-
-        worldShader.SetInt("PLAYER_X", Constants.WORLD_HALF_SIZE + 0);
-        worldShader.SetInt("PLAYER_Y", 4);
-        worldShader.SetInt("PLAYER_Z", Constants.WORLD_HALF_SIZE + 0);
-
-        worldShader.SetInt("RENDER_DISTANCE", McVideos.RenderDistance);
-
-        worldShader.SetBuffer(0, "drawBlockCount", drawBlockCountBuff);
-        worldShader.SetBuffer(0, "drawBlockIndex", drawBlockIndexBuff);
-
-        worldShader.SetBuffer(0, "meshVs", meshVsBuff);
-        worldShader.SetBuffer(0, "meshUVs", meshUVsBuff);
-        worldShader.SetBuffer(0, "meshTris", meshTrisBuff);
-
-        worldShader.SetBuffer(0, "meshVsCount", meshVsCountBuff);
-        worldShader.SetBuffer(0, "meshUVsCount", meshUVsCountBuff);
-        worldShader.SetBuffer(0, "meshTrisCount", meshTrisCountBuff);
-
-        meshBlock.SetBuffer(ref worldShader, "sourceMeshBlockVs", "sourceMeshBlockUVs", "sourceMeshBlockTris");
-
         if (thisInfo.worldType == "Flat")
         {
             // フラットワールドの生成
             int generateFlatWorld = worldShader.FindKernel("GenerateFlatWorld");
+            SetBuffer(generateFlatWorld);
             worldShader.Dispatch(generateFlatWorld, threadGroupsX, threadGroupsY, threadGroupsZ);
+
+            // X = 0, Z = 0におけるブロックのIDを表示
+            int[] blocksID = new int[Constants.WORLD_SIZE * Constants.WORLD_HEIGHT * Constants.WORLD_SIZE];
+            blocksIDBuff.GetData(blocksID); 
+            int blockX = Constants.WORLD_HALF_SIZE + 0;
+            int blockZ = Constants.WORLD_HALF_SIZE + 0;
+            Debug.Log("Block ID at (0, 0, 0): " + blocksID[blockX + 0 * Constants.WORLD_HEIGHT + blockZ * Constants.WORLD_HEIGHT * Constants.WORLD_SIZE]);
+            Debug.Log("Block ID at (0, 1, 0): " + blocksID[blockX + 1 * Constants.WORLD_HEIGHT + blockZ * Constants.WORLD_HEIGHT * Constants.WORLD_SIZE]);
+            Debug.Log("Block ID at (0, 2, 0): " + blocksID[blockX + 2 * Constants.WORLD_HEIGHT + blockZ * Constants.WORLD_HEIGHT * Constants.WORLD_SIZE]);
+            Debug.Log("Block ID at (0, 3, 0): " + blocksID[blockX + 3 * Constants.WORLD_HEIGHT + blockZ * Constants.WORLD_HEIGHT * Constants.WORLD_SIZE]);
+            Debug.Log("Block ID at (0, 4, 0): " + blocksID[blockX + 4 * Constants.WORLD_HEIGHT + blockZ * Constants.WORLD_HEIGHT * Constants.WORLD_SIZE]);
             
             int getBlocksAdjacentAir = worldShader.FindKernel("GetBlocksAdjacentAir");
+            SetBuffer(getBlocksAdjacentAir);
             worldShader.Dispatch(getBlocksAdjacentAir, threadGroupsX, threadGroupsY, threadGroupsZ);
+
+            drawBlockCountBuff.GetData(drawBlockCount);
+            drawBlockIndexBuff.GetData(drawBlockIndex);
+
+            Debug.Log("SOURCE_MESH_VS_MAX : " + Constants.SOURCE_MESH_VS_MAX);
+            Debug.Log("SOURCE_MESH_UVS_MAX : " + Constants.SOURCE_MESH_UVS_MAX);
+            Debug.Log("SOURCE_MESH_TRIS_MAX : " + Constants.SOURCE_MESH_TRIS_MAX);
+
+            Debug.Log("\nDraw Block Count : " + drawBlockCount[0]);
+            for (int i = 0; i < drawBlockCount[0]; i++)
+            {
+                Debug.Log("Draw Block Index : " + drawBlockIndex[i].x);
+                Debug.Log("Block Vertex Start : " + drawBlockIndex[i].y);
+                Debug.Log("Block UV Start : " + drawBlockIndex[i].z);
+                Debug.Log("Block Tris Start : " + drawBlockIndex[i].w);
+            }
+
+
         }
         else 
         {
@@ -289,6 +352,17 @@ public class World : MonoBehaviour
     {
         // バッファを解放
         if (blocksIDBuff != null) blocksIDBuff.Release();
+
+        if (drawBlockCountBuff != null) drawBlockCountBuff.Release();
+        if (drawBlockIndexBuff != null) drawBlockIndexBuff.Release();
+
+        if (meshVsCountBuff != null) meshVsCountBuff.Release();
+        if (meshUVsCountBuff != null) meshUVsCountBuff.Release();
+        if (meshTrisCountBuff != null) meshTrisCountBuff.Release();
+
+        if (meshVsBuff != null) meshVsBuff.Release();
+        if (meshUVsBuff != null) meshUVsBuff.Release();
+        if (meshTrisBuff != null) meshTrisBuff.Release();
         
         meshBlock.ReleaseBuffer();
     }

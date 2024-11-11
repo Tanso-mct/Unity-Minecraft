@@ -9,11 +9,6 @@ public class WorldMesh : MonoBehaviour
     private Vector2[] uv;
     private int[] triangles;
 
-    // Combineしたメッシュの頂点、UV、頂点インデックスのバッファー
-    private ComputeBuffer verticesBuff;
-    private ComputeBuffer uvBuff;
-    private ComputeBuffer trianglesBuff;
-
     public Texture2D textureAtlas;
 
     public void Init()
@@ -24,13 +19,6 @@ public class WorldMesh : MonoBehaviour
         CombineSquares();
 
         gameObject.SetActive(false);
-    }
-
-    public void OnDestroy()
-    {
-        if (verticesBuff != null) verticesBuff.Release();
-        if (uvBuff != null) uvBuff.Release();
-        if (trianglesBuff != null) trianglesBuff.Release();
     }
 
     public void CombineSquares()
@@ -98,38 +86,22 @@ public class WorldMesh : MonoBehaviour
         vertices = combinedMesh.vertices;
         uv = combinedMesh.uv;
         triangles = combinedMesh.triangles;
+
+        // 最大頂点数、頂点インデックスを設定
+        Constants.SOURCE_MESH_VS_MAX = (vertices.Length > Constants.SOURCE_MESH_VS_MAX) ? vertices.Length : Constants.SOURCE_MESH_VS_MAX;
+        Constants.SOURCE_MESH_TRIS_MAX = (triangles.Length > Constants.SOURCE_MESH_TRIS_MAX) ? triangles.Length : Constants.SOURCE_MESH_TRIS_MAX;
     }
 
-    public void CreateBuffer()
+    public void SetData(ref ComputeShader shader, ref List<Vector3> vertices, ref List<Vector2> uv, ref List<int> triangles)
     {
-        verticesBuff = new ComputeBuffer(vertices.Length, sizeof(float) * 3);
-        uvBuff = new ComputeBuffer(uv.Length, sizeof(float) * 2);
-        trianglesBuff = new ComputeBuffer(triangles.Length, sizeof(int));
+        shader.SetInt("SOURCE_MESH_BLOCK_VS_INDEX", vertices.Count);
+        shader.SetInt("SOURCE_MESH_BLOCK_TRIS_INDEX", triangles.Count);
+        
+        shader.SetInt("SOURCE_MESH_BLOCK_VS_SIZE", this.vertices.Length);
+        shader.SetInt("SOURCE_MESH_BLOCK_TRIS_SIZE", this.triangles.Length);
 
-        if (Constants.SOURCE_MESH_VS_MAX < vertices.Length) Constants.SOURCE_MESH_VS_MAX = vertices.Length;
-        if (Constants.SOURCE_MESH_UVS_MAX < uv.Length) Constants.SOURCE_MESH_UVS_MAX = uv.Length;
-        if (Constants.SOURCE_MESH_TRIS_MAX < triangles.Length) Constants.SOURCE_MESH_TRIS_MAX = triangles.Length;
-
-        verticesBuff.SetData(vertices);
-        uvBuff.SetData(uv);
-        trianglesBuff.SetData(triangles);
-    }
-
-    public void SetBuffer(ref ComputeShader shader, string verticesName, string uvName, string trianglesName)
-    {
-        shader.SetBuffer(0, verticesName, verticesBuff);
-        shader.SetBuffer(0, uvName, uvBuff);
-        shader.SetBuffer(0, trianglesName, trianglesBuff);
-
-        shader.SetInt("SOURCE_MESH_BLOCK_VS_SIZE", vertices.Length);
-        shader.SetInt("SOURCE_MESH_BLOCK_UVS_SIZE", uv.Length);
-        shader.SetInt("SOURCE_MESH_BLOCK_TRIS_SIZE", triangles.Length);
-    }
-
-    public void ReleaseBuffer()
-    {
-        if (verticesBuff != null) verticesBuff.Release();
-        if (uvBuff != null) uvBuff.Release();
-        if (trianglesBuff != null) trianglesBuff.Release();
+        vertices.AddRange(this.vertices);
+        uv.AddRange(this.uv);
+        triangles.AddRange(this.triangles);
     }
 }

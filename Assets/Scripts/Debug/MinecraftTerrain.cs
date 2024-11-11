@@ -103,10 +103,6 @@ public class MinecraftTerrain : MonoBehaviour
         vertices.Add(position + blockVs[v2]);
         vertices.Add(position + blockVs[v3]);
 
-        // UV座標
-        // Vector2[] blockUVs = CalculateUVs(textureIndex);
-        // uv.AddRange(blockUVs);
-
         // 三角形のインデックス
         triangles.Add(vertexIndex + 0);
         triangles.Add(vertexIndex + 1);

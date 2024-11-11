@@ -181,7 +181,6 @@ public class Constants : MonoBehaviour
 
     // ソースメッシュの頂点数、UV数、頂点インデックス数のうち最大のもの
     public static int SOURCE_MESH_VS_MAX = 0;
-    public static int SOURCE_MESH_UVS_MAX = 0;
     public static int SOURCE_MESH_TRIS_MAX = 0;
 
     public static void SetShaderConstants(ref ComputeShader shader)
@@ -190,13 +189,6 @@ public class Constants : MonoBehaviour
         shader.SetInt("WORLD_SIZE", WORLD_SIZE);
         shader.SetInt("WORLD_HALF_SIZE", WORLD_HALF_SIZE);
         shader.SetInt("WORLD_HEIGHT", WORLD_HEIGHT);
-
-        shader.SetInt("SOURCE_MESH_VS_MAX", SOURCE_MESH_VS_MAX);
-        shader.SetInt("SOURCE_MESH_UVS_MAX", SOURCE_MESH_UVS_MAX);
-        shader.SetInt("SOURCE_MESH_TRIS_MAX", SOURCE_MESH_TRIS_MAX);
     }
-    
-
-
 
 }

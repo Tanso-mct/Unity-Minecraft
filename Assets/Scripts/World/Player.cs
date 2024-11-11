@@ -29,6 +29,10 @@ public class Player : MonoBehaviour
 
     // プレイヤーの現在座標
     private Vector3 pos;
+    public Vector3 Pos
+    {
+        get { return pos; }
+    }
 
     // プレイヤーの現在のスピード
     private float speed = 0.0f;

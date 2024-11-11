@@ -1,37 +1,28 @@
 #pragma kernel GenerateFlatWorld
 #pragma kernel DiamondSquareStep
-#pragma kernel GetBlocksAdjacentAir
-#pragma kernel MeshUpdate
+#pragma kernel MeshGenerate
 
 int CHUCK_SIZE;
 int WORLD_SIZE;
 int WORLD_HALF_SIZE;
 int WORLD_HEIGHT;
 
-int SOURCE_MESH_VS_MAX;
-int SOURCE_MESH_UVS_MAX;
-int SOURCE_MESH_TRIS_MAX;
-
 RWStructuredBuffer<int> blocksID;
 
-int PLAYER_X;
-int PLAYER_Y;
-int PLAYER_Z;
+int VIEW_ORIGIN_X;
+int VIEW_ORIGIN_Y;
+int VIEW_ORIGIN_Z;
 int RENDER_DISTANCE;
 
-RWStructuredBuffer<int> drawBlockCount;
-RWStructuredBuffer<int4> drawBlockIndex;
+RWStructuredBuffer<int> counts;
 
 RWStructuredBuffer<float3> meshVs;
 RWStructuredBuffer<float2> meshUVs;
 RWStructuredBuffer<int> meshTris;
 
-RWStructuredBuffer<int> meshVsCount;
-RWStructuredBuffer<int> meshUVsCount;
-RWStructuredBuffer<int> meshTrisCount;
-
+int SOURCE_MESH_BLOCK_VS_INDEX;
+int SOURCE_MESH_BLOCK_TRIS_INDEX;
 int SOURCE_MESH_BLOCK_VS_SIZE;
-int SOURCE_MESH_BLOCK_UVS_SIZE;
 int SOURCE_MESH_BLOCK_TRIS_SIZE;
 RWStructuredBuffer<float3> sourceMeshBlockVs;
 RWStructuredBuffer<float3> sourceMeshBlockUVs;
@@ -40,7 +31,7 @@ RWStructuredBuffer<float3> sourceMeshBlockTris;
 [numthreads(8,8,8)]
 void GenerateFlatWorld (uint3 id : SV_DispatchThreadID)
 {
-    uint index = id.x + id.y * WORLD_HEIGHT + id.z * WORLD_HEIGHT * WORLD_SIZE;
+    int index = id.x + id.y * WORLD_HEIGHT + id.z * WORLD_HEIGHT * WORLD_SIZE;
 
     if (id.y == 0)
     {
@@ -63,7 +54,7 @@ void GenerateFlatWorld (uint3 id : SV_DispatchThreadID)
 [numthreads(8,8,8)]
 void DiamondSquareStep (uint3 id : SV_DispatchThreadID)
 {
-    uint index = id.x + id.y * WORLD_HEIGHT + id.z * WORLD_HEIGHT * WORLD_SIZE;
+    int index = id.x + id.y * WORLD_HEIGHT + id.z * WORLD_HEIGHT * WORLD_SIZE;
 
     
 }
@@ -76,19 +67,6 @@ int GetBlockVsCount(int id)
         case 2: // DIRT
         case 3: // GRASS
             return SOURCE_MESH_BLOCK_VS_SIZE;
-    }
-
-    return 0;
-}
-
-int GetBlockUVsCount(int id)
-{
-    switch (id)
-    {
-        case 1: // BEDROCK
-        case 2: // DIRT
-        case 3: // GRASS
-            return SOURCE_MESH_BLOCK_UVS_SIZE;
     }
 
     return 0;
@@ -131,43 +109,22 @@ bool CheckIsAir(int3 pos)
     return false;
 }
 
-[numthreads(8,8,8)]
-void GetBlocksAdjacentAir (uint3 id : SV_DispatchThreadID)
+int3 ToCoordsIntConvert(int3 pos)
 {
-    uint index = id.x + id.y * WORLD_HEIGHT + id.z * WORLD_HEIGHT * WORLD_SIZE;
+    return int3(pos.x - WORLD_HALF_SIZE, pos.y, pos.z - WORLD_HALF_SIZE);
+}
 
-    // 読み込み範囲をZ軸マイナスからプラス方向へ見たときの正面左下と、背面右上の座標を取得
-    int3 worldOrigin = int3
-    (
-        PLAYER_X - RENDER_DISTANCE * CHUCK_SIZE, 
-        PLAYER_Y - RENDER_DISTANCE * CHUCK_SIZE,
-        PLAYER_Z - RENDER_DISTANCE * CHUCK_SIZE
-    );
-
-    int3 worldOpposite = int3
-    (
-        PLAYER_X + RENDER_DISTANCE * CHUCK_SIZE, 
-        PLAYER_Y + RENDER_DISTANCE * CHUCK_SIZE,
-        PLAYER_Z + RENDER_DISTANCE * CHUCK_SIZE
-    );
-
-    // それぞれワールドの範囲外の場合は、範囲内に収める
-    worldOrigin.x = clamp(worldOrigin.x, 0, WORLD_SIZE - 1);
-    worldOrigin.y = clamp(worldOrigin.y, 0, WORLD_HEIGHT - 1);
-    worldOrigin.z = clamp(worldOrigin.z, 0, WORLD_SIZE - 1);
-
-    worldOpposite.x = clamp(worldOpposite.x, 0, WORLD_SIZE - 1);
-    worldOpposite.y = clamp(worldOpposite.y, 0, WORLD_HEIGHT - 1);
-    worldOpposite.z = clamp(worldOpposite.z, 0, WORLD_SIZE - 1);
+[numthreads(8,8,8)]
+void MeshGenerate (uint3 id : SV_DispatchThreadID)
+{
+    int3 voxel = int3(id.x + VIEW_ORIGIN_X, id.y + VIEW_ORIGIN_Y, id.z + VIEW_ORIGIN_Z);
+    int index = voxel.x + voxel.y * WORLD_HEIGHT + voxel.z * WORLD_HEIGHT * WORLD_SIZE;
 
     // ブロックが描画範囲でかつ、空気ブロックでない場合処理を行う
-    if (id.x >= worldOrigin.x && id.x <= worldOpposite.x &&
-        id.y >= worldOrigin.y && id.y <= worldOpposite.y &&
-        id.z >= worldOrigin.z && id.z <= worldOpposite.z &&
-        blocksID[index] != 0
-    ){
+    if (blocksID[index] != 0)
+    {
         // ブロックの周囲に空気ブロックがあるかどうかを判定
-        int3 checkPos = int3(id.x, id.y, id.z);
+        int3 checkPos = int3(voxel.x, voxel.y, voxel.z);
 
         // ブロックの周囲をチェック
         bool isNeedDraw = false;
@@ -183,28 +140,31 @@ void GetBlocksAdjacentAir (uint3 id : SV_DispatchThreadID)
         // 描画対象のブロック情報を格納
         if (isNeedDraw)
         {
-            uint blockIndex;
-            InterlockedAdd(drawBlockCount[0], 1, blockIndex);
+            InterlockedAdd(counts[0], 1);
 
-            uint vsIndex;
-            InterlockedAdd(meshVsCount[0], GetBlockVsCount(blocksID[index]), vsIndex);
+            int thisVsIndex;
+            InterlockedAdd(counts[1], GetBlockVsCount(blocksID[index]), thisVsIndex);
 
-            uint uvsIndex;
-            InterlockedAdd(meshUVsCount[0], GetBlockUVsCount(blocksID[index]), uvsIndex);
+            int thisTrisIndex;
+            InterlockedAdd(counts[2], GetBlockTrisCount(blocksID[index]), thisTrisIndex);
 
-            uint trisIndex;
-            InterlockedAdd(meshTrisCount[0], GetBlockTrisCount(blocksID[index]), trisIndex);
+            // ブロックの座標を変換
+            // int3 blockCoords = ToCoordsIntConvert(voxel);
 
-            drawBlockIndex[blockIndex].x = index;
-            drawBlockIndex[blockIndex].y = vsIndex;
-            drawBlockIndex[blockIndex].z = uvsIndex;
-            drawBlockIndex[blockIndex].w = trisIndex;
+            // int vsIndex = thisVsIndex;
+            // for (int i = 0; i < SOURCE_MESH_BLOCK_VS_INDEX; i++)
+            // {
+            //     meshVs[vsIndex] = sourceMeshBlockVs[i] + float3(blockCoords.x, blockCoords.y, blockCoords.z);
+            //     meshUVs[vsIndex] = sourceMeshBlockUVs[i];
+            //     vsIndex++;
+            // }
+
+            // int trisIndex = thisTrisIndex;
+            // for (int i = 0; i < SOURCE_MESH_BLOCK_TRIS_INDEX; i++)
+            // {
+            //     meshTris[trisIndex] = thisVsIndex + sourceMeshBlockTris[i];
+            //     trisIndex++;
+            // }
         }
     }
-}
-
-[numthreads(8,8,8)]
-void MeshUpdate (uint3 id : SV_DispatchThreadID)
-{
-    uint index = id.x + id.y * WORLD_HEIGHT + id.z * WORLD_HEIGHT * WORLD_SIZE;
 }

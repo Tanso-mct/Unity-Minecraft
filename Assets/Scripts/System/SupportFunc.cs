@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class SupportFunc
 {
-    static public Vector3 CoordsIntConvert(Vector3 coords)
+    static public Vector3Int CoordsIntConvert(Vector3 coords)
     {
-        Vector3 rtCoords = new Vector3();
+        Vector3Int rtCoords = new Vector3Int();
 
         rtCoords.x = (int)coords.x + Constants.WORLD_HALF_SIZE;
         rtCoords.y = (int)coords.y;

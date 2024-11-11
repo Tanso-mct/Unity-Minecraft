@@ -28,6 +28,8 @@ void GenerateFlatWorld (uint3 id : SV_DispatchThreadID)
 void DiamondSquareStep (uint3 id : SV_DispatchThreadID)
 {
     int index = id.x + id.y * WORLD_HEIGHT + id.z * WORLD_HEIGHT * WORLD_SIZE;
+
+    
 }
 
 [numthreads(8,8,8)]

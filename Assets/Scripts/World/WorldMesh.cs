@@ -106,6 +106,10 @@ public class WorldMesh : MonoBehaviour
         uvBuff = new ComputeBuffer(uv.Length, sizeof(float) * 2);
         trianglesBuff = new ComputeBuffer(triangles.Length, sizeof(int));
 
+        if (Constants.SOURCE_MESH_VS_MAX < vertices.Length) Constants.SOURCE_MESH_VS_MAX = vertices.Length;
+        if (Constants.SOURCE_MESH_UVS_MAX < uv.Length) Constants.SOURCE_MESH_UVS_MAX = uv.Length;
+        if (Constants.SOURCE_MESH_TRIS_MAX < triangles.Length) Constants.SOURCE_MESH_TRIS_MAX = triangles.Length;
+
         verticesBuff.SetData(vertices);
         uvBuff.SetData(uv);
         trianglesBuff.SetData(triangles);
@@ -116,6 +120,10 @@ public class WorldMesh : MonoBehaviour
         shader.SetBuffer(0, verticesName, verticesBuff);
         shader.SetBuffer(0, uvName, uvBuff);
         shader.SetBuffer(0, trianglesName, trianglesBuff);
+
+        shader.SetInt("SOURCE_MESH_BLOCK_VS_SIZE", vertices.Length);
+        shader.SetInt("SOURCE_MESH_BLOCK_UVS_SIZE", uv.Length);
+        shader.SetInt("SOURCE_MESH_BLOCK_TRIS_SIZE", triangles.Length);
     }
 
     public void ReleaseBuffer()

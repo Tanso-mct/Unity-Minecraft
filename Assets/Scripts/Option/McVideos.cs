@@ -14,7 +14,7 @@ public class McVideos : MonoBehaviour
     public static int Fov { get { return fov; } }
     private static Vector2 fovSbPos;
 
-    private static int renderDistance = 1;
+    private static int renderDistance = 2;
     public static int RenderDistance { get { return renderDistance; } }
     
     private static Vector2 renderDistanceSbPos;

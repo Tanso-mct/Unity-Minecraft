@@ -10,10 +10,7 @@ public class World : MonoBehaviour
     // 現在のワールド情報
     private static WorldInfo thisInfo;
 
-    // 初期値は0とし空気を示す。その座標に存在しているブロックの種類を示す。
-    private int[,,] blocksID;
-
-    // ブロックのバッファー
+    // ブロックのバッファー。その座標に存在しているブロックの種類を示す。
     private ComputeBuffer blocksIDBuff;
 
     // ワールド上のブロックとエンティティとアイテムのオブジェクト
@@ -36,6 +33,31 @@ public class World : MonoBehaviour
 
     // Shader
     [SerializeField] private ComputeShader worldShader;
+
+    // 描画するブロックの数
+    private int[] drawBlockCount;
+    private ComputeBuffer drawBlockCountBuff;
+
+    // 描画するブロックのインデックス番号の配列。y, z, wはそれぞれ頂点、UV、頂点インデックスの書きこみはじめ位置。
+    private ComputeBuffer drawBlockIndexBuff;
+
+    // メッシュの頂点、UV、頂点インデックスのそれぞれの合計数。
+    private int meshVsCount = 0;
+    private int meshUVsCount = 0;
+    private int meshTrisCount = 0;
+
+    private ComputeBuffer meshVsCountBuff;
+    private ComputeBuffer meshUVsCountBuff;
+    private ComputeBuffer meshTrisCountBuff;
+
+    // ワールドメッシュの頂点データバッファー。描画範囲によりサイズが変わる。
+    private ComputeBuffer meshVsBuff;
+
+    // ワールドメッシュのUVデータバッファー。描画範囲によりサイズが変わる。
+    private ComputeBuffer meshUVsBuff;
+
+    // ワールドメッシュの頂点インデックスデータバッファー。描画範囲によりサイズが変わる。
+    private ComputeBuffer meshTrisBuff;
 
     public static void LoadInfoFromJson()
     {
@@ -67,9 +89,7 @@ public class World : MonoBehaviour
     public void Init()
     {
         // ワールドの初期化
-        blocksID = new int[Constants.WORLD_SIZE, Constants.WORLD_HEIGHT, Constants.WORLD_SIZE];
         blocksIDBuff = new ComputeBuffer(Constants.WORLD_SIZE * Constants.WORLD_HEIGHT * Constants.WORLD_SIZE, sizeof(int));
-        blocksIDBuff.SetData(blocksID);
 
         blocks = new Dictionary<Vector3Int, Vaxel>();
         entities = new List<Vaxel>();
@@ -83,15 +103,70 @@ public class World : MonoBehaviour
         worldMesh = new Mesh();
         objWorldMesh.GetComponent<MeshFilter>().mesh = worldMesh;
 
-        // Texture meshAtlasTexture = null;
-        // SupportFunc.LoadTexture(ref meshAtlasTexture, Constants.TEXTURE_ATLAS_BLOCK);
-        // objWorldMesh.GetComponent<MeshRenderer>().material.mainTexture = meshAtlasTexture;
+        Texture meshAtlasTexture = null;
+        SupportFunc.LoadTexture(ref meshAtlasTexture, Constants.TEXTURE_ATLAS_BLOCK);
+        objWorldMesh.GetComponent<MeshRenderer>().material.mainTexture = meshAtlasTexture;
 
         // ソースメッシュオブジェクトの初期化
         meshBlock.Init();
 
         // ソースメッシュオブジェクトのバッファー作成
         meshBlock.CreateBuffer();
+
+        // ブロックの描画数のバッファー作成
+        drawBlockCountBuff = new ComputeBuffer(1, sizeof(int));
+        drawBlockCount = new int[1];
+        drawBlockCount[0] = 0;
+        drawBlockCountBuff.SetData(drawBlockCount);
+
+        // ブロックの情報のバッファー作成
+        drawBlockIndexBuff = new ComputeBuffer
+        (
+            McVideos.RenderDistance * Constants.CHUCK_SIZE * 
+            McVideos.RenderDistance * Constants.CHUCK_SIZE * 
+            McVideos.RenderDistance * Constants.CHUCK_SIZE, 
+            sizeof(int) * 4
+        );
+
+        // ワールドメッシュの頂点、UV、頂点インデックスのバッファー作成
+        meshVsBuff = new ComputeBuffer
+        (
+            McVideos.RenderDistance * Constants.CHUCK_SIZE * 
+            McVideos.RenderDistance * Constants.CHUCK_SIZE *
+            McVideos.RenderDistance * Constants.CHUCK_SIZE * 
+            Constants.SOURCE_MESH_VS_MAX, 
+            sizeof(float) * 3
+        );
+
+        meshUVsBuff = new ComputeBuffer
+        (
+            McVideos.RenderDistance * Constants.CHUCK_SIZE * 
+            McVideos.RenderDistance * Constants.CHUCK_SIZE  *
+            McVideos.RenderDistance * Constants.CHUCK_SIZE * 
+            Constants.SOURCE_MESH_UVS_MAX, 
+            sizeof(float) * 2
+        );
+
+        meshTrisBuff = new ComputeBuffer
+        (
+            McVideos.RenderDistance * Constants.CHUCK_SIZE * 
+            McVideos.RenderDistance * Constants.CHUCK_SIZE  *
+            McVideos.RenderDistance * Constants.CHUCK_SIZE * 
+            Constants.SOURCE_MESH_TRIS_MAX, 
+            sizeof(int)
+        );
+
+        // メッシュの頂点、UV、頂点インデックスの数のバッファー作成
+        int[] countAry = new int[1];
+        countAry[0] = 0;
+        meshVsCountBuff = new ComputeBuffer(1, sizeof(int));
+        meshVsCountBuff.SetData(countAry);
+
+        meshUVsCountBuff = new ComputeBuffer(1, sizeof(int));
+        meshUVsCountBuff.SetData(countAry);
+
+        meshTrisCountBuff = new ComputeBuffer(1, sizeof(int));
+        meshTrisCountBuff.SetData(countAry);
 
         // ワールドの生成もしくは読み込み
         if(thisInfo.dataJsonPath == "") Create(thisInfo.worldType);
@@ -111,6 +186,24 @@ public class World : MonoBehaviour
 
         // 各バッファーをシェーダーにセット
         worldShader.SetBuffer(0, "blocksID", blocksIDBuff);
+
+        worldShader.SetInt("PLAYER_X", Constants.WORLD_HALF_SIZE + 0);
+        worldShader.SetInt("PLAYER_Y", 4);
+        worldShader.SetInt("PLAYER_Z", Constants.WORLD_HALF_SIZE + 0);
+
+        worldShader.SetInt("RENDER_DISTANCE", McVideos.RenderDistance);
+
+        worldShader.SetBuffer(0, "drawBlockCount", drawBlockCountBuff);
+        worldShader.SetBuffer(0, "drawBlockIndex", drawBlockIndexBuff);
+
+        worldShader.SetBuffer(0, "meshVs", meshVsBuff);
+        worldShader.SetBuffer(0, "meshUVs", meshUVsBuff);
+        worldShader.SetBuffer(0, "meshTris", meshTrisBuff);
+
+        worldShader.SetBuffer(0, "meshVsCount", meshVsCountBuff);
+        worldShader.SetBuffer(0, "meshUVsCount", meshUVsCountBuff);
+        worldShader.SetBuffer(0, "meshTrisCount", meshTrisCountBuff);
+
         meshBlock.SetBuffer(ref worldShader, "sourceMeshBlockVs", "sourceMeshBlockUVs", "sourceMeshBlockTris");
 
         if (thisInfo.worldType == "Flat")
@@ -118,6 +211,9 @@ public class World : MonoBehaviour
             // フラットワールドの生成
             int generateFlatWorld = worldShader.FindKernel("GenerateFlatWorld");
             worldShader.Dispatch(generateFlatWorld, threadGroupsX, threadGroupsY, threadGroupsZ);
+            
+            int getBlocksAdjacentAir = worldShader.FindKernel("GetBlocksAdjacentAir");
+            worldShader.Dispatch(getBlocksAdjacentAir, threadGroupsX, threadGroupsY, threadGroupsZ);
         }
         else 
         {

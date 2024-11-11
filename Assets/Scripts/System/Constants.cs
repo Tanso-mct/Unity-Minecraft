@@ -4,18 +4,6 @@ using UnityEngine;
 
 public class Constants : MonoBehaviour
 {
-    public static void SetShaderConstants(ref ComputeShader shader)
-    {
-        shader.SetInt("CHUCK_SIZE", CHUCK_SIZE);
-        shader.SetInt("WORLD_SIZE", WORLD_SIZE);
-        shader.SetInt("WORLD_HALF_SIZE", WORLD_HALF_SIZE);
-        shader.SetInt("WORLD_HEIGHT", WORLD_HEIGHT);
-
-        shader.SetInt("BLOCK_VERTEX_COUNT", BLOCK_VERTEX_COUNT);
-        shader.SetInt("STAIR_VERTEX_COUNT", STAIR_VERTEX_COUNT);
-        shader.SetInt("SLAB_VERTEX_COUNT", SLAB_VERTEX_COUNT);
-    }
-
     // Set FPS. Make sure that fps is this value.
     public const int SPECIFIED_FPS = 60;
 
@@ -107,6 +95,7 @@ public class Constants : MonoBehaviour
     // Vaxel type
     public enum BLOCK_TYPE
     {
+        AIR,
         BEDROCK,
         DIRT,
         GRASS,
@@ -171,10 +160,6 @@ public class Constants : MonoBehaviour
     public const int WORLD_HALF_SIZE = 256;
     public const int WORLD_HEIGHT = 320;
 
-    // World mesh block vertex count
-    public const int BLOCK_VERTEX_COUNT = 8;
-    public const int STAIR_VERTEX_COUNT = 12;
-    public const int SLAB_VERTEX_COUNT = 8;
 
     // World Info
     public const string WORLD_MODE_CREATIVE = "Creative";
@@ -193,6 +178,23 @@ public class Constants : MonoBehaviour
     // Unity Tags
     public const string TAG_PLAYER = "Player";
     public const string TAG_BLOCK_TOP = "Block_Top";
+
+    // ソースメッシュの頂点数、UV数、頂点インデックス数のうち最大のもの
+    public static int SOURCE_MESH_VS_MAX = 0;
+    public static int SOURCE_MESH_UVS_MAX = 0;
+    public static int SOURCE_MESH_TRIS_MAX = 0;
+
+    public static void SetShaderConstants(ref ComputeShader shader)
+    {
+        shader.SetInt("CHUCK_SIZE", CHUCK_SIZE);
+        shader.SetInt("WORLD_SIZE", WORLD_SIZE);
+        shader.SetInt("WORLD_HALF_SIZE", WORLD_HALF_SIZE);
+        shader.SetInt("WORLD_HEIGHT", WORLD_HEIGHT);
+
+        shader.SetInt("SOURCE_MESH_VS_MAX", SOURCE_MESH_VS_MAX);
+        shader.SetInt("SOURCE_MESH_UVS_MAX", SOURCE_MESH_UVS_MAX);
+        shader.SetInt("SOURCE_MESH_TRIS_MAX", SOURCE_MESH_TRIS_MAX);
+    }
     
 
 

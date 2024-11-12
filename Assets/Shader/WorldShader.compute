@@ -20,13 +20,20 @@ RWStructuredBuffer<float3> meshVs;
 RWStructuredBuffer<float2> meshUVs;
 RWStructuredBuffer<int> meshTris;
 
+int SOURCE_MESH_BLOCK_FRONT;
+int SOURCE_MESH_BLOCK_BACK;
+int SOURCE_MESH_BLOCK_LEFT;
+int SOURCE_MESH_BLOCK_RIGHT;
+int SOURCE_MESH_BLOCK_TOP;
+int SOURCE_MESH_BLOCK_BOTTOM;
+
+int SOURCE_MESH_BLOCK_FACE_COUNT;
 int SOURCE_MESH_BLOCK_VS_INDEX;
 int SOURCE_MESH_BLOCK_TRIS_INDEX;
-int SOURCE_MESH_BLOCK_VS_SIZE;
-int SOURCE_MESH_BLOCK_TRIS_SIZE;
-RWStructuredBuffer<float3> sourceMeshBlockVs;
-RWStructuredBuffer<float3> sourceMeshBlockUVs;
-RWStructuredBuffer<float3> sourceMeshBlockTris;
+
+RWStructuredBuffer<float3> sourceMeshVs;
+RWStructuredBuffer<float2> sourceMeshUVs;
+RWStructuredBuffer<int> sourceMeshTris;
 
 [numthreads(8,8,8)]
 void GenerateFlatWorld (uint3 id : SV_DispatchThreadID)
@@ -59,32 +66,6 @@ void DiamondSquareStep (uint3 id : SV_DispatchThreadID)
     
 }
 
-int GetBlockVsCount(int id)
-{
-    switch (id)
-    {
-        case 1: // BEDROCK
-        case 2: // DIRT
-        case 3: // GRASS
-            return SOURCE_MESH_BLOCK_VS_SIZE;
-    }
-
-    return 0;
-}
-
-int GetBlockTrisCount(int id)
-{
-    switch (id)
-    {
-        case 1: // BEDROCK
-        case 2: // DIRT
-        case 3: // GRASS
-            return SOURCE_MESH_BLOCK_TRIS_SIZE;
-    }
-
-    return 0;
-}
-
 bool IsInWorldRange(int3 pos)
 {
     if (
@@ -95,18 +76,18 @@ bool IsInWorldRange(int3 pos)
     else return false;
 }
 
-bool CheckIsAir(int3 pos)
+int CheckIsAir(int3 pos)
 {
     if (IsInWorldRange(pos))
     {
         if (blocksID[pos.x + pos.y * WORLD_HEIGHT + pos.z * WORLD_HEIGHT * WORLD_SIZE] == 0)
         {
-            return true;
+            return 1;
         }
         
     }
 
-    return false;
+    return 0;
 }
 
 int3 ToCoordsIntConvert(int3 pos)
@@ -126,45 +107,65 @@ void MeshGenerate (uint3 id : SV_DispatchThreadID)
         // ブロックの周囲に空気ブロックがあるかどうかを判定
         int3 checkPos = int3(voxel.x, voxel.y, voxel.z);
 
-        // ブロックの周囲をチェック
-        bool isNeedDraw = false;
-
         // 上下左右前後の6方向をチェック
-        isNeedDraw = CheckIsAir(checkPos + int3(0, 1, 0)) ? true : isNeedDraw; // 上
-        isNeedDraw = CheckIsAir(checkPos + int3(0, -1, 0)) ? true : isNeedDraw; // 下
-        isNeedDraw = CheckIsAir(checkPos + int3(1, 0, 0)) ? true : isNeedDraw; // 右
-        isNeedDraw = CheckIsAir(checkPos + int3(-1, 0, 0)) ? true : isNeedDraw; // 左
-        isNeedDraw = CheckIsAir(checkPos + int3(0, 0, -1)) ? true : isNeedDraw; // 前
-        isNeedDraw = CheckIsAir(checkPos + int3(0, 0, 1)) ? true : isNeedDraw; // 後
+        int isTopNeedDraw = CheckIsAir(checkPos + int3(0, 1, 0));
+        int isBottomNeedDraw = CheckIsAir(checkPos + int3(0, -1, 0));
+        int isLeftNeedDraw = CheckIsAir(checkPos + int3(-1, 0, 0));
+        int isRightNeedDraw = CheckIsAir(checkPos + int3(1, 0, 0));
+        int isFrontNeedDraw = CheckIsAir(checkPos + int3(0, 0, -1));
+        int isBackNeedDraw = CheckIsAir(checkPos + int3(0, 0, 1));
+
+        // どれか一つでも空気ブロックがあれば描画対象とする
+        int isNeedDraw = isTopNeedDraw + isBottomNeedDraw + isLeftNeedDraw + isRightNeedDraw + isFrontNeedDraw + isBackNeedDraw;
 
         // 描画対象のブロック情報を格納
-        if (isNeedDraw)
+        if (isNeedDraw > 0)
         {
             InterlockedAdd(counts[0], 1);
 
             int thisVsIndex;
-            InterlockedAdd(counts[1], GetBlockVsCount(blocksID[index]), thisVsIndex);
+            InterlockedAdd(counts[1], isNeedDraw * 4, thisVsIndex);
 
             int thisTrisIndex;
-            InterlockedAdd(counts[2], GetBlockTrisCount(blocksID[index]), thisTrisIndex);
+            InterlockedAdd(counts[2], isNeedDraw * 6, thisTrisIndex);
 
-            // ブロックの座標を変換
-            // int3 blockCoords = ToCoordsIntConvert(voxel);
+            int vsIndex = thisVsIndex;
+            int trisIndex = thisTrisIndex;
+            for (int i = 0; i < SOURCE_MESH_BLOCK_FACE_COUNT; i++)
+            {
+                int nowDrawing = 0;
+                if (i == 0) nowDrawing = isFrontNeedDraw;
+                else if (i == 1) nowDrawing = isBackNeedDraw;
+                else if (i == 2) nowDrawing = isLeftNeedDraw;
+                else if (i == 3) nowDrawing = isRightNeedDraw;
+                else if (i == 4) nowDrawing = isTopNeedDraw;
+                else if (i == 5) nowDrawing = isBottomNeedDraw;
 
-            // int vsIndex = thisVsIndex;
-            // for (int i = 0; i < SOURCE_MESH_BLOCK_VS_INDEX; i++)
-            // {
-            //     meshVs[vsIndex] = sourceMeshBlockVs[i] + float3(blockCoords.x, blockCoords.y, blockCoords.z);
-            //     meshUVs[vsIndex] = sourceMeshBlockUVs[i];
-            //     vsIndex++;
-            // }
+                if (nowDrawing == 1)
+                {
+                    // ブロックの座標を変換
+                    int3 blockCoords = ToCoordsIntConvert(voxel);
 
-            // int trisIndex = thisTrisIndex;
-            // for (int i = 0; i < SOURCE_MESH_BLOCK_TRIS_INDEX; i++)
-            // {
-            //     meshTris[trisIndex] = thisVsIndex + sourceMeshBlockTris[i];
-            //     trisIndex++;
-            // }
+                    for (int j = 0; j < 4; j++)
+                    {
+                        meshVs[vsIndex] = 
+                        sourceMeshVs[SOURCE_MESH_BLOCK_VS_INDEX + i * 4 + j] + 
+                        float3(blockCoords.x, blockCoords.y, blockCoords.z);
+
+                        meshUVs[vsIndex] = sourceMeshUVs[SOURCE_MESH_BLOCK_VS_INDEX + i * 4 + j];
+
+                        vsIndex++;
+                    }
+
+                    for (int j = 0; j < 6; j++)
+                    {
+                        meshTris[trisIndex] = thisVsIndex + sourceMeshTris[SOURCE_MESH_BLOCK_TRIS_INDEX + i * 6 + j];
+                        trisIndex++;
+                    }
+
+                    thisVsIndex += 4;
+                }
+            }
         }
     }
 }

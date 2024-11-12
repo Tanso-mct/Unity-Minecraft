@@ -5,11 +5,13 @@ using UnityEngine;
 public class WorldMesh : MonoBehaviour
 {
     // Combineしたメッシュの頂点、UV、頂点インデックス
-    private Vector3[] vertices;
-    private Vector2[] uv;
-    private int[] triangles;
+    private List<Vector3> vertices;
+    private List<Vector2> uv;
+    private List<int> triangles;
 
     public Texture2D textureAtlas;
+
+    List<GameObject> squares;
 
     public void Init()
     {
@@ -26,21 +28,21 @@ public class WorldMesh : MonoBehaviour
         // 新しいメッシュを作成
         Mesh combinedMesh = new Mesh();
 
-        // CombineするSquareを設定
-        List<GameObject> squaresToCombine = SupportFunc.GetChildren(gameObject);
+        // Squareを設定
+        squares = SupportFunc.GetChildren(gameObject);
 
-        // CombineするSquareがない場合は処理を終了
-        if (squaresToCombine.Count == 0)　return;
+        // Squareがない場合は処理を終了
+        if (squares.Count == 0)　return;
 
-        // CombineするSquareのテクスチャタイルを設定
+        // Squareのテクスチャタイルを設定
         List<Vector2Int> textureTiles = new List<Vector2Int>();
-        for (int i = 0; i < squaresToCombine.Count; i++)
+        for (int i = 0; i < squares.Count; i++)
         {
-            textureTiles.Add(squaresToCombine[i].GetComponent<WorldSquare>().textureTile);
+            textureTiles.Add(squares[i].GetComponent<WorldSquare>().textureTile);
         }
 
         // 各SquareのUVを設定
-        for (int i = 0; i < squaresToCombine.Count; i++)
+        for (int i = 0; i < squares.Count; i++)
         {
             Vector2Int tile = new Vector2Int
             (
@@ -56,8 +58,8 @@ public class WorldMesh : MonoBehaviour
             oppositeUV.x /= textureAtlas.width;
             oppositeUV.y /= textureAtlas.height;
 
-            Mesh mesh = squaresToCombine[i].GetComponent<MeshFilter>().mesh;
-            squaresToCombine[i].GetComponent<MeshRenderer>().material.mainTexture = textureAtlas;
+            Mesh mesh = squares[i].GetComponent<MeshFilter>().mesh;
+            squares[i].GetComponent<MeshRenderer>().material.mainTexture = textureAtlas;
 
             Vector2[] uvs = new Vector2[4];
 
@@ -69,37 +71,36 @@ public class WorldMesh : MonoBehaviour
             mesh.uv = uvs;
         }
 
-        CombineInstance[] combine = new CombineInstance[squaresToCombine.Count];
-        for (int i = 0; i < squaresToCombine.Count; i++)
+        // 各Squareの情報を格納
+        vertices = new List<Vector3>();
+        uv = new List<Vector2>();
+        triangles = new List<int>();
+        for (int i = 0; i < squares.Count; i++)
         {
-            combine[i].mesh = squaresToCombine[i].GetComponent<MeshFilter>().sharedMesh;
-            combine[i].transform = squaresToCombine[i].transform.localToWorldMatrix;
+            vertices.AddRange(squares[i].GetComponent<MeshFilter>().mesh.vertices);
+            uv.AddRange(squares[i].GetComponent<MeshFilter>().mesh.uv);
+            triangles.AddRange(squares[i].GetComponent<MeshFilter>().mesh.triangles);
         }
 
-        combinedMesh.CombineMeshes(combine);
-
-        // 結合したメッシュを適用
-        GetComponent<MeshFilter>().sharedMesh = combinedMesh;
-        GetComponent<MeshRenderer>().material.mainTexture = textureAtlas;
-
-        // Combineしたメッシュの頂点、UV、頂点インデックスを取得
-        vertices = combinedMesh.vertices;
-        uv = combinedMesh.uv;
-        triangles = combinedMesh.triangles;
-
         // 最大頂点数、頂点インデックスを設定
-        Constants.SOURCE_MESH_VS_MAX = (vertices.Length > Constants.SOURCE_MESH_VS_MAX) ? vertices.Length : Constants.SOURCE_MESH_VS_MAX;
-        Constants.SOURCE_MESH_TRIS_MAX = (triangles.Length > Constants.SOURCE_MESH_TRIS_MAX) ? triangles.Length : Constants.SOURCE_MESH_TRIS_MAX;
+        Constants.SOURCE_MESH_VS_MAX = (vertices.Count > Constants.SOURCE_MESH_VS_MAX) ? vertices.Count : Constants.SOURCE_MESH_VS_MAX;
+        Constants.SOURCE_MESH_TRIS_MAX = (triangles.Count > Constants.SOURCE_MESH_TRIS_MAX) ? triangles.Count : Constants.SOURCE_MESH_TRIS_MAX;
     }
 
     public void SetData(ref ComputeShader shader, ref List<Vector3> vertices, ref List<Vector2> uv, ref List<int> triangles)
     {
+        shader.SetInt("SOURCE_MESH_BLOCK_FRONT", 0);
+        shader.SetInt("SOURCE_MESH_BLOCK_BACK", 1);
+        shader.SetInt("SOURCE_MESH_BLOCK_LEFT", 2);
+        shader.SetInt("SOURCE_MESH_BLOCK_RIGHT", 3);
+        shader.SetInt("SOURCE_MESH_BLOCK_TOP", 4);
+        shader.SetInt("SOURCE_MESH_BLOCK_BOTTOM", 5);
+
         shader.SetInt("SOURCE_MESH_BLOCK_VS_INDEX", vertices.Count);
         shader.SetInt("SOURCE_MESH_BLOCK_TRIS_INDEX", triangles.Count);
-        
-        shader.SetInt("SOURCE_MESH_BLOCK_VS_SIZE", this.vertices.Length);
-        shader.SetInt("SOURCE_MESH_BLOCK_TRIS_SIZE", this.triangles.Length);
 
+        shader.SetInt("SOURCE_MESH_BLOCK_FACE_COUNT", squares.Count);
+        
         vertices.AddRange(this.vertices);
         uv.AddRange(this.uv);
         triangles.AddRange(this.triangles);

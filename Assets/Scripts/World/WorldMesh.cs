@@ -71,14 +71,28 @@ public class WorldMesh : MonoBehaviour
             mesh.uv = uvs;
         }
 
+        CombineInstance[] combine = new CombineInstance[squares.Count];
+        for (int i = 0; i < squares.Count; i++)
+        {
+            combine[i].mesh = squares[i].GetComponent<MeshFilter>().sharedMesh;
+            combine[i].transform = squares[i].transform.localToWorldMatrix;
+
+        }
+
+        combinedMesh.CombineMeshes(combine);
+
+        // 結合したメッシュを適用
+        GetComponent<MeshFilter>().mesh = combinedMesh;
+        GetComponent<MeshRenderer>().material.mainTexture = textureAtlas;
+
         // 各Squareの情報を格納
         vertices = new List<Vector3>();
         uv = new List<Vector2>();
         triangles = new List<int>();
+        vertices.AddRange(combinedMesh.vertices);
+        uv.AddRange(combinedMesh.uv);
         for (int i = 0; i < squares.Count; i++)
         {
-            vertices.AddRange(squares[i].GetComponent<MeshFilter>().mesh.vertices);
-            uv.AddRange(squares[i].GetComponent<MeshFilter>().mesh.uv);
             triangles.AddRange(squares[i].GetComponent<MeshFilter>().mesh.triangles);
         }
 

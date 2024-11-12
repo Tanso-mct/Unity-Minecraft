@@ -8,9 +8,13 @@ public class Player : MonoBehaviour
 
     // プレイヤーのパーツら
     [SerializeField] private GameObject parts;
+    [SerializeField] private GameObject partsBody;
 
-    // プレイヤーのHeadGameObject
+    // PartsのGameObject
     [SerializeField] private GameObject head;
+    [SerializeField] private GameObject body;
+    [SerializeField] private GameObject leftArm;
+    [SerializeField] private GameObject rightArm;
 
     // プレイヤーのカメラ
     [SerializeField] private Camera cam;
@@ -73,7 +77,8 @@ public class Player : MonoBehaviour
     Quaternion m45Rot = Quaternion.Euler(0, -45f, 0);
 
     // アニメーター
-    private Animator anim;
+    private Animator animParts;
+    private Animator animBody;
 
     public void Init()
     {
@@ -88,7 +93,10 @@ public class Player : MonoBehaviour
         McControls.CursorLock(true);
 
         // アニメーターの初期化
-        anim = parts.GetComponent<Animator>();
+        animParts = parts.GetComponent<Animator>();
+        animBody = partsBody.GetComponent<Animator>();
+
+        partsBody.SetActive(false);
 
         // 1人称視点でのテクスチャを設定
         // mat.mainTexture = firstPersonTexture;
@@ -116,6 +124,7 @@ public class Player : MonoBehaviour
         rot.y += mouseAxis.x;
 
         parts.transform.rotation = Quaternion.Euler(0.0f, rot.y, 0.0f);
+        partsBody.transform.rotation = Quaternion.Euler(0.0f, rot.y, 0.0f);
         head.transform.localRotation = Quaternion.Euler(rot.x, 0.0f, 0.0f);
     }
 
@@ -152,12 +161,12 @@ public class Player : MonoBehaviour
             if (isRunning && isFor == 1 && vertical == 1)
             {
                 speed = runningSpeed;
-                anim.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_RUN);
+                animParts.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_RUN);
             }
             else
             {
                 speed = walkingSpeed;
-                anim.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_WALK);
+                animParts.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_WALK);
             }
 
             movement.z = -speed;
@@ -169,7 +178,7 @@ public class Player : MonoBehaviour
 
             speed = 0.0f;
             movement = Vector3.zero;
-            anim.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_BREATH);
+            animParts.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_BREATH);
         }
 
         // 移動ベクトルを設定
@@ -231,6 +240,30 @@ public class Player : MonoBehaviour
         pos += movement;
     }
 
+    public void Use()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            body.SetActive(false);
+            // leftArm.SetActive(false);
+            rightArm.SetActive(false);
+
+            partsBody.SetActive(true);
+
+            animBody.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_BREATH);
+            animBody.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_USE);
+        }
+    }
+
+    public void OnUseEnd()
+    {
+        partsBody.SetActive(false);
+
+        body.SetActive(true);
+        // leftArm.SetActive(true);
+        rightArm.SetActive(true);
+    }
+
     public void Execute()
     {   
         // フレーム開始
@@ -247,6 +280,8 @@ public class Player : MonoBehaviour
 
         // プレイヤーの飛行中移動更新
         if (!isGrounded) FlyUpdate();
+
+        Use();
 
         // プレイヤーの移動
         Transfer();

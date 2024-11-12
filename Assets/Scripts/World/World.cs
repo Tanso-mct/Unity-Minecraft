@@ -11,6 +11,7 @@ public class World : MonoBehaviour
     private static WorldInfo thisInfo;
 
     // ブロックのバッファー。その座標に存在しているブロックの種類を示す。
+    int[] blocksId;
     private ComputeBuffer blocksIDBuff;
 
     // ワールド上のブロックとエンティティとアイテムのオブジェクト
@@ -89,6 +90,7 @@ public class World : MonoBehaviour
     {
         // ワールドの初期化
         blocksIDBuff = new ComputeBuffer(Constants.WORLD_SIZE * Constants.WORLD_HEIGHT * Constants.WORLD_SIZE, sizeof(int));
+        blocksId = new int[Constants.WORLD_SIZE * Constants.WORLD_HEIGHT * Constants.WORLD_SIZE];
 
         blocks = new Dictionary<Vector3Int, Vaxel>();
         entities = new List<Vaxel>();
@@ -224,10 +226,6 @@ public class World : MonoBehaviour
         worldOpposite.y = Mathf.Clamp(worldOpposite.y, 0, Constants.WORLD_HEIGHT - 1);
         worldOpposite.z = Mathf.Clamp(worldOpposite.z, 0, Constants.WORLD_SIZE - 1);
 
-        int viewThreadGroupsX = Mathf.CeilToInt((worldOpposite.x - worldOrigin.x) / 8.0f);
-        int viewThreadGroupsY = Mathf.CeilToInt((worldOpposite.y - worldOrigin.y) / 8.0f);
-        int viewThreadGroupsZ = Mathf.CeilToInt((worldOpposite.z - worldOrigin.z) / 8.0f);
-
         // 処理するインデックスの開始地点、終了地点をセット
         worldShader.SetInt("VIEW_ORIGIN_X", worldOrigin.x);
         worldShader.SetInt("VIEW_ORIGIN_Y", worldOrigin.y);
@@ -236,59 +234,32 @@ public class World : MonoBehaviour
         if (thisInfo.worldType == "Flat")
         {
             // フラットワールドの生成
-            int generateFlatWorld = worldShader.FindKernel("GenerateFlatWorld");
-            SetBuffer(generateFlatWorld);
-            worldShader.Dispatch(generateFlatWorld, worldThreadGroupsX, worldThreadGroupsY, worldThreadGroupsZ);
-
-            // int[] blocksId = new int[Constants.WORLD_SIZE * Constants.WORLD_HEIGHT * Constants.WORLD_SIZE];
-            // for (int x = 0; x < Constants.WORLD_SIZE; x++)
-            // {
-            //     for (int y = 0; y < Constants.WORLD_HEIGHT; y++)
-            //     {
-            //         for (int z = 0; z < Constants.WORLD_SIZE; z++)
-            //         {
-            //             int index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
-            //             if (y == 0) blocksId[index] = 1;
-            //             else if (y >= 1 && y <= 2) blocksId[index] = 2;
-            //             else if (y == 3) blocksId[index] = 3;
-            //             else blocksId[index] = 0;
-            //         }
-            //     }
-            // }
-
-            // blocksIDBuff.SetData(blocksId);
-        }
-        else 
-        {
-            // ダイアモンドスクエアアルゴリズムによるワールドの生成
-            int diamondSquareStep = worldShader.FindKernel("DiamondSquareStep");
-            worldShader.Dispatch(diamondSquareStep, worldThreadGroupsX, worldThreadGroupsY, worldThreadGroupsZ);
-        }
-
-        int[] blocksIDAry = new int[Constants.WORLD_SIZE * Constants.WORLD_HEIGHT * Constants.WORLD_SIZE];
-        blocksIDBuff.GetData(blocksIDAry);
-
-
-        int heightPerBlock = 0;
-        for (int x = 0; x < Constants.WORLD_SIZE; x++)
-        {
-            for (int y = 0; y < Constants.WORLD_HEIGHT; y++)
+            for (int x = 0; x < Constants.WORLD_SIZE; x++)
             {
-                for (int z = 0; z < Constants.WORLD_SIZE; z++)
+                for (int y = 0; y < Constants.WORLD_HEIGHT; y++)
                 {
-                    int index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
-                    Vector3Int pos = new Vector3Int(x, y, z);
-
-                    if (blocksIDAry[index] != 0 && y == 4)
+                    for (int z = 0; z < Constants.WORLD_SIZE; z++)
                     {
-                        heightPerBlock++;
-                        Debug.Log("Block ID : " + blocksIDAry[index] + " Pos : " + pos);
+                        int index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
+                        if (y == 0) blocksId[index] = (int)Constants.BLOCK_TYPE.BEDROCK; 
+                        else if (y >= 1 && y <= 2) blocksId[index] = (int)Constants.BLOCK_TYPE.DIRT;
+                        else if (y == 3) blocksId[index] = (int)Constants.BLOCK_TYPE.GRASS_TOP;
+                        else blocksId[index] = (int)Constants.BLOCK_TYPE.AIR;
                     }
                 }
             }
         }
+        else 
+        {
+            // ダイアモンドスクエアアルゴリズムによるワールドの生成
+            
+        }
 
-        Debug.Log("Height Per Block : " + heightPerBlock);
+        blocksIDBuff.SetData(blocksId);
+
+        int viewThreadGroupsX = Mathf.CeilToInt((worldOpposite.x - worldOrigin.x) / 8.0f);
+        int viewThreadGroupsY = Mathf.CeilToInt((worldOpposite.y - worldOrigin.y) / 8.0f);
+        int viewThreadGroupsZ = Mathf.CeilToInt((worldOpposite.z - worldOrigin.z) / 8.0f);
 
         // 空気と隣接するブロックを描画ブロックとし、それらの情報を取得
         int meshGenerate = worldShader.FindKernel("MeshGenerate");

@@ -42,6 +42,7 @@ public class WorldMesh : MonoBehaviour
         }
 
         // 各SquareのUVを設定
+        // テクスチャ一つなら左上を、面事にかわるなら左上から右へ、下へと続く
         for (int i = 0; i < squares.Count; i++)
         {
             Vector2Int tile = new Vector2Int
@@ -109,6 +110,12 @@ public class WorldMesh : MonoBehaviour
         shader.SetInt("SOURCE_MESH_BLOCK_RIGHT", 3);
         shader.SetInt("SOURCE_MESH_BLOCK_TOP", 4);
         shader.SetInt("SOURCE_MESH_BLOCK_BOTTOM", 5);
+
+        float textureTileX = 16f / textureAtlas.width;
+        float textureTileY = 16f / textureAtlas.height;
+
+        shader.SetFloat("TEXTURE_BLOCK_TILE_U", 16f / textureAtlas.width);
+        shader.SetFloat("TEXTURE_BLOCK_TILE_V", 16f / textureAtlas.height);
 
         shader.SetInt("SOURCE_MESH_BLOCK_VS_INDEX", vertices.Count);
         shader.SetInt("SOURCE_MESH_BLOCK_TRIS_INDEX", triangles.Count);

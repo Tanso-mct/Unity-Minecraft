@@ -98,7 +98,7 @@ public class Constants : MonoBehaviour
         AIR,
         BEDROCK,
         DIRT,
-        GRASS,
+        GRASS_TOP, GRASS_SIDE, GRASS_BOTTOM,
         STONE, COBBLESTONE, STONE_ANDESITE, STONE_DIORITE, STONE_GRANITE,
         COAL_ORE,
         IRON_ORE,

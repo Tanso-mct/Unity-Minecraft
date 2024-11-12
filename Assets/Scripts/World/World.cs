@@ -239,6 +239,24 @@ public class World : MonoBehaviour
             int generateFlatWorld = worldShader.FindKernel("GenerateFlatWorld");
             SetBuffer(generateFlatWorld);
             worldShader.Dispatch(generateFlatWorld, worldThreadGroupsX, worldThreadGroupsY, worldThreadGroupsZ);
+
+            // int[] blocksId = new int[Constants.WORLD_SIZE * Constants.WORLD_HEIGHT * Constants.WORLD_SIZE];
+            // for (int x = 0; x < Constants.WORLD_SIZE; x++)
+            // {
+            //     for (int y = 0; y < Constants.WORLD_HEIGHT; y++)
+            //     {
+            //         for (int z = 0; z < Constants.WORLD_SIZE; z++)
+            //         {
+            //             int index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
+            //             if (y == 0) blocksId[index] = 1;
+            //             else if (y >= 1 && y <= 2) blocksId[index] = 2;
+            //             else if (y == 3) blocksId[index] = 3;
+            //             else blocksId[index] = 0;
+            //         }
+            //     }
+            // }
+
+            // blocksIDBuff.SetData(blocksId);
         }
         else 
         {
@@ -246,6 +264,31 @@ public class World : MonoBehaviour
             int diamondSquareStep = worldShader.FindKernel("DiamondSquareStep");
             worldShader.Dispatch(diamondSquareStep, worldThreadGroupsX, worldThreadGroupsY, worldThreadGroupsZ);
         }
+
+        int[] blocksIDAry = new int[Constants.WORLD_SIZE * Constants.WORLD_HEIGHT * Constants.WORLD_SIZE];
+        blocksIDBuff.GetData(blocksIDAry);
+
+
+        int heightPerBlock = 0;
+        for (int x = 0; x < Constants.WORLD_SIZE; x++)
+        {
+            for (int y = 0; y < Constants.WORLD_HEIGHT; y++)
+            {
+                for (int z = 0; z < Constants.WORLD_SIZE; z++)
+                {
+                    int index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
+                    Vector3Int pos = new Vector3Int(x, y, z);
+
+                    if (blocksIDAry[index] != 0 && y == 4)
+                    {
+                        heightPerBlock++;
+                        Debug.Log("Block ID : " + blocksIDAry[index] + " Pos : " + pos);
+                    }
+                }
+            }
+        }
+
+        Debug.Log("Height Per Block : " + heightPerBlock);
 
         // 空気と隣接するブロックを描画ブロックとし、それらの情報を取得
         int meshGenerate = worldShader.FindKernel("MeshGenerate");
@@ -259,6 +302,10 @@ public class World : MonoBehaviour
         drawBlockCount = countsAry[0];
         meshVsCount = countsAry[1];
         meshTrisCount = countsAry[2];
+
+        // カウント配列を初期化
+        for (int i = 0; i < 3; i++) countsAry[i] = 0;
+        countsBuff.SetData(countsAry);
 
         Debug.Log("Draw Block Count : " + drawBlockCount);
 
@@ -294,7 +341,6 @@ public class World : MonoBehaviour
         worldMesh.triangles = meshTrisAry;
 
         // ワールドメッシュの更新
-        worldMesh.RecalculateBounds();
         worldMesh.RecalculateTangents();
         worldMesh.RecalculateNormals();
         worldMesh.Optimize();
@@ -326,6 +372,77 @@ public class World : MonoBehaviour
 
     private void MeshUpdate()
     {
+        // プレイヤーの座標を変換
+        Vector3Int convertedPos = SupportFunc.CoordsIntConvert(player.Pos);
+
+        // 描画範囲を処理するためのスレッドグループ数
+        Vector3Int worldOrigin = new Vector3Int
+        (
+            convertedPos.x - McVideos.RenderDistance * Constants.CHUCK_SIZE,
+            convertedPos.y - McVideos.RenderDistance * Constants.CHUCK_SIZE,
+            convertedPos.z - McVideos.RenderDistance * Constants.CHUCK_SIZE
+        );
+
+        Vector3Int worldOpposite = new Vector3Int
+        (
+            convertedPos.x + McVideos.RenderDistance * Constants.CHUCK_SIZE,
+            convertedPos.y + McVideos.RenderDistance * Constants.CHUCK_SIZE,
+            convertedPos.z + McVideos.RenderDistance * Constants.CHUCK_SIZE
+        );
+
+        worldOrigin.x = Mathf.Clamp(worldOrigin.x, 0, Constants.WORLD_SIZE - 1);
+        worldOrigin.y = Mathf.Clamp(worldOrigin.y, 0, Constants.WORLD_HEIGHT - 1);
+        worldOrigin.z = Mathf.Clamp(worldOrigin.z, 0, Constants.WORLD_SIZE - 1);
+
+        worldOpposite.x = Mathf.Clamp(worldOpposite.x, 0, Constants.WORLD_SIZE - 1);
+        worldOpposite.y = Mathf.Clamp(worldOpposite.y, 0, Constants.WORLD_HEIGHT - 1);
+        worldOpposite.z = Mathf.Clamp(worldOpposite.z, 0, Constants.WORLD_SIZE - 1);
+
+        int viewThreadGroupsX = Mathf.CeilToInt((worldOpposite.x - worldOrigin.x) / 8.0f);
+        int viewThreadGroupsY = Mathf.CeilToInt((worldOpposite.y - worldOrigin.y) / 8.0f);
+        int viewThreadGroupsZ = Mathf.CeilToInt((worldOpposite.z - worldOrigin.z) / 8.0f);
+
+        // 処理するインデックスの開始地点、終了地点をセット
+        worldShader.SetInt("VIEW_ORIGIN_X", worldOrigin.x);
+        worldShader.SetInt("VIEW_ORIGIN_Y", worldOrigin.y);
+        worldShader.SetInt("VIEW_ORIGIN_Z", worldOrigin.z);
+
+        // 空気と隣接するブロックを描画ブロックとし、それらの情報を取得
+        int meshGenerate = worldShader.FindKernel("MeshGenerate");
+        SetBuffer(meshGenerate);
+        worldShader.Dispatch(meshGenerate, viewThreadGroupsX, viewThreadGroupsY, viewThreadGroupsZ);
+
+        // 各数を取得
+        int[] countsAry = new int[3];
+        countsBuff.GetData(countsAry);
+
+        drawBlockCount = countsAry[0];
+        meshVsCount = countsAry[1];
+        meshTrisCount = countsAry[2];
+
+        // カウント配列を初期化
+        for (int i = 0; i < 3; i++) countsAry[i] = 0;
+        countsBuff.SetData(countsAry);
+
+        // ワールドメッシュの頂点、UV、頂点インデックスを取得
+        Vector3[] meshVsAry = new Vector3[meshVsCount];
+        Vector2[] meshUVsAry = new Vector2[meshVsCount];
+        int[] meshTrisAry = new int[meshTrisCount];
+
+        meshVsBuff.GetData(meshVsAry);
+        meshUVsBuff.GetData(meshUVsAry);
+        meshTrisBuff.GetData(meshTrisAry);
+
+        // ワールドメッシュの頂点、UV、頂点インデックスを設定
+        worldMesh.Clear();
+        worldMesh.vertices = meshVsAry;
+        worldMesh.uv = meshUVsAry;
+        worldMesh.triangles = meshTrisAry;
+
+        // ワールドメッシュの更新
+        worldMesh.RecalculateTangents();
+        worldMesh.RecalculateNormals();
+        worldMesh.Optimize();
 
     }
 

@@ -228,6 +228,7 @@ public class Player : MonoBehaviour
     {
         // プレイヤーの移動を行う。当たり判定もここで行う
         gameObject.transform.position += movement;
+        pos += movement;
     }
 
     public void Execute()

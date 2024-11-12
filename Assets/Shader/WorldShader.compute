@@ -38,30 +38,29 @@ RWStructuredBuffer<int> sourceMeshTris;
 [numthreads(8,8,8)]
 void GenerateFlatWorld (uint3 id : SV_DispatchThreadID)
 {
-    int index = id.x + id.y * WORLD_HEIGHT + id.z * WORLD_HEIGHT * WORLD_SIZE;
+    int index = id.x + id.y * WORLD_SIZE + id.z * WORLD_HEIGHT * WORLD_SIZE;
 
+    blocksID[index] = 0; // AIR
+
+    int before;
     if (id.y == 0)
     {
-        blocksID[index] = 1; // BEDROCK
+        InterLockedExchange(blocksID[index], 1, before); // BEDROCK
     }
-    else if (id.y == 1 || id.y == 2)
+    if (id.y >= 1 && id.y <= 2)
     {
-        blocksID[index] = 2; // DIRT
+        InterLockedExchange(blocksID[index], 2, before); // DIRT
     }
-    else if (id.y == 3)
+    if (id.y == 3)
     {
-        blocksID[index] = 3; // GRASS
-    }
-    else
-    {
-        blocksID[index] = 0; // AIR
+        InterLockedExchange(blocksID[index], 3, before); // GRASS
     }
 }
 
 [numthreads(8,8,8)]
 void DiamondSquareStep (uint3 id : SV_DispatchThreadID)
 {
-    int index = id.x + id.y * WORLD_HEIGHT + id.z * WORLD_HEIGHT * WORLD_SIZE;
+    int index = id.x + id.y * WORLD_SIZE + id.z * WORLD_HEIGHT * WORLD_SIZE;
 
     
 }
@@ -80,7 +79,7 @@ int CheckIsAir(int3 pos)
 {
     if (IsInWorldRange(pos))
     {
-        if (blocksID[pos.x + pos.y * WORLD_HEIGHT + pos.z * WORLD_HEIGHT * WORLD_SIZE] == 0)
+        if (blocksID[pos.x + pos.y * WORLD_SIZE + pos.z * WORLD_HEIGHT * WORLD_SIZE] == 0)
         {
             return 1;
         }
@@ -90,30 +89,27 @@ int CheckIsAir(int3 pos)
     return 0;
 }
 
-int3 ToCoordsIntConvert(int3 pos)
+float3 ToCoordsIntConvert(int3 pos)
 {
-    return int3(pos.x - WORLD_HALF_SIZE, pos.y, pos.z - WORLD_HALF_SIZE);
+    return float3((float)pos.x - WORLD_HALF_SIZE, (float)pos.y, (float)pos.z - WORLD_HALF_SIZE);
 }
 
 [numthreads(8,8,8)]
 void MeshGenerate (uint3 id : SV_DispatchThreadID)
 {
     int3 voxel = int3(id.x + VIEW_ORIGIN_X, id.y + VIEW_ORIGIN_Y, id.z + VIEW_ORIGIN_Z);
-    int index = voxel.x + voxel.y * WORLD_HEIGHT + voxel.z * WORLD_HEIGHT * WORLD_SIZE;
+    int index = voxel.x + voxel.y * WORLD_SIZE + voxel.z * WORLD_HEIGHT * WORLD_SIZE;
 
     // ブロックが描画範囲でかつ、空気ブロックでない場合処理を行う
     if (blocksID[index] != 0)
     {
-        // ブロックの周囲に空気ブロックがあるかどうかを判定
-        int3 checkPos = int3(voxel.x, voxel.y, voxel.z);
-
         // 上下左右前後の6方向をチェック
-        int isTopNeedDraw = CheckIsAir(checkPos + int3(0, 1, 0));
-        int isBottomNeedDraw = CheckIsAir(checkPos + int3(0, -1, 0));
-        int isLeftNeedDraw = CheckIsAir(checkPos + int3(-1, 0, 0));
-        int isRightNeedDraw = CheckIsAir(checkPos + int3(1, 0, 0));
-        int isFrontNeedDraw = CheckIsAir(checkPos + int3(0, 0, -1));
-        int isBackNeedDraw = CheckIsAir(checkPos + int3(0, 0, 1));
+        int isTopNeedDraw = CheckIsAir(voxel + int3(0, 1, 0));
+        int isBottomNeedDraw = CheckIsAir(voxel + int3(0, -1, 0));
+        int isLeftNeedDraw = CheckIsAir(voxel + int3(-1, 0, 0));
+        int isRightNeedDraw = CheckIsAir(voxel + int3(1, 0, 0));
+        int isFrontNeedDraw = CheckIsAir(voxel + int3(0, 0, -1));
+        int isBackNeedDraw = CheckIsAir(voxel + int3(0, 0, 1));
 
         // どれか一つでも空気ブロックがあれば描画対象とする
         int isNeedDraw = isTopNeedDraw + isBottomNeedDraw + isLeftNeedDraw + isRightNeedDraw + isFrontNeedDraw + isBackNeedDraw;
@@ -144,7 +140,8 @@ void MeshGenerate (uint3 id : SV_DispatchThreadID)
                 if (nowDrawing == 1)
                 {
                     // ブロックの座標を変換
-                    int3 blockCoords = ToCoordsIntConvert(voxel);
+                    float3 blockCoords = ToCoordsIntConvert(voxel);
+
 
                     for (int j = 0; j < 4; j++)
                     {

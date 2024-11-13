@@ -170,6 +170,7 @@ public class Constants : MonoBehaviour
 
     // Animation
     public const string ANIM_TYPE = "AnimType";
+    public const int ANIM_IDLE = 0;
     public const int ANIM_PLAYER_BREATH = 1;
     public const int ANIM_PLAYER_WALK = 2;
     public const int ANIM_PLAYER_RUN = 3;

@@ -9,9 +9,12 @@ public class Player : MonoBehaviour
     // プレイヤーのパーツら
     [SerializeField] private GameObject parts;
     [SerializeField] private GameObject partsBody;
-
-    // Canvas上の右腕
     [SerializeField] private GameObject canvasRightArm;
+    [SerializeField] private GameObject canvasRightArmIdle;
+
+    private Vector3 canvasRightArmIdlePos;
+    private Vector3 canvasRightArmIdleRot;
+    private Vector3 canvasRightArmIdleScale;
 
     // PartsのGameObject
     [SerializeField] private GameObject head;
@@ -82,6 +85,7 @@ public class Player : MonoBehaviour
     // アニメーター
     private Animator animParts;
     private Animator animBody;
+    private Animator animRightArm;
 
     public void Init()
     {
@@ -98,8 +102,9 @@ public class Player : MonoBehaviour
         // アニメーターの初期化
         animParts = parts.GetComponent<Animator>();
         animBody = partsBody.GetComponent<Animator>();
+        animRightArm = canvasRightArm.GetComponent<Animator>();
 
-        partsBody.SetActive(false);
+        // partsBody.SetActive(false);
 
         // 1人称視点でのテクスチャを設定
         // mat.mainTexture = firstPersonTexture;
@@ -127,6 +132,7 @@ public class Player : MonoBehaviour
         rot.y += mouseAxis.x;
 
         parts.transform.rotation = Quaternion.Euler(0.0f, rot.y, 0.0f);
+
         partsBody.transform.rotation = Quaternion.Euler(partsBody.transform.rotation.x, rot.y, partsBody.transform.rotation.z);
         head.transform.localRotation = Quaternion.Euler(rot.x, 0.0f, 0.0f);
     }
@@ -240,7 +246,6 @@ public class Player : MonoBehaviour
     {
         // プレイヤーの移動を行う。当たり判定もここで行う
         gameObject.transform.position += movement;
-        canvasRightArm.transform.position += movement;
         pos += movement;
     }
 
@@ -248,21 +253,27 @@ public class Player : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            body.SetActive(false);
-            rightArm.SetActive(false);
+            // body.SetActive(false);
+            // rightArm.SetActive(false);
 
-            partsBody.SetActive(true);
+            // partsBody.SetActive(true);
 
-            animBody.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_USE);
+            canvasRightArmIdle.SetActive(false);
+            canvasRightArm.SetActive(true);
+            animRightArm.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_USE);
         }
     }
 
     public void OnUseEnd()
     {
-        partsBody.SetActive(false);
+        // partsBody.SetActive(false);
 
-        body.SetActive(true);
-        rightArm.SetActive(true);
+        // body.SetActive(true);
+        // rightArm.SetActive(true);
+
+        canvasRightArmIdle.SetActive(true);
+        canvasRightArm.SetActive(false);
+
     }
 
     public void Execute()

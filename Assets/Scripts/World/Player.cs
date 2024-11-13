@@ -10,6 +10,9 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject parts;
     [SerializeField] private GameObject partsBody;
 
+    // Canvas上の右腕
+    [SerializeField] private GameObject canvasRightArm;
+
     // PartsのGameObject
     [SerializeField] private GameObject head;
     [SerializeField] private GameObject body;
@@ -124,7 +127,7 @@ public class Player : MonoBehaviour
         rot.y += mouseAxis.x;
 
         parts.transform.rotation = Quaternion.Euler(0.0f, rot.y, 0.0f);
-        partsBody.transform.rotation = Quaternion.Euler(0.0f, rot.y, 0.0f);
+        partsBody.transform.rotation = Quaternion.Euler(partsBody.transform.rotation.x, rot.y, partsBody.transform.rotation.z);
         head.transform.localRotation = Quaternion.Euler(rot.x, 0.0f, 0.0f);
     }
 
@@ -237,6 +240,7 @@ public class Player : MonoBehaviour
     {
         // プレイヤーの移動を行う。当たり判定もここで行う
         gameObject.transform.position += movement;
+        canvasRightArm.transform.position += movement;
         pos += movement;
     }
 
@@ -245,12 +249,10 @@ public class Player : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             body.SetActive(false);
-            // leftArm.SetActive(false);
             rightArm.SetActive(false);
 
             partsBody.SetActive(true);
 
-            animBody.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_BREATH);
             animBody.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_USE);
         }
     }
@@ -260,7 +262,6 @@ public class Player : MonoBehaviour
         partsBody.SetActive(false);
 
         body.SetActive(true);
-        // leftArm.SetActive(true);
         rightArm.SetActive(true);
     }
 

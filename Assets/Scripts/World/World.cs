@@ -540,11 +540,11 @@ public class World : MonoBehaviour
         // プレイヤーの実行。Raycastの結果を送信
         player.Execute(RaycastAtBlock());
 
-        // メッシュの更新
-        MeshUpdate();
-
         // ブロックの更新
         BlockUpdate();
+
+        // メッシュの更新
+        MeshUpdate();
 
         // エンティティの更新
         EntityUpdate();

@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class World : MonoBehaviour
 {
@@ -40,7 +42,6 @@ public class World : MonoBehaviour
     private int meshVsCount = 0;
     private int meshTrisCount = 0;
 
-
     // ワールドメッシュの頂点データバッファー。描画範囲によりサイズが変わる。
     private ComputeBuffer meshVsBuff;
 
@@ -60,9 +61,7 @@ public class World : MonoBehaviour
 
     // Raycast用のバッファー
     private ComputeBuffer raycastBlocksBuff;
-    int[] raycastBlocks;
-    private ComputeBuffer nearestBlockBuff;
-    int[] nearestBlock;
+    Vector4[] raycastBlocks;
 
     // Raycastの精度
     [SerializeField] private int rayAccuracy = 100;
@@ -259,6 +258,15 @@ public class World : MonoBehaviour
                     }
                 }
             }
+
+            // 横長の柱を生成
+            for (int x = Constants.WORLD_HALF_SIZE; x < Constants.WORLD_HALF_SIZE + 10; x++)
+            {
+                int y = 5;
+                int z = Constants.WORLD_HALF_SIZE;
+                int index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
+                blocksId[index] = (int)Constants.BLOCK_TYPE.BEDROCK;
+            }
         }
         else 
         {
@@ -357,56 +365,83 @@ public class World : MonoBehaviour
         int raySize = (int)(player.Reach * rayAccuracy);
 
         // レイキャスト用のバッファーを作成
-        raycastBlocks = new int[raySize * 3];
-        for (int i = 0; i < raySize * 3; i++) raycastBlocks[i] = 0;
+        raycastBlocks = new Vector4[raySize];
+        for (int i = 0; i < raySize; i++)
+        {
+            raycastBlocks[i].x = 0;
+            raycastBlocks[i].y = 0;
+            raycastBlocks[i].z = 0;
+            raycastBlocks[i].w = 0;
+        }
 
-        raycastBlocksBuff = new ComputeBuffer(raySize, sizeof(int) * 3);
+        raycastBlocksBuff = new ComputeBuffer(raySize, sizeof(float) * 4);
         raycastBlocksBuff.SetData(raycastBlocks);
-
-        nearestBlock = new int[1];
-        nearestBlock[0] = raySize - 1;
-
-        nearestBlockBuff = new ComputeBuffer(1, sizeof(int));
-        nearestBlockBuff.SetData(nearestBlock);
-
     }
 
     // X = Block.x, Y = Block.y, Z = Block.z W = BlockType
     private Vector4 RaycastAtBlock()
     {
-        // プレイヤーの視線方向にRayを飛ばし、当たったブロックの座標を取得
-        Camera cam = player.cam;
+        Vector3 origin = player.Pos;
+        origin.x += Constants.WORLD_HALF_SIZE;
+        origin.y += 2f;
+        origin.z += Constants.WORLD_HALF_SIZE;
 
-        Vector3 origin = Camera.main.transform.position;
-        Vector3 direction = Camera.main.transform.forward;
+        Vector3 direction = player.cam.transform.forward;
 
         int raySize = (int)(player.Reach * rayAccuracy);
 
-        // Raycastを実行
-        int threadGroupsX = Mathf.CeilToInt(raySize / 8.0f);
-        int threadGroupsY = Mathf.CeilToInt(1);
-        int threadGroupsZ = Mathf.CeilToInt(1);
+        worldShader.SetFloat("RAY_SIZE", raySize);
 
-        worldShader.SetFloat("RAY_ACCURACY", rayAccuracy);
-        worldShader.SetVector("RAY_ORIGIN", new Vector3(origin.x, origin.y, origin.z));
-        worldShader.SetVector("RAY_DIRECTION", new Vector3(direction.x, direction.y, direction.z));
+        worldShader.SetFloat("RAY_ORIGIN_X", origin.x);
+        worldShader.SetFloat("RAY_ORIGIN_Y", origin.y);
+        worldShader.SetFloat("RAY_ORIGIN_Z", origin.z);
+
+        worldShader.SetFloat("RAY_DIRECTION_X", direction.x);
+        worldShader.SetFloat("RAY_DIRECTION_Y", direction.y);
+        worldShader.SetFloat("RAY_DIRECTION_Z", direction.z);
+
+        worldShader.SetFloat("RAY_LENGTH", player.Reach);
 
         int raycastAtBlock = worldShader.FindKernel("RaycastAtBlock");
 
         worldShader.SetBuffer(raycastAtBlock, "blocksID", blocksIDBuff);
         worldShader.SetBuffer(raycastAtBlock, "raycastBlocks", raycastBlocksBuff);
-        worldShader.SetBuffer(raycastAtBlock, "nearestBlock", nearestBlockBuff);
+
+        int threadGroupsX = Mathf.CeilToInt(raySize / 8.0f);
+        int threadGroupsY = Mathf.CeilToInt(1);
+        int threadGroupsZ = Mathf.CeilToInt(1);
 
         worldShader.Dispatch(raycastAtBlock, threadGroupsX, threadGroupsY, threadGroupsZ);
 
         raycastBlocksBuff.GetData(raycastBlocks);
-        nearestBlockBuff.GetData(nearestBlock);
+        
+        Vector4 setTargetBlock = new Vector4(0, 0, 0, 0);
+        Vector4 useTargetBlock = new Vector4(0, 0, 0, 0);
+        for (int i = 0; i < raycastBlocks.Length; i++)
+        {
+            if (raycastBlocks[i].w != 0f)
+            {
+                if (i - 1 >= 0)
+                {
+                    setTargetBlock.x = raycastBlocks[i - 1].x;
+                    setTargetBlock.y = raycastBlocks[i - 1].y;
+                    setTargetBlock.z = raycastBlocks[i - 1].z;
+                    setTargetBlock.w = raycastBlocks[i - 1].w;
+                }
+                else
+                {
+                    setTargetBlock.w = -1;
+                }
 
+                useTargetBlock.x = raycastBlocks[i].x;
+                useTargetBlock.y = raycastBlocks[i].y;
+                useTargetBlock.z = raycastBlocks[i].z;
+                useTargetBlock.w = raycastBlocks[i].w;
+                break;
+            }
+        }
 
-        // デバッグ用のRayを描画
-        Debug.DrawRay(origin, direction * player.Reach, Color.red, 1.0f);
-
-        return new Vector4(0, 0, 0, 0);
+        return useTargetBlock;
     }
 
     private void MeshUpdate()
@@ -536,6 +571,5 @@ public class World : MonoBehaviour
         if (sourceMeshTrisBuff != null) sourceMeshTrisBuff.Release();
 
         if (raycastBlocksBuff != null) raycastBlocksBuff.Release();
-        if (nearestBlockBuff != null) nearestBlockBuff.Release();
     }
 }

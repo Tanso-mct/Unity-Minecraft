@@ -151,24 +151,38 @@ void MeshGenerate (uint3 id : SV_DispatchThreadID)
     }
 }
 
-float RAY_ACCURACY;
-float3 RAY_ORIGIN;
-float3 RAY_DIRECTION;
+float RAY_SIZE;
+float RAY_ORIGIN_X;
+float RAY_ORIGIN_Y;
+float RAY_ORIGIN_Z;
 
-RWStructuredBuffer<int3> raycastBlocks;
-RWBuffer<int> nearestBlock;
+float RAY_DIRECTION_X;
+float RAY_DIRECTION_Y;
+float RAY_DIRECTION_Z;
+
+float RAY_LENGTH;
+
+RWStructuredBuffer<float4> raycastBlocks;
 
 [numthreads(8,1,1)]
 void RaycastAtBlock (uint3 id : SV_DispatchThreadID)
 {
     uint index = id.x;
 
-    // // 例として、raycastBlocks から値を取得
-    // float3 currentBlock = raycastBlocks[index];
+    float3 rayPos;
+    rayPos.x = RAY_ORIGIN_X + (RAY_DIRECTION_X * RAY_LENGTH) * ((float)index / (float)RAY_SIZE);
+    rayPos.y = RAY_ORIGIN_Y + (RAY_DIRECTION_Y * RAY_LENGTH) * ((float)index / (float)RAY_SIZE);
+    rayPos.z = RAY_ORIGIN_Z + (RAY_DIRECTION_Z * RAY_LENGTH) * ((float)index / (float)RAY_SIZE);
 
-    // // 距離の計算
-    // float distance = length(currentBlock - RAY_ORIGIN);
+    int3 blockPos = int3(rayPos);
+    float3 rayFloatPart = rayPos - float3(int3(rayPos));
+    
+    if (rayFloatPart.x >= 0.5) blockPos.x += 1;
+    if (rayFloatPart.y >= 0.5) blockPos.y += 1;
+    if (rayFloatPart.z >= 0.5) blockPos.z += 1;
 
-    // // nearestBlock の最初の要素を更新
-    // InterlockedMin(nearestBlock[0].x, distance);
+    raycastBlocks[index].x = blockPos.x;
+    raycastBlocks[index].y = blockPos.y;
+    raycastBlocks[index].z = blockPos.z;
+    raycastBlocks[index].w = blocksID[blockPos.x + blockPos.y * WORLD_SIZE + blockPos.z * WORLD_HEIGHT * WORLD_SIZE];
 }

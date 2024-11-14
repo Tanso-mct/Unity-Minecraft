@@ -1945,7 +1945,7 @@ MonoBehaviour:
   canvasRightArm: {fileID: 1971372244}
   canvasRightArmIdle: {fileID: 208598568}
   cam: {fileID: 922196900}
-  reach: 4.5
+  reach: 5
   mat: {fileID: 2100000, guid: bdbad945551d6bf48babd9fdaabd76f0, type: 2}
   texture: {fileID: 2800000, guid: 166fea76460a8bb4dbc3dee4b3f4750e, type: 3}
   walkingSpeed: 0.1

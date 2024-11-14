@@ -37,7 +37,7 @@ public class Player : MonoBehaviour
     [SerializeField] public Camera cam;
     
     // プレイヤーのリーチ
-    [SerializeField] private float reach = 4.5f;
+    [SerializeField] private float reach = 5f;
     public float Reach {get { return reach; }}
 
     // プレイヤーのマテリアル

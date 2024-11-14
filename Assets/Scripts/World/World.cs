@@ -383,7 +383,7 @@ public class World : MonoBehaviour
     {
         Vector3 origin = player.Pos;
         origin.x += Constants.WORLD_HALF_SIZE;
-        origin.y += 2f;
+        origin.y += 1.75f;
         origin.z += Constants.WORLD_HALF_SIZE;
 
         Vector3 direction = player.cam.transform.forward;

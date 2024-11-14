@@ -190,7 +190,7 @@ void RaycastAtBlock (uint3 id : SV_DispatchThreadID)
     float3 rayFloatPart = rayPos - float3(int3(rayPos));
     
     if (rayFloatPart.x >= 0.5) blockPos.x += 1;
-    // if (rayFloatPart.y >= 0.5) blockPos.y += 1;
+    if (rayFloatPart.y >= 0.5) blockPos.y += 1;
     if (rayFloatPart.z >= 0.5) blockPos.z += 1;
 
     raycastBlocks[index].x = blockPos.x;

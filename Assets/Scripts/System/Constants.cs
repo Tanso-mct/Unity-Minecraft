@@ -93,6 +93,7 @@ public class Constants : MonoBehaviour
     public const int VAXEL_STATE_ENTITY = 3;
 
     // Vaxel type
+    public const int BLOCK_TYPE_CANT_SET = -1;
     public enum BLOCK_TYPE
     {
         AIR,
@@ -107,6 +108,9 @@ public class Constants : MonoBehaviour
         EMERALD_ORE,
         LAPIS_ORE
     }
+
+    public const int TARGET_BLOCK_SELECT = 0;
+    public const int TARGET_BLOCK_SET = 1;
 
     // Block object type    
     public const string BLOCK_OBJ_FRONT = "Front";

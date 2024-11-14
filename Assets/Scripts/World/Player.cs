@@ -277,9 +277,9 @@ public class Player : MonoBehaviour
         pos += movement;
     }
 
-    public void Use()
+    private void Attack(ref List<Vector4> targetBlocks)
     {
-        if (Input.GetMouseButtonDown(0))
+        if (McControls.IsKey(Constants.CONTROL_ATTACK))
         {
             if (viewMode != 1)
             {
@@ -294,6 +294,14 @@ public class Player : MonoBehaviour
                 animRightArm.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_USE);
             }
 
+            Debug.Log("Attack block at " + targetBlocks[Constants.TARGET_BLOCK_SELECT].x + ", " + targetBlocks[Constants.TARGET_BLOCK_SELECT].y + ", " + targetBlocks[Constants.TARGET_BLOCK_SELECT].z);
+        }
+    }
+
+    private void Use()
+    {
+        if (McControls.IsKey(Constants.CONTROL_USE))
+        {
             
         }
     }
@@ -312,7 +320,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void Execute()
+    public void Execute(List<Vector4> targetBlocks)
     {   
         // フレーム開始
         FrameStart();
@@ -329,7 +337,7 @@ public class Player : MonoBehaviour
         // プレイヤーの飛行中移動更新
         if (!isGrounded) FlyUpdate();
 
-        Use();
+        Attack(ref targetBlocks);
 
         // プレイヤーの移動
         Transfer();

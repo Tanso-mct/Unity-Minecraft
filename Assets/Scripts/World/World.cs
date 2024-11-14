@@ -379,7 +379,7 @@ public class World : MonoBehaviour
     }
 
     // X = Block.x, Y = Block.y, Z = Block.z W = BlockType
-    private Vector4 RaycastAtBlock()
+    private List<Vector4> RaycastAtBlock()
     {
         Vector3 origin = player.Pos;
         origin.x += Constants.WORLD_HALF_SIZE;
@@ -414,34 +414,34 @@ public class World : MonoBehaviour
         worldShader.Dispatch(raycastAtBlock, threadGroupsX, threadGroupsY, threadGroupsZ);
 
         raycastBlocksBuff.GetData(raycastBlocks);
-        
-        Vector4 setTargetBlock = new Vector4(0, 0, 0, 0);
-        Vector4 useTargetBlock = new Vector4(0, 0, 0, 0);
+
+        Vector4 selectBlock = new Vector4(0, 0, 0, 0);
+        Vector4 setBlock = new Vector4(0, 0, 0, 0);
         for (int i = 0; i < raycastBlocks.Length; i++)
         {
             if (raycastBlocks[i].w != 0f)
             {
+                selectBlock.x = raycastBlocks[i].x;
+                selectBlock.y = raycastBlocks[i].y;
+                selectBlock.z = raycastBlocks[i].z;
+                selectBlock.w = raycastBlocks[i].w;
+
                 if (i - 1 >= 0)
                 {
-                    setTargetBlock.x = raycastBlocks[i - 1].x;
-                    setTargetBlock.y = raycastBlocks[i - 1].y;
-                    setTargetBlock.z = raycastBlocks[i - 1].z;
-                    setTargetBlock.w = raycastBlocks[i - 1].w;
+                    setBlock.x = raycastBlocks[i - 1].x;
+                    setBlock.y = raycastBlocks[i - 1].y;
+                    setBlock.z = raycastBlocks[i - 1].z;
+                    setBlock.w = raycastBlocks[i - 1].w;
                 }
                 else
                 {
-                    setTargetBlock.w = -1;
+                    setBlock.w = Constants.BLOCK_TYPE_CANT_SET;
                 }
-
-                useTargetBlock.x = raycastBlocks[i].x;
-                useTargetBlock.y = raycastBlocks[i].y;
-                useTargetBlock.z = raycastBlocks[i].z;
-                useTargetBlock.w = raycastBlocks[i].w;
                 break;
             }
         }
 
-        return useTargetBlock;
+        return new List<Vector4> { selectBlock, setBlock };
     }
 
     private void MeshUpdate()
@@ -537,10 +537,8 @@ public class World : MonoBehaviour
 
     public void Execute()
     {
-        Vector4 selectingBlock = RaycastAtBlock();
-
-        // プレイヤーの実行
-        player.Execute();
+        // プレイヤーの実行。Raycastの結果を送信
+        player.Execute(RaycastAtBlock());
 
         // メッシュの更新
         MeshUpdate();

@@ -1,4 +1,6 @@
 #pragma kernel MeshGenerate
+#pragma kernel BlockGenerate
+#pragma kernel BlockDestroy
 #pragma kernel RaycastAtBlock
 
 int CHUCK_SIZE;
@@ -151,6 +153,16 @@ void MeshGenerate (uint3 id : SV_DispatchThreadID)
     }
 }
 
+[numthreads(1,1,1)]
+void BlockGenerate (uint3 id : SV_DispatchThreadID)
+{
+}
+
+[numthreads(1,1,1)]
+void BlockDestroy (uint3 id : SV_DispatchThreadID)
+{
+}
+
 float RAY_SIZE;
 float RAY_ORIGIN_X;
 float RAY_ORIGIN_Y;
@@ -178,7 +190,7 @@ void RaycastAtBlock (uint3 id : SV_DispatchThreadID)
     float3 rayFloatPart = rayPos - float3(int3(rayPos));
     
     if (rayFloatPart.x >= 0.5) blockPos.x += 1;
-    if (rayFloatPart.y >= 0.5) blockPos.y += 1;
+    // if (rayFloatPart.y >= 0.5) blockPos.y += 1;
     if (rayFloatPart.z >= 0.5) blockPos.z += 1;
 
     raycastBlocks[index].x = blockPos.x;

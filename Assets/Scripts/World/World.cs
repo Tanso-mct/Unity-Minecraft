@@ -11,7 +11,6 @@ public class World : MonoBehaviour
     private static WorldInfo thisInfo;
 
     // ブロックのバッファー。その座標に存在しているブロックの種類を示す。
-    int[] blocksId;
     private ComputeBuffer blocksIDBuff;
 
     // ワールド上のブロックとエンティティとアイテムのオブジェクト
@@ -59,6 +58,15 @@ public class World : MonoBehaviour
     private ComputeBuffer sourceMeshUVsBuff;
     private ComputeBuffer sourceMeshTrisBuff;
 
+    // Raycast用のバッファー
+    private ComputeBuffer raycastBlocksBuff;
+    int[] raycastBlocks;
+    private ComputeBuffer nearestBlockBuff;
+    int[] nearestBlock;
+
+    // Raycastの精度
+    [SerializeField] private int rayAccuracy = 100;
+
     public static void LoadInfoFromJson()
     {
         WorldInfos = new List<WorldInfo>();
@@ -90,7 +98,6 @@ public class World : MonoBehaviour
     {
         // ワールドの初期化
         blocksIDBuff = new ComputeBuffer(Constants.WORLD_SIZE * Constants.WORLD_HEIGHT * Constants.WORLD_SIZE, sizeof(int));
-        blocksId = new int[Constants.WORLD_SIZE * Constants.WORLD_HEIGHT * Constants.WORLD_SIZE];
 
         blocks = new Dictionary<Vector3Int, Vaxel>();
         entities = new List<Vaxel>();
@@ -163,6 +170,9 @@ public class World : MonoBehaviour
             sizeof(int)
         );
 
+        // Raycastの初期化
+        RaycastInit();
+
         // ワールドの生成もしくは読み込み
         if(thisInfo.dataJsonPath == "") Create(thisInfo.worldType);
         else LoadFromJson();
@@ -231,6 +241,7 @@ public class World : MonoBehaviour
         worldShader.SetInt("VIEW_ORIGIN_Y", worldOrigin.y);
         worldShader.SetInt("VIEW_ORIGIN_Z", worldOrigin.z);
 
+        int[] blocksId = new int[Constants.WORLD_SIZE * Constants.WORLD_HEIGHT * Constants.WORLD_SIZE];
         if (thisInfo.worldType == "Flat")
         {
             // フラットワールドの生成
@@ -341,6 +352,63 @@ public class World : MonoBehaviour
         // Paramに保存されているワールド情報を使用してワールドを削除
     }
 
+    private void RaycastInit()
+    {
+        int raySize = (int)(player.Reach * rayAccuracy);
+
+        // レイキャスト用のバッファーを作成
+        raycastBlocks = new int[raySize * 3];
+        for (int i = 0; i < raySize * 3; i++) raycastBlocks[i] = 0;
+
+        raycastBlocksBuff = new ComputeBuffer(raySize, sizeof(int) * 3);
+        raycastBlocksBuff.SetData(raycastBlocks);
+
+        nearestBlock = new int[1];
+        nearestBlock[0] = raySize - 1;
+
+        nearestBlockBuff = new ComputeBuffer(1, sizeof(int));
+        nearestBlockBuff.SetData(nearestBlock);
+
+    }
+
+    // X = Block.x, Y = Block.y, Z = Block.z W = BlockType
+    private Vector4 RaycastAtBlock()
+    {
+        // プレイヤーの視線方向にRayを飛ばし、当たったブロックの座標を取得
+        Camera cam = player.cam;
+
+        Vector3 origin = Camera.main.transform.position;
+        Vector3 direction = Camera.main.transform.forward;
+
+        int raySize = (int)(player.Reach * rayAccuracy);
+
+        // Raycastを実行
+        int threadGroupsX = Mathf.CeilToInt(raySize / 8.0f);
+        int threadGroupsY = Mathf.CeilToInt(1);
+        int threadGroupsZ = Mathf.CeilToInt(1);
+
+        worldShader.SetFloat("RAY_ACCURACY", rayAccuracy);
+        worldShader.SetVector("RAY_ORIGIN", new Vector3(origin.x, origin.y, origin.z));
+        worldShader.SetVector("RAY_DIRECTION", new Vector3(direction.x, direction.y, direction.z));
+
+        int raycastAtBlock = worldShader.FindKernel("RaycastAtBlock");
+
+        worldShader.SetBuffer(raycastAtBlock, "blocksID", blocksIDBuff);
+        worldShader.SetBuffer(raycastAtBlock, "raycastBlocks", raycastBlocksBuff);
+        worldShader.SetBuffer(raycastAtBlock, "nearestBlock", nearestBlockBuff);
+
+        worldShader.Dispatch(raycastAtBlock, threadGroupsX, threadGroupsY, threadGroupsZ);
+
+        raycastBlocksBuff.GetData(raycastBlocks);
+        nearestBlockBuff.GetData(nearestBlock);
+
+
+        // デバッグ用のRayを描画
+        Debug.DrawRay(origin, direction * player.Reach, Color.red, 1.0f);
+
+        return new Vector4(0, 0, 0, 0);
+    }
+
     private void MeshUpdate()
     {
         // プレイヤーの座標を変換
@@ -434,6 +502,8 @@ public class World : MonoBehaviour
 
     public void Execute()
     {
+        Vector4 selectingBlock = RaycastAtBlock();
+
         // プレイヤーの実行
         player.Execute();
 
@@ -464,5 +534,8 @@ public class World : MonoBehaviour
         if (sourceMeshVsBuff != null) sourceMeshVsBuff.Release();
         if (sourceMeshUVsBuff != null) sourceMeshUVsBuff.Release();
         if (sourceMeshTrisBuff != null) sourceMeshTrisBuff.Release();
+
+        if (raycastBlocksBuff != null) raycastBlocksBuff.Release();
+        if (nearestBlockBuff != null) nearestBlockBuff.Release();
     }
 }

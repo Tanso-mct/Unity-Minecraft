@@ -1,4 +1,5 @@
 #pragma kernel MeshGenerate
+#pragma kernel RaycastAtBlock
 
 int CHUCK_SIZE;
 int WORLD_SIZE;
@@ -148,4 +149,26 @@ void MeshGenerate (uint3 id : SV_DispatchThreadID)
             }
         }
     }
+}
+
+float RAY_ACCURACY;
+float3 RAY_ORIGIN;
+float3 RAY_DIRECTION;
+
+RWStructuredBuffer<int3> raycastBlocks;
+RWBuffer<int> nearestBlock;
+
+[numthreads(8,1,1)]
+void RaycastAtBlock (uint3 id : SV_DispatchThreadID)
+{
+    uint index = id.x;
+
+    // // 例として、raycastBlocks から値を取得
+    // float3 currentBlock = raycastBlocks[index];
+
+    // // 距離の計算
+    // float distance = length(currentBlock - RAY_ORIGIN);
+
+    // // nearestBlock の最初の要素を更新
+    // InterlockedMin(nearestBlock[0].x, distance);
 }

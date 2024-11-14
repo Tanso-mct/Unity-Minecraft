@@ -6,33 +6,45 @@ public class Player : MonoBehaviour
 {
     private BoxCollider bc;
 
+    // プレイヤーの第何人称
+    [SerializeField] private int viewMode = 1;
+
     // プレイヤーのパーツら
     [SerializeField] private GameObject parts;
-    [SerializeField] private GameObject partsBody;
-    [SerializeField] private GameObject canvasRightArm;
-    [SerializeField] private GameObject canvasRightArmIdle;
+    [SerializeField] private GameObject partsSub;
 
     private Vector3 canvasRightArmIdlePos;
     private Vector3 canvasRightArmIdleRot;
     private Vector3 canvasRightArmIdleScale;
 
     // PartsのGameObject
+    [SerializeField] private List<GameObject> partsList;
+
+    // PartsのHead
     [SerializeField] private GameObject head;
-    [SerializeField] private GameObject body;
-    [SerializeField] private GameObject leftArm;
+
+    // Partsの右腕
     [SerializeField] private GameObject rightArm;
 
+    // 
+
+    // PartsのHeadにある右腕オブジェクト
+    [SerializeField] private GameObject canvasRightArm;
+    [SerializeField] private GameObject canvasRightArmIdle;
+    
+
     // プレイヤーのカメラ
-    [SerializeField] private Camera cam;
+    [SerializeField] public Camera cam;
+    
+    // プレイヤーのリーチ
+    [SerializeField] private float reach = 4.5f;
+    public float Reach {get { return reach; }}
 
     // プレイヤーのマテリアル
     [SerializeField] private Material mat;
 
-    // １人称視点でのテクスチャ
-    [SerializeField] private Texture2D firstPersonTexture;
-
-    // 2、3人称視点でのテクスチャ
-    [SerializeField] private Texture2D otherPersonTexture;
+    // テクスチャ
+    [SerializeField] private Texture2D texture;
 
     // プレイヤーの回転角度
     private Vector2 rot;
@@ -84,7 +96,7 @@ public class Player : MonoBehaviour
 
     // アニメーター
     private Animator animParts;
-    private Animator animBody;
+    private Animator animSub;
     private Animator animRightArm;
 
     public void Init()
@@ -101,16 +113,32 @@ public class Player : MonoBehaviour
 
         // アニメーターの初期化
         animParts = parts.GetComponent<Animator>();
-        animBody = partsBody.GetComponent<Animator>();
+        animSub = partsSub.GetComponent<Animator>();
         animRightArm = canvasRightArm.GetComponent<Animator>();
 
-        // partsBody.SetActive(false);
+        // プレイヤーの1人称視点での初期化
+        if (viewMode == 1)
+        {
+            for (int i = 0; i < partsList.Count; i++)
+            {
+                partsList[i].SetActive(false);
+            }
+            partsSub.SetActive(false);
 
-        // 1人称視点でのテクスチャを設定
-        // mat.mainTexture = firstPersonTexture;
+            canvasRightArmIdle.SetActive(true);
+        }
+        else
+        {
+            parts.SetActive(true);
+            partsSub.SetActive(true);
 
-        // 2、3人称視点でのテクスチャを設定
-        mat.mainTexture = otherPersonTexture;
+            canvasRightArmIdle.SetActive(false);
+            canvasRightArm.SetActive(false);
+        }
+
+
+        // テクスチャを設定
+        mat.mainTexture = texture;
     }
 
     public void Create()
@@ -133,7 +161,7 @@ public class Player : MonoBehaviour
 
         parts.transform.rotation = Quaternion.Euler(0.0f, rot.y, 0.0f);
 
-        partsBody.transform.rotation = Quaternion.Euler(partsBody.transform.rotation.x, rot.y, partsBody.transform.rotation.z);
+        partsSub.transform.rotation = Quaternion.Euler(partsSub.transform.rotation.x, rot.y, partsSub.transform.rotation.z);
         head.transform.localRotation = Quaternion.Euler(rot.x, 0.0f, 0.0f);
     }
 
@@ -253,27 +281,35 @@ public class Player : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            // body.SetActive(false);
-            // rightArm.SetActive(false);
+            if (viewMode != 1)
+            {
+                rightArm.SetActive(false);
+                partsSub.SetActive(true);
+                animSub.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_USE);
+            }
+            else
+            {
+                canvasRightArmIdle.SetActive(false);
+                canvasRightArm.SetActive(true);
+                animRightArm.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_USE);
+            }
 
-            // partsBody.SetActive(true);
-
-            canvasRightArmIdle.SetActive(false);
-            canvasRightArm.SetActive(true);
-            animRightArm.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_USE);
+            
         }
     }
 
     public void OnUseEnd()
     {
-        // partsBody.SetActive(false);
-
-        // body.SetActive(true);
-        // rightArm.SetActive(true);
-
-        canvasRightArmIdle.SetActive(true);
-        canvasRightArm.SetActive(false);
-
+        if (viewMode != 1)
+        {
+            rightArm.SetActive(true);
+            partsSub.SetActive(false);
+        }
+        else
+        {
+            canvasRightArmIdle.SetActive(true);
+            canvasRightArm.SetActive(false);
+        }
     }
 
     public void Execute()

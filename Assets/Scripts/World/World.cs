@@ -321,6 +321,7 @@ public class World : MonoBehaviour
         // ワールドメッシュの更新
         worldMesh.RecalculateTangents();
         worldMesh.RecalculateNormals();
+        worldMesh.RecalculateBounds();
         worldMesh.Optimize();
 
         // プレイヤーの生成及び配置
@@ -507,6 +508,7 @@ public class World : MonoBehaviour
         // ワールドメッシュの更新
         worldMesh.RecalculateTangents();
         worldMesh.RecalculateNormals();
+        worldMesh.RecalculateBounds();
         worldMesh.Optimize();
 
     }

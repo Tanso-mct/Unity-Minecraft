@@ -245,6 +245,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 208598569}
+  - component: {fileID: 208598570}
   m_Layer: 0
   m_Name: canvas_right_arm_idle
   m_TagString: Untagged
@@ -268,6 +269,33 @@ Transform:
   - {fileID: 1704401682}
   m_Father: {fileID: 1110255227}
   m_LocalEulerAnglesHint: {x: 126.60901, y: -43.541016, z: -62.932007}
+--- !u!114 &208598570
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 208598568}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bb854e23b24b234dbb148032d7d44a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onArmAnimEnd:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1586971688}
+        m_TargetAssemblyTypeName: Player, Assembly-CSharp
+        m_MethodName: OnArmAnimEnd
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &214592781 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 525165432180171524, guid: b14123b473fcf6f42abd6a0409bb87dd, type: 3}
@@ -1440,11 +1468,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4856897463465555632, guid: f9169ac76117e074a938e5cbe1a816ce, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4856897463465555632, guid: f9169ac76117e074a938e5cbe1a816ce, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 5088093865467459110, guid: f9169ac76117e074a938e5cbe1a816ce, type: 3}
       propertyPath: m_IsActive
@@ -1910,12 +1938,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bb854e23b24b234dbb148032d7d44a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onUseEnd:
+  onArmAnimEnd:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1586971688}
         m_TargetAssemblyTypeName: Player, Assembly-CSharp
-        m_MethodName: OnUseEnd
+        m_MethodName: OnArmAnimEnd
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2046,7 +2074,7 @@ MonoBehaviour:
   canvasRightArm: {fileID: 1971372244}
   canvasRightArmIdle: {fileID: 208598568}
   cam: {fileID: 922196900}
-  reach: 4
+  reach: 4.5
   mat: {fileID: 2100000, guid: bdbad945551d6bf48babd9fdaabd76f0, type: 2}
   texture: {fileID: 2800000, guid: 166fea76460a8bb4dbc3dee4b3f4750e, type: 3}
   walkingSpeed: 0.1
@@ -2055,6 +2083,8 @@ MonoBehaviour:
   jumpForce: 1
   diffRunningFov: 10
   selector: {fileID: 596598153}
+  frameSetBlocks: []
+  frameDestroyBlocks: []
 --- !u!65 &1586971690
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3929,12 +3959,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bb854e23b24b234dbb148032d7d44a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onUseEnd:
+  onArmAnimEnd:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1586971688}
         m_TargetAssemblyTypeName: Player, Assembly-CSharp
-        m_MethodName: OnUseEnd
+        m_MethodName: OnArmAnimEnd
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

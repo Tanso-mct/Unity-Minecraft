@@ -1,6 +1,5 @@
 #pragma kernel MeshGenerate
-#pragma kernel BlockGenerate
-#pragma kernel BlockDestroy
+#pragma kernel BlockUpdate
 #pragma kernel RaycastAtBlock
 
 int CHUCK_SIZE;
@@ -159,17 +158,10 @@ int TARGET_BLOCK_Z;
 
 int GENERATE_BLOCK_ID;
 [numthreads(1,1,1)]
-void BlockGenerate (uint3 id : SV_DispatchThreadID)
+void BlockUpdate (uint3 id : SV_DispatchThreadID)
 {
     int index = TARGET_BLOCK_X + TARGET_BLOCK_Y * WORLD_SIZE + TARGET_BLOCK_Z * WORLD_HEIGHT * WORLD_SIZE;
     blocksID[index] = GENERATE_BLOCK_ID;
-}
-
-[numthreads(1,1,1)]
-void BlockDestroy (uint3 id : SV_DispatchThreadID)
-{
-    int index = TARGET_BLOCK_X + TARGET_BLOCK_Y * WORLD_SIZE + TARGET_BLOCK_Z * WORLD_HEIGHT * WORLD_SIZE;
-    blocksID[index] = 0;
 }
 
 float RAY_SIZE;

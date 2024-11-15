@@ -102,6 +102,12 @@ public class Player : MonoBehaviour
     // ブロックのセレクター
     [SerializeField] private GameObject selector;
 
+    // フレーム内で設置したブロックのデータ
+    [HideInInspector] public List<Vector4> frameSetBlocks;
+
+    // フレーム内で破壊したブロックのデータ
+    [HideInInspector] public List<Vector4> frameDestroyBlocks;
+
     public void Init()
     {
         // プレイヤーの初期位置と回転角度
@@ -139,9 +145,12 @@ public class Player : MonoBehaviour
             canvasRightArm.SetActive(false);
         }
 
-
         // テクスチャを設定
         mat.mainTexture = texture;
+
+        // フレーム内で設置、破壊したブロックのデータを初期化。Worldクラスで管理する。
+        frameSetBlocks = new List<Vector4>();
+        frameDestroyBlocks = new List<Vector4>();
     }
 
     public void Create()
@@ -298,7 +307,7 @@ public class Player : MonoBehaviour
 
     private void Attack(ref List<Vector4> targetBlocks)
     {
-        if (McControls.IsKey(Constants.CONTROL_ATTACK))
+        if (McControls.IsKeyDown(Constants.CONTROL_ATTACK))
         {
             if (viewMode != 1)
             {
@@ -312,18 +321,50 @@ public class Player : MonoBehaviour
                 canvasRightArm.SetActive(true);
                 animRightArm.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_USE);
             }
+
+            // ブロックの破壊
+            if (targetBlocks[Constants.TARGET_BLOCK_SELECT].w != 0)
+            {
+                frameDestroyBlocks.Add(targetBlocks[Constants.TARGET_BLOCK_SELECT]);
+            }
         }
     }
 
-    private void Use()
+    private void Use(ref List<Vector4> targetBlocks)
     {
-        if (McControls.IsKey(Constants.CONTROL_USE))
+        if (McControls.IsKeyDown(Constants.CONTROL_USE))
         {
-            
+            if (viewMode != 1)
+            {
+                rightArm.SetActive(false);
+                partsSub.SetActive(true);
+                animSub.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_USE);
+            }
+            else
+            {
+                canvasRightArmIdle.SetActive(false);
+                canvasRightArm.SetActive(true);
+                animRightArm.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_USE);
+            }
+
+            // ブロックの設置
+            if (targetBlocks[Constants.TARGET_BLOCK_SET].w == 0)
+            {
+                frameSetBlocks.Add
+                (
+                    new Vector4
+                    (
+                        targetBlocks[Constants.TARGET_BLOCK_SET].x,
+                        targetBlocks[Constants.TARGET_BLOCK_SET].y,
+                        targetBlocks[Constants.TARGET_BLOCK_SET].z,
+                        (float)Constants.BLOCK_TYPE.DIRT
+                    )
+                );
+            }
         }
     }
 
-    public void OnUseEnd()
+    public void OnArmAnimEnd()
     {
         if (viewMode != 1)
         {
@@ -355,6 +396,8 @@ public class Player : MonoBehaviour
         if (!isGrounded) FlyUpdate();
 
         Attack(ref targetBlocks);
+
+        Use(ref targetBlocks);
 
         // プレイヤーの移動
         Transfer();

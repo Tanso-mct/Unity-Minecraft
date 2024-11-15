@@ -5,10 +5,10 @@ using UnityEngine.Events;
 
 public class PlayerAnimEvent : MonoBehaviour
 {
-    [SerializeField] private UnityEvent onUseEnd;
+    [SerializeField] private UnityEvent onArmAnimEnd;
 
-    public void UseEnd()
+    public void ArmAnimEnd()
     {
-        onUseEnd.Invoke();
+        onArmAnimEnd.Invoke();
     }
 }

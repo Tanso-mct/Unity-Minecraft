@@ -522,7 +522,29 @@ public class World : MonoBehaviour
 
     private void BlockUpdate()
     {
+        // ブロックの生成
+        int blockUpdate = worldShader.FindKernel("BlockUpdate");
+        worldShader.SetBuffer(blockUpdate, "blocksID", blocksIDBuff);
+        for (int i = 0; i < player.frameSetBlocks.Count; i++)
+        {
+            worldShader.SetInt("TARGET_BLOCK_X", (int)player.frameSetBlocks[i].x);
+            worldShader.SetInt("TARGET_BLOCK_Y", (int)player.frameSetBlocks[i].y);
+            worldShader.SetInt("TARGET_BLOCK_Z", (int)player.frameSetBlocks[i].z);
+            worldShader.SetInt("GENERATE_BLOCK_ID", (int)player.frameSetBlocks[i].w);
+            worldShader.Dispatch(blockUpdate, 1, 1, 1);
+        }
+        player.frameSetBlocks.Clear();
 
+        // ブロックの削除
+        for (int i = 0; i < player.frameDestroyBlocks.Count; i++)
+        {
+            worldShader.SetInt("TARGET_BLOCK_X", (int)player.frameDestroyBlocks[i].x);
+            worldShader.SetInt("TARGET_BLOCK_Y", (int)player.frameDestroyBlocks[i].y);
+            worldShader.SetInt("TARGET_BLOCK_Z", (int)player.frameDestroyBlocks[i].z);
+            worldShader.SetInt("GENERATE_BLOCK_ID", (int)Constants.BLOCK_TYPE.AIR);
+            worldShader.Dispatch(blockUpdate, 1, 1, 1);
+        }
+        player.frameDestroyBlocks.Clear();
     }
 
     private void EntityUpdate()

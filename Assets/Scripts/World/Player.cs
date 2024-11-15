@@ -111,7 +111,10 @@ public class Player : MonoBehaviour
     // フレーム内で破壊したブロックのデータ
     [HideInInspector] public List<Vector4> frameDestroyBlocks;
 
-    // 現在破壊しているについて
+    // 最後に設置したブロックについて
+    int lastSetFrame = 0;
+
+    // 現在破壊しているブロックについて
     private bool isDestroying = false;
     private float destroyProgress = 0f;
     private float blockDurability = 10f;
@@ -323,21 +326,8 @@ public class Player : MonoBehaviour
 
     private void Attack(ref List<Vector4> targetBlocks)
     {
-        if (McControls.IsKeyDown(Constants.CONTROL_ATTACK))
+        if (McControls.IsKey(Constants.CONTROL_ATTACK) && !isDestroying)
         {
-            if (viewMode != 1)
-            {
-                rightArm.SetActive(false);
-                partsSub.SetActive(true);
-                animSub.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_USE);
-            }
-            else
-            {
-                canvasRightArmIdle.SetActive(false);
-                canvasRightArm.SetActive(true);
-                animRightArm.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_USE);
-            }
-
             // ブロックの破壊
             if (targetBlocks[Constants.TARGET_BLOCK_SELECT].w != 0)
             {
@@ -400,6 +390,15 @@ public class Player : MonoBehaviour
                 }
             }
         }
+        else if (McControls.IsKeyUp(Constants.CONTROL_ATTACK))
+        {
+            isDestroying = false;
+            destroyProgress = 0f;
+            for (int i = 0; i < selectorParts.Count; i++)
+            {
+                selectorParts[i].GetComponent<MeshRenderer>().material.mainTexture = selectorTexture;
+            }
+        }
     }
 
     private void Use(ref List<Vector4> targetBlocks)
@@ -422,6 +421,7 @@ public class Player : MonoBehaviour
             // ブロックの設置
             if (targetBlocks[Constants.TARGET_BLOCK_SET].w == 0)
             {
+                lastSetFrame = Time.frameCount;
                 frameSetBlocks.Add
                 (
                     new Vector4
@@ -434,6 +434,38 @@ public class Player : MonoBehaviour
                 );
             }
         }
+        else if (McControls.IsKey(Constants.CONTROL_USE))
+        {
+            if (viewMode != 1)
+            {
+                rightArm.SetActive(false);
+                partsSub.SetActive(true);
+                animSub.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_USE);
+            }
+            else
+            {
+                canvasRightArmIdle.SetActive(false);
+                canvasRightArm.SetActive(true);
+                animRightArm.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_USE);
+            }
+
+            // ブロックの設置
+            if (targetBlocks[Constants.TARGET_BLOCK_SET].w == 0)
+            {
+                lastSetFrame = Time.frameCount;
+                frameSetBlocks.Add
+                (
+                    new Vector4
+                    (
+                        targetBlocks[Constants.TARGET_BLOCK_SET].x,
+                        targetBlocks[Constants.TARGET_BLOCK_SET].y,
+                        targetBlocks[Constants.TARGET_BLOCK_SET].z,
+                        (float)Constants.BLOCK_TYPE.DIRT
+                    )
+                );
+            }
+        }
+
     }
 
     public void OnArmAnimEnd()

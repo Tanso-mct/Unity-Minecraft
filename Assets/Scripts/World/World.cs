@@ -260,7 +260,7 @@ public class World : MonoBehaviour
             }
 
             // ‰¡’·‚Ì’Œ‚ğ¶¬
-            for (int x = Constants.WORLD_HALF_SIZE; x < Constants.WORLD_HALF_SIZE + 10; x++)
+            for (int x = Constants.WORLD_HALF_SIZE + 1; x < Constants.WORLD_HALF_SIZE + 10; x++)
             {
                 int y = 5;
                 int z = Constants.WORLD_HALF_SIZE;

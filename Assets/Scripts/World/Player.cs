@@ -450,7 +450,7 @@ public class Player : MonoBehaviour
             }
 
             // ブロックの設置
-            if (targetBlocks[Constants.TARGET_BLOCK_SET].w == 0)
+            if (targetBlocks[Constants.TARGET_BLOCK_SET].w == 0 && Time.frameCount - lastSetFrame > 10)
             {
                 lastSetFrame = Time.frameCount;
                 frameSetBlocks.Add

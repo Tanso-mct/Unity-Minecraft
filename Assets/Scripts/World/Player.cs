@@ -101,12 +101,21 @@ public class Player : MonoBehaviour
 
     // ブロックのセレクター
     [SerializeField] private GameObject selector;
+    [SerializeField] private List<GameObject> selectorParts;
+    [SerializeField] private Texture2D selectorTexture;
+    [SerializeField] private List<Texture2D> destroyStageTextures;
 
     // フレーム内で設置したブロックのデータ
     [HideInInspector] public List<Vector4> frameSetBlocks;
 
     // フレーム内で破壊したブロックのデータ
     [HideInInspector] public List<Vector4> frameDestroyBlocks;
+
+    // 現在破壊しているについて
+    private bool isDestroying = false;
+    private float destroyProgress = 0f;
+    private float blockDurability = 10f;
+    private Vector4 destroyingBlock;
 
     public void Init()
     {
@@ -147,6 +156,13 @@ public class Player : MonoBehaviour
 
         // テクスチャを設定
         mat.mainTexture = texture;
+
+        // セレクターのテクスチャを設定
+        selectorParts = SupportFunc.GetChildren(selector);
+        for (int i = 0; i < selectorParts.Count; i++)
+        {
+            selectorParts[i].GetComponent<MeshRenderer>().material.mainTexture = selectorTexture;
+        }
 
         // フレーム内で設置、破壊したブロックのデータを初期化。Worldクラスで管理する。
         frameSetBlocks = new List<Vector4>();
@@ -325,7 +341,63 @@ public class Player : MonoBehaviour
             // ブロックの破壊
             if (targetBlocks[Constants.TARGET_BLOCK_SELECT].w != 0)
             {
-                frameDestroyBlocks.Add(targetBlocks[Constants.TARGET_BLOCK_SELECT]);
+                isDestroying = true;
+                destroyProgress = 0f; // 破壊段階を初期化
+                blockDurability = 100f; // ブロックの耐久値を取得
+                destroyingBlock = targetBlocks[Constants.TARGET_BLOCK_SELECT];
+            }
+        }
+        else if (McControls.IsKey(Constants.CONTROL_ATTACK))
+        {
+            if (viewMode != 1)
+            {
+                rightArm.SetActive(false);
+                partsSub.SetActive(true);
+                animSub.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_USE);
+            }
+            else
+            {
+                canvasRightArmIdle.SetActive(false);
+                canvasRightArm.SetActive(true);
+                animRightArm.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_USE);
+            }
+
+            if (isDestroying && targetBlocks[Constants.TARGET_BLOCK_SELECT].Equals(destroyingBlock))
+            {
+                destroyProgress += 1f;
+
+                // 破壊段階に応じてテクスチャを変更
+                int destroyStage = (int)((destroyProgress / blockDurability) * destroyStageTextures.Count);
+                Debug.Log(destroyStage);
+
+                if (destroyStage < destroyStageTextures.Count)
+                {
+                    for (int i = 0; i < selectorParts.Count; i++)
+                    {
+                        selectorParts[i].GetComponent<MeshRenderer>().material.mainTexture = destroyStageTextures[destroyStage];
+                    }
+                }
+
+                // 耐久が0以下になった場合はブロックを破壊
+                if (destroyProgress >= blockDurability)
+                {
+                    isDestroying = false;
+                    destroyProgress = 0f;
+                    frameDestroyBlocks.Add(targetBlocks[Constants.TARGET_BLOCK_SELECT]);
+                    for (int i = 0; i < selectorParts.Count; i++)
+                    {
+                        selectorParts[i].GetComponent<MeshRenderer>().material.mainTexture = selectorTexture;
+                    }
+                }
+            }
+            else if (isDestroying && !targetBlocks[Constants.TARGET_BLOCK_SELECT].Equals(destroyingBlock))
+            {
+                isDestroying = false;
+                destroyProgress = 0f;
+                for (int i = 0; i < selectorParts.Count; i++)
+                {
+                    selectorParts[i].GetComponent<MeshRenderer>().material.mainTexture = selectorTexture;
+                }
             }
         }
     }

@@ -1,0 +1,22 @@
+@startuml
+class World {
+    - Init() : void
+    + Create() : void
+    + LoadFromJson() : void
+    + SaveToJson() : void
+    + DestroyJson() : void
+    + {static} LoadInfoFromJson() : void
+    + Execute() : void
+}
+class "List`1"<T> {
+}
+class "Dictionary`2"<T1,T2> {
+}
+MonoBehaviour <|-- World
+World --> "WorldInfos<WorldInfo>" "List`1"
+World --> "currentWorldInfo" WorldInfo
+World --> "entitiesIDToVaxelIDs<int,List<int>>" "Dictionary`2"
+World --> "itemsIDToVaxelIDs<int,List<int>>" "Dictionary`2"
+World --> "data" WorldData
+World --> "player" Player
+@enduml

@@ -1,0 +1,63 @@
+﻿@startuml Unity Minecraft UI
+
+class Element
+{
+
+}
+
+class Text
+{
+
+}
+
+Button *-- Text
+Button --|> Element
+class Button
+{
+
+}
+
+Bar *-- Text
+Bar --|> Element
+class Bar
+{
+
+}
+
+class McSetting
+{
+
+}
+
+McVideos --|> McSetting
+class McVideos
+{
+
+}
+
+McControls --|> McSetting
+class McControls
+{
+
+}
+
+McSounds --|> McSetting
+class McSounds
+{
+
+}
+
+McOption *-- McSetting
+class McOption
+{
+
+}
+
+McOptionUI o-- Element
+McOptionUI *-- McOption
+class McOptionUI
+{
+
+}
+
+@enduml

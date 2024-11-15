@@ -1,0 +1,9 @@
+@startuml
+class InputBoxEl {
+    + <<override>> Init() : void
+    + <<override>> Show() : void
+    + <<override>> Close() : void
+    + <<override>> Execute() : void
+}
+Element <|-- InputBoxEl
+@enduml

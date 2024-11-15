@@ -1,0 +1,7 @@
+@startuml
+class FallData {
+    - Start() : void
+    - Update() : void
+}
+MonoBehaviour <|-- FallData
+@enduml

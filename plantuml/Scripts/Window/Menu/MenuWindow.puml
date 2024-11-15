@@ -1,0 +1,20 @@
+@startuml
+class MenuWindow {
+    + <<override>> Init() : void
+    + <<override>> Show() : void
+    + <<override>> Close() : void
+    + <<override>> Execute() : void
+    + <<override>> Move(moveVec:Vector2) : void
+}
+class "List`1"<T> {
+}
+class "Dictionary`2"<T1,T2> {
+}
+GameWindow <|-- MenuWindow
+MenuWindow o-> "inputBoxes<GameObject>" "List`1"
+MenuWindow o-> "buttons<GameObject>" "List`1"
+MenuWindow o-> "selectBars<GameObject>" "List`1"
+MenuWindow --> "diInputBoxEl<string,Element>" "Dictionary`2"
+MenuWindow --> "diButtonEl<string,Element>" "Dictionary`2"
+MenuWindow --> "diSelectBarEl<string,Element>" "Dictionary`2"
+@enduml

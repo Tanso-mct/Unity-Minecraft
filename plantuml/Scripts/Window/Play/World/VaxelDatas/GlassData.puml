@@ -1,0 +1,7 @@
+@startuml
+class GlassData {
+    - Start() : void
+    - Update() : void
+}
+MonoBehaviour <|-- GlassData
+@enduml

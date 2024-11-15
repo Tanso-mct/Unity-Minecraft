@@ -1,0 +1,6 @@
+@startuml
+class Vaxel {
+    + Init() : void
+}
+MonoBehaviour <|-- Vaxel
+@enduml

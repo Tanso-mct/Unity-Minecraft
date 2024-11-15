@@ -1,0 +1,640 @@
+@startuml classes
+class ButtonEl {
+    - isHover : bool = false
+    + <<override>> Init() : void
+    + <<override>> Show() : void
+    + <<override>> Close() : void
+    + <<override>> Execute() : void
+}
+class "UnityEvent`1"<T> {
+}
+Element <|-- ButtonEl
+ButtonEl o-> "clickEvent<string>" "UnityEvent`1"
+ButtonEl o-> "hoverEvent" UnityEvent
+ButtonEl o-> "unHoverEvent" UnityEvent
+abstract class Element {
+    - type : string = ""
+    + Type : string <<get>>
+    - isShow : bool = false
+    + IsShow : bool <<get>>
+    # BaseInit() : void
+    # GetAllChildren(parent:GameObject) : List<GameObject>
+    - InitImages() : void
+    + ShowImages(val:bool, groupName:string) : void
+    + ShowAllImages(val:bool) : void
+    + ShowText(val:bool, name:string) : void
+    # ShowAllTexts(val:bool) : void
+    {abstract} + Init() : void
+    {abstract} + Show() : void
+    {abstract} + Close() : void
+    {abstract} + Execute() : void
+    + Move(vec:Vector2) : void
+    + Move(vec:Vector2, image:Image) : void
+    + Transfer(vec:Vector2, image:Image) : void
+    - IsUnderMouse() : bool
+    + IsUnderMouse(image:Image) : bool
+    # IsClick() : bool
+    # IsClick(image:Image) : bool
+    # IsHover() : bool
+}
+class "Dictionary`2"<T1,T2> {
+}
+MonoBehaviour <|-- Element
+Element --> "eventSystem" EventSystem
+Element --> "raycaster" GraphicRaycaster
+Element --> "frame" GameObject
+Element --> "initGroup" GameObject
+Element --> "imageGroups" GameObject
+Element --> "diImageGroups<string,List<Image>>" "Dictionary`2"
+Element --> "diTexts<string,Text>" "Dictionary`2"
+Element --> "diGroupShow<string,bool>" "Dictionary`2"
+class ImageEl {
+    - isHover : bool = false
+    + <<override>> Init() : void
+    + <<override>> Show() : void
+    + <<override>> Close() : void
+    + <<override>> Execute() : void
+}
+Element <|-- ImageEl
+ImageEl o-> "hoverEvent" UnityEvent
+ImageEl o-> "unHoverEvent" UnityEvent
+class InputBoxEl {
+    + <<override>> Init() : void
+    + <<override>> Show() : void
+    + <<override>> Close() : void
+    + <<override>> Execute() : void
+}
+Element <|-- InputBoxEl
+class SelectBarEl {
+    - margin : float
+    - isHover : bool = false
+    + <<override>> Init() : void
+    + <<override>> Show() : void
+    + <<override>> Close() : void
+    + GetBarMin() : float
+    + GetBarMax() : float
+    + GetFrameWidth() : float
+    + <<override>> Execute() : void
+}
+Element <|-- SelectBarEl
+SelectBarEl --> "initText" Text
+SelectBarEl --> "texts" GameObject
+SelectBarEl --> "selector" Image
+SelectBarEl o-> "hoverEvent" UnityEvent
+SelectBarEl o-> "unHoverEvent" UnityEvent
+SelectBarEl o-> "clickEvent" UnityEvent
+class TextEl {
+    - isHover : bool = false
+    - clicked : bool = false
+    + <<override>> Init() : void
+    + <<override>> Show() : void
+    + <<override>> Close() : void
+    + <<override>> Execute() : void
+}
+class "UnityEvent`1"<T> {
+}
+Element <|-- TextEl
+TextEl --> "initText" Text
+TextEl --> "texts" GameObject
+TextEl o-> "hoverEvent" UnityEvent
+TextEl o-> "unHoverEvent" UnityEvent
+TextEl o-> "clickEvent<string>" "UnityEvent`1"
+TextEl o-> "unClickEvent<string>" "UnityEvent`1"
+class McControls {
+    - {static} hasSaveData : bool = false
+    - {static} sen : int = 2
+    + Init() : void
+    + Save() : void
+    + ControlBackground() : void
+    + SenEdit() : void
+    + BindEdit(name:string) : void
+    + BindReset(name:string) : void
+    + BindResetAll() : void
+    {static} + CursorLock(symbol:bool) : void
+    + {static} GetMouseAxis() : Vector2
+    {static} + IsKey(control:string) : bool
+    {static} + IsKeyDown(control:string) : bool
+    {static} + IsKeyUp(control:string) : bool
+}
+MonoBehaviour <|-- McControls
+McControls --> "senSb" SelectBarParts
+McControls --> "senSbPos" Vector2
+McControls o-> "attackKey" KeyCode
+McControls o-> "dropKey" KeyCode
+McControls o-> "useKey" KeyCode
+McControls o-> "hotBar1Key" KeyCode
+McControls o-> "hotBar2Key" KeyCode
+McControls o-> "hotBar3Key" KeyCode
+McControls o-> "hotBar4Key" KeyCode
+McControls o-> "hotBar5Key" KeyCode
+McControls o-> "hotBar6Key" KeyCode
+McControls o-> "hotBar7Key" KeyCode
+McControls o-> "hotBar8Key" KeyCode
+McControls o-> "hotBar9Key" KeyCode
+McControls o-> "inventoryKey" KeyCode
+McControls o-> "perspectiveKey" KeyCode
+McControls o-> "jumpKey" KeyCode
+McControls o-> "sprintKey" KeyCode
+McControls o-> "leftKey" KeyCode
+McControls o-> "rightKey" KeyCode
+McControls o-> "backKey" KeyCode
+McControls o-> "forwardKey" KeyCode
+class McOption {
+    + Init() : void
+    + Save() : void
+}
+MonoBehaviour <|-- McOption
+McOption --> "videos" McVideos
+McOption --> "controls" McControls
+McOption --> "sounds" McSounds
+class McSounds {
+    - {static} hasSaveData : bool = false
+    - {static} masterVal : int = 50
+    - {static} musicVal : int = 50
+    - {static} blocksVal : int = 50
+    - {static} uiVal : int = 50
+    - {static} playersVal : int = 50
+    - {static} hostileVal : int = 50
+    - {static} friendlyVal : int = 50
+    + Init() : void
+    + Save() : void
+    + SetMaster() : void
+    + SetMusic() : void
+    + SetBlocks() : void
+    + SetUi() : void
+    + SetPlayers() : void
+    + SetHostile() : void
+    + SetFriendly() : void
+}
+MonoBehaviour <|-- McSounds
+McSounds --> "masterSb" SelectBarParts
+McSounds --> "musicSb" SelectBarParts
+McSounds --> "blocksSb" SelectBarParts
+McSounds --> "uiSb" SelectBarParts
+McSounds --> "playersSb" SelectBarParts
+McSounds --> "hostileSb" SelectBarParts
+McSounds --> "friendlySb" SelectBarParts
+McSounds --> "masterSbPos" Vector2
+McSounds --> "musicSbPos" Vector2
+McSounds --> "blocksSbPos" Vector2
+McSounds --> "uiSbPos" Vector2
+McSounds --> "playersSbPos" Vector2
+McSounds --> "hostileSbPos" Vector2
+McSounds --> "friendlySbPos" Vector2
+class McVideos {
+    - {static} hasSaveData : bool = false
+    - {static} fov : int = 70
+    + {static} Fov : int <<get>>
+    - {static} renderDistance : int = 8
+    + {static} RenderDistance : int <<get>>
+    - {static} brightness : int = 50
+    + {static} Brightness : int <<get>>
+    + Init() : void
+    + Save() : void
+    + SetFov() : void
+    + SetRenderDistance() : void
+    + SetBrightness() : void
+}
+MonoBehaviour <|-- McVideos
+McVideos --> "fovSb" SelectBarParts
+McVideos --> "renderDistanceSb" SelectBarParts
+McVideos --> "brightnessSb" SelectBarParts
+McVideos --> "fovSbPos" Vector2
+McVideos --> "renderDistanceSbPos" Vector2
+McVideos --> "brightnessSbPos" Vector2
+class SelectBarParts {
+    - val : float
+    + Val : float <<get>>
+    - maxVal : float
+    - minVal : float
+    - isClicked : bool = false
+    - isMoving : bool = false
+    + EditTxt(txt:string) : void
+    + HoverEvent() : void
+    - Update() : void
+    + UnHoverEvent() : void
+    + ClickEvent() : void
+}
+MonoBehaviour <|-- SelectBarParts
+SelectBarParts --> "initSelectorPos" Vector2
+SelectBarParts --> "initMousePos" Vector2
+SelectBarParts --> "selectorPos" Vector2
+SelectBarParts --> "SelectorPos" Vector2
+SelectBarParts o-> "mouseEvent" UnityEvent
+SelectBarParts o-> "selectBarEl" SelectBarEl
+SelectBarParts o-> "hoverText" GameObject
+class TextButtonParts {
+    + HoverEvent() : void
+    + UnHoverEvent() : void
+    + ClickEvent() : void
+}
+MonoBehaviour <|-- TextButtonParts
+TextButtonParts o-> "clickEvent" UnityEvent
+TextButtonParts o-> "textEl" TextEl
+TextButtonParts o-> "hoverImageGroup" GameObject
+TextButtonParts o-> "hoverText" GameObject
+class WorldShowParts {
+    + worldName : string = "World Name"
+    + Create() : void
+    + ClickEvent() : void
+    + UnClickEvent() : void
+}
+MonoBehaviour <|-- WorldShowParts
+WorldShowParts o-> "textEl" TextEl
+WorldShowParts o-> "selectingImageGroup" GameObject
+class BaseManager {
+    - Awake() : void
+    - Start() : void
+    - Update() : void
+    - Exit() : void
+    + ProcessParam() : void
+    + QuitGame() : void
+    + SetFps() : int
+    + SetResolution() : int
+    + ChangeScene() : int
+}
+MonoBehaviour <|-- BaseManager
+BaseManager --> "managerObject" GameObject
+BaseManager --> "manager" Manager
+BaseManager --> "option" McOption
+class Constants {
+    + <<const>> SPECIFIED_FPS : int = 60
+    + <<const>> SCREEN_WIDTH : int = 1920
+    + <<const>> SCREEN_HEIGHT : int = 1080
+    + <<const>> MSG_NULL : int = 0
+    + <<const>> MSG_SUCCESS : int = 1
+    + <<const>> MSG_FAILED : int = 2
+    + <<const>> MSG_ERROR : int = 3
+    + <<const>> MSG_WARNING : int = 4
+    + <<const>> MSG_CHANGE_SCENE : int = 5
+    + <<const>> MSG_QUIT_GAME : int = 6
+    + <<const>> SCENE_MENU : string = "Menu"
+    + <<const>> SCENE_PLAY : string = "Play"
+    + <<const>> TYPE_IMAGE : string = "Image"
+    + <<const>> TYPE_INPUT_BOX : string = "InputBox"
+    + <<const>> TYPE_BUTTON : string = "Button"
+    + <<const>> TYPE_TEXT : string = "Text"
+    + <<const>> TYPE_SELECT_BAR : string = "SelectBar"
+    + <<const>> CONTROL_ATTACK : string = "Attack"
+    + <<const>> CONTROL_DROP_ITEM : string = "DropItem"
+    + <<const>> CONTROL_USE : string = "Use"
+    + <<const>> CONTROL_HS1 : string = "HS1"
+    + <<const>> CONTROL_HS2 : string = "HS2"
+    + <<const>> CONTROL_HS3 : string = "HS3"
+    + <<const>> CONTROL_HS4 : string = "HS4"
+    + <<const>> CONTROL_HS5 : string = "HS5"
+    + <<const>> CONTROL_HS6 : string = "HS6"
+    + <<const>> CONTROL_HS7 : string = "HS7"
+    + <<const>> CONTROL_HS8 : string = "HS8"
+    + <<const>> CONTROL_HS9 : string = "HS9"
+    + <<const>> CONTROL_INVENTORY : string = "Inventory"
+    + <<const>> CONTROL_JUMP : string = "Jump"
+    + <<const>> CONTROL_SPRINT : string = "Sprint"
+    + <<const>> CONTROL_LEFT : string = "Left"
+    + <<const>> CONTROL_RIGHT : string = "Right"
+    + <<const>> CONTROL_BACK : string = "Back"
+    + <<const>> CONTROL_FOR : string = "Forward"
+    + <<const>> GAME_MODE_CREATIVE : string = "Creative"
+    + <<const>> GAME_MODE_SURVIVAL : string = "Survival"
+    + <<const>> WND_MENU : string = "WindowMenu"
+    + <<const>> VAXEL_STATE_NULL : int = 0
+    + <<const>> VAXEL_STATE_ITEM : int = 1
+    + <<const>> VAXEL_STATE_BLOCK : int = 2
+    + <<const>> VAXEL_STATE_ENTITY : int = 3
+    + <<const>> WORLD_SIZE : int = 513
+    + <<const>> WORLD_HEIGHT : int = 320
+    + <<const>> ANIM_TYPE : string = "AnimType"
+    + <<const>> ANIM_PLAYER_BREATH : int = 1
+    + <<const>> ANIM_PLAYER_WALK : int = 2
+    + <<const>> ANIM_PLAYER_RUN : int = 3
+    + <<const>> ANIM_PLAYER_USE : int = 4
+    + <<const>> TAG_PLAYER : string = "Player"
+    + <<const>> TAG_BLOCK_TOP : string = "Block_Top"
+}
+MonoBehaviour <|-- Constants
+abstract class Manager {
+    - scrollSpeed : float
+    - AddWindows() : void
+    # Init() : void
+    # Dispose() : void
+    # ShowWindow(wndName:string) : void
+    # CloseWindow(wndName:string) : void
+    # ExecuteWindows() : void
+    # ScrollWindows() : void
+    # ScrollWindows(bottomY:float) : void
+    {abstract} + BaseAwake() : void
+    {abstract} + BaseStart() : void
+    {abstract} + BaseUpdate() : void
+    {abstract} + BaseExit() : void
+}
+class "List`1"<T> {
+}
+class "Dictionary`2"<T1,T2> {
+}
+MonoBehaviour <|-- Manager
+Manager o-> "windows<GameWindow>" "List`1"
+Manager --> "parentWindows" GameObject
+Manager o-> "windowNameToIndex<string,GameWindow>" "Dictionary`2"
+Manager --> "movedVec" Vector2
+class MenuManager {
+    - loadingShowFrame : int = 120
+    - controlScrollBottom : float
+    - singlePlayerScrollBottom : float
+    - loadingFrame : int = 0
+    + <<override>> BaseAwake() : void
+    + <<override>> BaseStart() : void
+    + <<override>> BaseUpdate() : void
+    + <<override>> BaseExit() : void
+    + ShowOption() : void
+    + CloseOption() : void
+    + ShowVideoSetting() : void
+    + CloseVideoSetting() : void
+    + ShowSoundSetting() : void
+    + CloseSoundSetting() : void
+    + ShowControlSetting() : void
+    + CloseControlSetting() : void
+    + ShowSinglePlayer() : void
+    + CloseSinglePlayer() : void
+    + QuitGame() : void
+    + PlaySelectWorld() : void
+    + CreateNewWorld() : void
+    + DestroySelectWorld() : void
+}
+Manager <|-- MenuManager
+MenuManager --> "wndLoad" GameObject
+MenuManager --> "wndTitle" GameObject
+MenuManager --> "wndOption" GameObject
+MenuManager --> "wndVideoSetting" GameObject
+MenuManager --> "wndSoundSetting" GameObject
+MenuManager --> "wndControlSetting" GameObject
+MenuManager --> "wndControlSettingScroll" GameObject
+MenuManager --> "wndSinglePlayer" GameObject
+MenuManager --> "wndSinglePlayerScroll" GameObject
+class Param {
+    + {static} msg : int
+    + {static} floPar : float = 0
+    + {static} strPar : string = ""
+    + {static} popUpWindowDone : bool = false
+    + {static} createWorld : bool = true
+    + {static} loadWorld : bool = false
+    + {static} worldInfoId : int
+    + {static} Init() : void
+    + {static} InitWorldParam() : void
+}
+MonoBehaviour <|-- Param
+class PlayManager {
+    - controlScrollBottom : float
+    + <<override>> BaseAwake() : void
+    + <<override>> BaseStart() : void
+    + <<override>> BaseUpdate() : void
+    + <<override>> BaseExit() : void
+    + ShowOption() : void
+    + CloseOption() : void
+    + ShowVideoSetting() : void
+    + CloseVideoSetting() : void
+    + ShowSoundSetting() : void
+    + CloseSoundSetting() : void
+    + ShowControlSetting() : void
+    + CloseControlSetting() : void
+}
+Manager <|-- PlayManager
+PlayManager --> "wndPlay" GameObject
+PlayManager --> "wndOption" GameObject
+PlayManager --> "wndVideoSetting" GameObject
+PlayManager --> "wndSoundSetting" GameObject
+PlayManager --> "wndControlSetting" GameObject
+PlayManager --> "wndControlSettingScroll" GameObject
+abstract class GameWindow {
+    # isCreated : bool = false
+    + IsCreated : bool <<get>>
+    # isOpening : bool = false
+    + IsOpening : bool <<get>>
+    # isScroll : bool = false
+    + IsScroll : bool <<get>>
+    # isPopUp : bool = false
+    + IsPopUp : bool <<get>>
+    # GetAllChildren(parent:GameObject) : List<GameObject>
+    # GetElements(parents:List<GameObject>, diEl:Dictionary<string, Element>) : void
+    # ElementsInit(diEl:Dictionary<string, Element>) : void
+    # ShowCanvases(val:bool) : void
+    # ShowBackgrounds(val:bool) : void
+    {abstract} + Init() : void
+    # ElementsShow(diEl:Dictionary<string, Element>) : void
+    {abstract} + Show() : void
+    # ElementsClose(diEl:Dictionary<string, Element>) : void
+    {abstract} + Close() : void
+    # ElementsExecute(diEl:Dictionary<string, Element>) : void
+    {abstract} + Execute() : void
+    # ElementsMove(diEl:Dictionary<string, Element>, vec:Vector2) : void
+    {abstract} + Move(moveVec:Vector2) : void
+}
+class "List`1"<T> {
+}
+class "Dictionary`2"<T1,T2> {
+}
+MonoBehaviour <|-- GameWindow
+GameWindow --> "canvas" Canvas
+GameWindow --> "background" Image
+GameWindow o-> "images<GameObject>" "List`1"
+GameWindow o-> "texts<GameObject>" "List`1"
+GameWindow --> "diImageEl<string,Element>" "Dictionary`2"
+GameWindow --> "diTextEl<string,Element>" "Dictionary`2"
+class MenuWindow {
+    + <<override>> Init() : void
+    + <<override>> Show() : void
+    + <<override>> Close() : void
+    + <<override>> Execute() : void
+    + <<override>> Move(moveVec:Vector2) : void
+}
+class "List`1"<T> {
+}
+class "Dictionary`2"<T1,T2> {
+}
+GameWindow <|-- MenuWindow
+MenuWindow o-> "inputBoxes<GameObject>" "List`1"
+MenuWindow o-> "buttons<GameObject>" "List`1"
+MenuWindow o-> "selectBars<GameObject>" "List`1"
+MenuWindow --> "diInputBoxEl<string,Element>" "Dictionary`2"
+MenuWindow --> "diButtonEl<string,Element>" "Dictionary`2"
+MenuWindow --> "diSelectBarEl<string,Element>" "Dictionary`2"
+class PlayWindow {
+    + <<override>> Init() : void
+    + <<override>> Show() : void
+    + <<override>> Close() : void
+    + <<override>> Execute() : void
+    + <<override>> Move(moveVec:Vector2) : void
+}
+GameWindow <|-- PlayWindow
+PlayWindow --> "world" World
+class Player {
+    - speed : float = 0.0f
+    - walkingSpeed : float = 7.0f
+    - runningSpeed : float = 10.0f
+    - jumpingSpeedAspect : float = 1.2f
+    - jumpForce : float = 5.0f
+    - isGrounded : bool = true
+    - groundCount : int = 0
+    - notGroundingFrame : int = 0
+    - isRunning : bool = false
+    - isFlying : bool = false
+    - diffRunningFov : float = 30.0f
+    + Init() : void
+    + Create() : void
+    + Load() : void
+    + ViewUpdate() : void
+    + MoveUpdate() : void
+    + FlyUpdate() : void
+    + Jump() : void
+    + Execute() : void
+    + FrameStart() : void
+    + FrameFinish() : void
+    + LoadFromJson() : void
+    + SaveToJson() : void
+    + DestoroyJson() : void
+    - OnCollisionEnter(collision:Collision) : void
+    - OnCollisionStay(collision:Collision) : void
+    - OnCollisionExit(collision:Collision) : void
+}
+MonoBehaviour <|-- Player
+Player --> "parts" GameObject
+Player --> "head" GameObject
+Player --> "data" PlayerData
+Player --> "cam" Camera
+Player --> "mat" Material
+Player --> "firstPersonTexture" Texture2D
+Player --> "otherPersonTexture" Texture2D
+Player --> "rot" Vector2
+Player --> "pos" Vector3
+Player o-> "flyMovement" Vector3
+Player o-> "p180Rot" Quaternion
+Player o-> "p90Rot" Quaternion
+Player o-> "p45Rot" Quaternion
+Player o-> "m90Rot" Quaternion
+Player o-> "m45Rot" Quaternion
+Player --> "anim" Animator
+class PlayerData {
+}
+MonoBehaviour <|-- PlayerData
+PlayerData --> "pos" Vector3
+PlayerData --> "rot" Quaternion
+class Vaxel {
+    + Init() : void
+}
+MonoBehaviour <|-- Vaxel
+class VaxelData {
+    + Init() : void
+}
+MonoBehaviour <|-- VaxelData
+class World {
+    - Init() : void
+    + Create() : void
+    + LoadFromJson() : void
+    + SaveToJson() : void
+    + DestroyJson() : void
+    + {static} LoadInfoFromJson() : void
+    + Execute() : void
+}
+class "List`1"<T> {
+}
+class "Dictionary`2"<T1,T2> {
+}
+MonoBehaviour <|-- World
+World --> "WorldInfos<WorldInfo>" "List`1"
+World --> "currentWorldInfo" WorldInfo
+World --> "entitiesIDToVaxelIDs<int,List<int>>" "Dictionary`2"
+World --> "itemsIDToVaxelIDs<int,List<int>>" "Dictionary`2"
+World --> "data" WorldData
+World --> "player" Player
+class WorldData {
+    + Init(blocksID:int[,,], entitiesID:int[,,], itemsID:int[,,]) : void
+    + Create(blocksID:int[,,]) : void
+    + SpawnMob(entitiesID:int[,,]) : void
+    + Load(info:WorldInfo) : void
+}
+class "LinkedList`1"<T> {
+}
+MonoBehaviour <|-- WorldData
+WorldData --> "vaxels<Vaxel>" "LinkedList`1"
+class WorldInfo {
+    + worldName : string
+    + createdDate : string
+    + gameMode : string
+    + worldJson : string
+    + worldJsonPath : string
+}
+class ArmorData {
+    - Start() : void
+    - Update() : void
+}
+MonoBehaviour <|-- ArmorData
+class BuildBlockData {
+    - Start() : void
+    - Update() : void
+}
+MonoBehaviour <|-- BuildBlockData
+class EnchantBookData {
+    - Start() : void
+    - Update() : void
+}
+MonoBehaviour <|-- EnchantBookData
+class EntityData {
+    - Start() : void
+    - Update() : void
+}
+MonoBehaviour <|-- EntityData
+class FallData {
+    - Start() : void
+    - Update() : void
+}
+MonoBehaviour <|-- FallData
+class FenceData {
+    - Start() : void
+    - Update() : void
+}
+MonoBehaviour <|-- FenceData
+class FluidData {
+    - Start() : void
+    - Update() : void
+}
+MonoBehaviour <|-- FluidData
+class FoodData {
+    - Start() : void
+    - Update() : void
+}
+MonoBehaviour <|-- FoodData
+class FurunitureData {
+    - Start() : void
+    - Update() : void
+}
+MonoBehaviour <|-- FurunitureData
+class GlassData {
+    - Start() : void
+    - Update() : void
+}
+MonoBehaviour <|-- GlassData
+class GrassData {
+    - Start() : void
+    - Update() : void
+}
+MonoBehaviour <|-- GrassData
+class LeafData {
+    - Start() : void
+    - Update() : void
+}
+MonoBehaviour <|-- LeafData
+class OreData {
+    - Start() : void
+    - Update() : void
+}
+MonoBehaviour <|-- OreData
+class SeedData {
+    - Start() : void
+    - Update() : void
+}
+MonoBehaviour <|-- SeedData
+class ToolData {
+    - Start() : void
+    - Update() : void
+}
+MonoBehaviour <|-- ToolData
+@enduml

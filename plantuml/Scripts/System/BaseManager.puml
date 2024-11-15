@@ -1,0 +1,17 @@
+@startuml
+class BaseManager {
+    - Awake() : void
+    - Start() : void
+    - Update() : void
+    - Exit() : void
+    + ProcessParam() : void
+    + QuitGame() : void
+    + SetFps() : int
+    + SetResolution() : int
+    + ChangeScene() : int
+}
+MonoBehaviour <|-- BaseManager
+BaseManager --> "managerObject" GameObject
+BaseManager --> "manager" Manager
+BaseManager --> "option" McOption
+@enduml

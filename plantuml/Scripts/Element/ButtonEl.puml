@@ -1,0 +1,15 @@
+@startuml
+class ButtonEl {
+    - isHover : bool = false
+    + <<override>> Init() : void
+    + <<override>> Show() : void
+    + <<override>> Close() : void
+    + <<override>> Execute() : void
+}
+class "UnityEvent`1"<T> {
+}
+Element <|-- ButtonEl
+ButtonEl o-> "clickEvent<string>" "UnityEvent`1"
+ButtonEl o-> "hoverEvent" UnityEvent
+ButtonEl o-> "unHoverEvent" UnityEvent
+@enduml

@@ -1,0 +1,20 @@
+@startuml
+class SelectBarEl {
+    - margin : float
+    - isHover : bool = false
+    + <<override>> Init() : void
+    + <<override>> Show() : void
+    + <<override>> Close() : void
+    + GetBarMin() : float
+    + GetBarMax() : float
+    + GetFrameWidth() : float
+    + <<override>> Execute() : void
+}
+Element <|-- SelectBarEl
+SelectBarEl --> "initText" Text
+SelectBarEl --> "texts" GameObject
+SelectBarEl --> "selector" Image
+SelectBarEl o-> "hoverEvent" UnityEvent
+SelectBarEl o-> "unHoverEvent" UnityEvent
+SelectBarEl o-> "clickEvent" UnityEvent
+@enduml

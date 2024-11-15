@@ -1,0 +1,7 @@
+@startuml
+class GrassData {
+    - Start() : void
+    - Update() : void
+}
+MonoBehaviour <|-- GrassData
+@enduml

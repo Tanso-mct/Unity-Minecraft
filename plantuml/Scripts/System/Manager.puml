@@ -1,0 +1,26 @@
+@startuml
+abstract class Manager {
+    - scrollSpeed : float
+    - AddWindows() : void
+    # Init() : void
+    # Dispose() : void
+    # ShowWindow(wndName:string) : void
+    # CloseWindow(wndName:string) : void
+    # ExecuteWindows() : void
+    # ScrollWindows() : void
+    # ScrollWindows(bottomY:float) : void
+    {abstract} + BaseAwake() : void
+    {abstract} + BaseStart() : void
+    {abstract} + BaseUpdate() : void
+    {abstract} + BaseExit() : void
+}
+class "List`1"<T> {
+}
+class "Dictionary`2"<T1,T2> {
+}
+MonoBehaviour <|-- Manager
+Manager o-> "windows<GameWindow>" "List`1"
+Manager --> "parentWindows" GameObject
+Manager o-> "windowNameToIndex<string,GameWindow>" "Dictionary`2"
+Manager --> "movedVec" Vector2
+@enduml

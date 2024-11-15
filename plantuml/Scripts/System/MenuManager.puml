@@ -1,0 +1,36 @@
+@startuml
+class MenuManager {
+    - loadingShowFrame : int = 120
+    - controlScrollBottom : float
+    - singlePlayerScrollBottom : float
+    - loadingFrame : int = 0
+    + <<override>> BaseAwake() : void
+    + <<override>> BaseStart() : void
+    + <<override>> BaseUpdate() : void
+    + <<override>> BaseExit() : void
+    + ShowOption() : void
+    + CloseOption() : void
+    + ShowVideoSetting() : void
+    + CloseVideoSetting() : void
+    + ShowSoundSetting() : void
+    + CloseSoundSetting() : void
+    + ShowControlSetting() : void
+    + CloseControlSetting() : void
+    + ShowSinglePlayer() : void
+    + CloseSinglePlayer() : void
+    + QuitGame() : void
+    + PlaySelectWorld() : void
+    + CreateNewWorld() : void
+    + DestroySelectWorld() : void
+}
+Manager <|-- MenuManager
+MenuManager --> "wndLoad" GameObject
+MenuManager --> "wndTitle" GameObject
+MenuManager --> "wndOption" GameObject
+MenuManager --> "wndVideoSetting" GameObject
+MenuManager --> "wndSoundSetting" GameObject
+MenuManager --> "wndControlSetting" GameObject
+MenuManager --> "wndControlSettingScroll" GameObject
+MenuManager --> "wndSinglePlayer" GameObject
+MenuManager --> "wndSinglePlayerScroll" GameObject
+@enduml

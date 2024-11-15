@@ -1,0 +1,439 @@
+﻿@startuml Prototype App Base System
+
+class Param
+{
+    + {static} int msg
+    + {static} float floP
+    + {static} string strP
+
+    + {static} void Init()
+}
+
+enum VOXEL_ID
+{
+
+}
+
+Constants *-- VOXEL_ID
+class Constants
+{
+    + {static} const int SPECIFIED_FPS = 60
+
+    + {static} const int MSG_NULL = 0
+    + {static} const int MSG_SUCSESS = 1
+    + {static} const int MSG_FAILED = 2
+    + {static} const int MSG_ERROR = 3
+    + {static} const int MSG_WARNING = 4
+    + {static} const int MSG_CHANGE_SCENE = 5
+
+    + {static} const string SCENE_MENU = "Menu"
+    + {static} const string SCENE_PLAY = "Play"
+
+    + {static} const string TYPE_BACKGROUND = "background"
+    + {static} const string TYPE_IMAGE = "image"
+    + {static} const string TYPE_INPUT_BOX = "inputBox"
+    + {static} const string TYPE_BUTTON = "button"
+    + {static} const string TYPE_TEXT = "text"
+
+    + {static} const string WND_MENU = "WindowMenu"
+
+    + {static} const string VAXEL_STATE_NULL = "none"
+    + {static} const string VAXEL_STATE_ITEM = "item"
+    + {static} const string VAXEL_STATE_BLOCK = "block"
+    + {static} const string VAXEL_STATE_ENTITY = "entity"
+
+    + {static} const string VAXEL_TYPE_BUILD_BLOCK = "buildBlock"
+    + {static} const string VAXEL_TYPE_GRASS = "grass"
+    + {static} const string VAXEL_TYPE_ORE = "ore"
+    + {static} const string VAXEL_TYPE_GLASS = "glass"
+    + {static} const string VAXEL_TYPE_FENCE = "fence"
+    + {static} const string VAXEL_TYPE_LEAF = "leaf"
+    + {static} const string VAXEL_TYPE_SEED = "seed"
+    + {static} const string VAXEL_TYPE_FLUID = "fluid"
+    + {static} const string VAXEL_TYPE_FURNITURE = "furniture"
+    + {static} const string VAXEL_TYPE_FALL = "fall"
+    + {static} const string VAXEL_TYPE_FOOD = "food"
+    + {static} const string VAXEL_TYPE_TOOL = "tool"
+    + {static} const string VAXEL_TYPE_ARMOR = "armor"
+    + {static} const string VAXEL_TYPE_ENCHANT_BOOK = "enchantBook"
+    + {static} const string VAXEL_TYPE_ENTITY = "entity"
+
+    + {static} const WORLD_SIZE = 513
+    + {static} const WORLD_HEIGHT = 320
+}
+
+BaseManager *-- Param
+BaseManager *-- Manager
+class BaseManager
+{
+    - [SerializeField] GameObject managerObject
+    - Manager manager
+
+    - void [Unity] Awake()
+    - void [Unity] Start()
+    - void [Unity] Update()
+    - void Exit()
+
+    - int SetFps()
+    - int ChangeScene()
+}
+
+abstract class Element
+{
+    - [SerializeField] string type
+
+    #  [SerializeField] GameObject frame
+
+    - [SerializeField] GameObject images
+    - List<Image> liImages
+
+    - bool isShow = false
+
+    # void InitImages()
+    # void ShowImages()
+
+    + {abstract} void Init()
+    + {abstract} void Show()
+    + {abstract} void Close()
+    + {abstract} void Execute()
+    + {abstract} void Move(ref Vector2 vec)
+    
+    + bool IsClick()
+    + bool IsHover()
+}
+
+ImageEl --|> Element
+class ImageEl
+{
+    + [override] void Init()
+    + [override] void Show()
+    + [override] void Close()   
+    + [override] void Execute()
+    + [override] void Move(ref Vector2 vec)
+}
+
+InputBoxEl --|> Element
+class InputBoxEl
+{
+    + [override] void Init()
+    + [override] void Show()
+    + [override] void Close()   
+    + [override] void Execute()
+    + [override] void Move(ref Vector2 vec)
+}
+
+ButtonEl --|> Element
+class ButtonEl
+{
+    + [override] void Init()
+    + [override] void Show()
+    + [override] void Close()   
+    + [override] void Execute()
+    + [override] void Move(ref Vector2 vec)
+}
+
+TextEl --|> Element
+class TextEl
+{
+    + [override] void Init()
+    + [override] void Show()
+    + [override] void Close()   
+    + [override] void Execute()
+    + [override] void Move(ref Vector2 vec)
+}
+
+GameWindow *-- Element
+abstract class GameWindow
+{
+    - bool isCreated = false
+    - bool isOpening = false
+    - [SerializeField] bool isScroll = true
+    - [SerializeField] bool isPopUp = false
+
+    - [SerializeField] Canvas canvas
+    - [SerializeField] Image background
+
+    # [SerializeField] GameObject images
+    # [SerializeField] GameObject texts
+
+    - Dictionary<string, Element> diImageEl
+    - Dictionary<string, Element> diTextEl
+
+    # ShowCanvas()
+    # ShowBackground()
+
+    + {abstract} void Init()
+    + {abstract} void Show()
+    + {abstract} void Close()
+    + {abstract} void Execute()
+}
+
+MenuWindow *-- McOption
+MenuWindow --|> GameWindow
+class MenuWindow
+{
+    - McOption option
+
+    - [SerializeField] GameObject inputBoxes
+    - [SerializeField] GameObject buttons
+
+    - Dictionary<string, Element> diInputBoxEl
+    - Dictionary<string, Element> diButtonEl
+
+    + [override] void Init()
+    + [override] void Show()
+    + [override] void Close()
+    + [override] void Execute()
+}
+
+class McVideos
+{
+
+}
+
+class McControls
+{
+
+}
+
+class McSounds
+{
+
+}
+
+McOption *-- McVideos
+McOption *-- McControls
+McOption *-- McSounds
+class McOption
+{
+
+}
+
+PlayWindow *-- World
+PlayWindow --|> GameWindow
+class PlayWindow
+{
+    + [override] void Init()
+    + [override] void Show()
+    + [override] void Close()
+    + [override] void Execute()
+}
+
+Vaxel *-- VaxelData
+class Vaxel
+{
+    [SerializeField] VaxelData data
+}
+
+abstract class VaxelData
+{
+    - [SerializeField] string name
+    - [SerializeField] string state
+    - [SerializeField] string type
+
+    - [SerializeField] int id
+    - [SerializeField] int maxCount
+
+    - [SerializeField] bool isStackable
+    - [SerializeField] bool isUsable
+    - [SerializeField] bool isWearable
+
+    - [SerializeField] Texture texture
+
+    - bool isTargetting = false
+    - bool isSelecting = false
+    - bool isHolding = false
+    - bool isWearing = false
+
+    - Vector3 pos
+
+    + {abstract} void Create()
+    + {abstract} void Destroy()
+
+    + void ItemGet(ref Player player)
+    + void ItemDrop(ref Player player)
+}
+
+BuildBlockData --|> VaxelData
+class BuildBlockData
+{
+    + [override] void Create()
+    + [override] void Destroy()
+}
+
+GrassData --|> VaxelData
+class GrassData
+{
+    + [override] void Create()
+    + [override] void Destroy()
+}
+
+OreData --|> VaxelData
+class OreData
+{
+    + [override] void Create()
+    + [override] void Destroy()
+}
+
+GlassData --|> VaxelData
+class GlassData
+{
+    + [override] void Create()
+    + [override] void Destroy()
+}
+
+FenceData --|> VaxelData
+class FenceData
+{
+    + [override] void Create()
+    + [override] void Destroy()
+}
+
+LeafData --|> VaxelData
+class LeafData
+{
+    + [override] void Create()
+    + [override] void Destroy()
+}
+
+SeedData --|> VaxelData
+class SeedData
+{
+    + [override] void Create()
+    + [override] void Destroy()
+}
+
+FluidData --|> VaxelData
+class FluidData
+{
+    + [override] void Create()
+    + [override] void Destroy()
+}
+
+FurnitureData --|> VaxelData
+class FurnitureData
+{
+    + [override] void Create()
+    + [override] void Destroy()
+}
+
+FallData --|> VaxelData
+class FallData
+{
+    + [override] void Create()
+    + [override] void Destroy()
+}
+
+FoodData --|> VaxelData
+class FoodData
+{
+    + [override] void Create()
+    + [override] void Destroy()
+}
+
+ToolData --|> VaxelData
+class ToolData
+{
+    + [override] void Create()
+    + [override] void Destroy()
+}
+
+ArmorData --|> VaxelData
+class ArmorData
+{
+    + [override] void Create()
+    + [override] void Destroy()
+}
+
+EnchantBookData --|> VaxelData
+class EnchantBookData
+{
+    + [override] void Create()
+    + [override] void Destroy()
+}
+
+EntityData --|> VaxelData
+class EntityData
+{
+    + [override] void Create()
+    + [override] void Destroy()
+}
+
+class PlayerData
+{
+
+}
+
+Player *-- PlayerData
+class Player
+{
+
+}
+
+WorldData *-- Vaxel
+class WorldData
+{
+    - List<Voxel> voxels
+    + void SaveVaxels()
+}
+
+World *-- Player
+World *-- WorldData
+class World
+{
+    - int size = 513
+    - int height = 320
+
+    - WorldData data
+
+    - int[,,] blocksID = new int[size, height, size]
+    - int[,,] entitiesID = new int[size, height, size]
+    - int[,,] itemsID = new int[size, height, size]
+
+    + void Load()
+    + void Create()
+    + void Save()
+    + void Destroy()
+}
+
+Manager o-- GameWindow
+abstract class Manager
+{
+    - [SerializeField] List<GameWindow> windows
+    - Dictionary<string, int> windowNameToIndex
+
+    # void Init()
+    # void Destroy()
+
+    # void ShowWindow(string name)
+    # void CloseWindow(string name)
+
+    # void ExecuteWindows()
+    # void ScrollWindows()
+
+    + {abstract} void BaseAwake()
+    + {abstract} void BaseStart()
+    + {abstract} void BaseUpdate()
+    + {abstract} void BaseExit()
+}
+
+MenuManager --|> Manager
+class MenuManager
+{
+    + [override] void BaseAwake()
+    + [override] void BaseStart()
+    + [override] void BaseUpdate()
+    + [override] void BaseExit()
+}
+
+PlayManager --|> Manager
+class PlayManager
+{
+    + [override] void BaseAwake()
+    + [override] void BaseStart()
+    + [override] void BaseUpdate()
+    + [override] void BaseExit()
+}
+
+
+@enduml

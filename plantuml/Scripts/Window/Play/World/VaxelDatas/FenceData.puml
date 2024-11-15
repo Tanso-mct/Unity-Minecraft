@@ -1,0 +1,7 @@
+@startuml
+class FenceData {
+    - Start() : void
+    - Update() : void
+}
+MonoBehaviour <|-- FenceData
+@enduml

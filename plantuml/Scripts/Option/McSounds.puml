@@ -1,0 +1,36 @@
+@startuml
+class McSounds {
+    - {static} hasSaveData : bool = false
+    - {static} masterVal : int = 50
+    - {static} musicVal : int = 50
+    - {static} blocksVal : int = 50
+    - {static} uiVal : int = 50
+    - {static} playersVal : int = 50
+    - {static} hostileVal : int = 50
+    - {static} friendlyVal : int = 50
+    + Init() : void
+    + Save() : void
+    + SetMaster() : void
+    + SetMusic() : void
+    + SetBlocks() : void
+    + SetUi() : void
+    + SetPlayers() : void
+    + SetHostile() : void
+    + SetFriendly() : void
+}
+MonoBehaviour <|-- McSounds
+McSounds --> "masterSb" SelectBarParts
+McSounds --> "musicSb" SelectBarParts
+McSounds --> "blocksSb" SelectBarParts
+McSounds --> "uiSb" SelectBarParts
+McSounds --> "playersSb" SelectBarParts
+McSounds --> "hostileSb" SelectBarParts
+McSounds --> "friendlySb" SelectBarParts
+McSounds --> "masterSbPos" Vector2
+McSounds --> "musicSbPos" Vector2
+McSounds --> "blocksSbPos" Vector2
+McSounds --> "uiSbPos" Vector2
+McSounds --> "playersSbPos" Vector2
+McSounds --> "hostileSbPos" Vector2
+McSounds --> "friendlySbPos" Vector2
+@enduml

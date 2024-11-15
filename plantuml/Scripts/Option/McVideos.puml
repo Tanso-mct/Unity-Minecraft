@@ -1,0 +1,23 @@
+@startuml
+class McVideos {
+    - {static} hasSaveData : bool = false
+    - {static} fov : int = 70
+    + {static} Fov : int <<get>>
+    - {static} renderDistance : int = 8
+    + {static} RenderDistance : int <<get>>
+    - {static} brightness : int = 50
+    + {static} Brightness : int <<get>>
+    + Init() : void
+    + Save() : void
+    + SetFov() : void
+    + SetRenderDistance() : void
+    + SetBrightness() : void
+}
+MonoBehaviour <|-- McVideos
+McVideos --> "fovSb" SelectBarParts
+McVideos --> "renderDistanceSb" SelectBarParts
+McVideos --> "brightnessSb" SelectBarParts
+McVideos --> "fovSbPos" Vector2
+McVideos --> "renderDistanceSbPos" Vector2
+McVideos --> "brightnessSbPos" Vector2
+@enduml

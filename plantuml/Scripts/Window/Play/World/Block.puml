@@ -1,0 +1,8 @@
+@startuml
+class Block {
+    + vaxelId : int
+    + Init(worldData:WorldData) : void
+}
+MonoBehaviour <|-- Block
+Block --> "worldData" WorldData
+@enduml

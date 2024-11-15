@@ -1,0 +1,57 @@
+@startuml
+class Constants {
+    + <<const>> SPECIFIED_FPS : int = 60
+    + <<const>> SCREEN_WIDTH : int = 1920
+    + <<const>> SCREEN_HEIGHT : int = 1080
+    + <<const>> MSG_NULL : int = 0
+    + <<const>> MSG_SUCCESS : int = 1
+    + <<const>> MSG_FAILED : int = 2
+    + <<const>> MSG_ERROR : int = 3
+    + <<const>> MSG_WARNING : int = 4
+    + <<const>> MSG_CHANGE_SCENE : int = 5
+    + <<const>> MSG_QUIT_GAME : int = 6
+    + <<const>> SCENE_MENU : string = "Menu"
+    + <<const>> SCENE_PLAY : string = "Play"
+    + <<const>> TYPE_IMAGE : string = "Image"
+    + <<const>> TYPE_INPUT_BOX : string = "InputBox"
+    + <<const>> TYPE_BUTTON : string = "Button"
+    + <<const>> TYPE_TEXT : string = "Text"
+    + <<const>> TYPE_SELECT_BAR : string = "SelectBar"
+    + <<const>> CONTROL_ATTACK : string = "Attack"
+    + <<const>> CONTROL_DROP_ITEM : string = "DropItem"
+    + <<const>> CONTROL_USE : string = "Use"
+    + <<const>> CONTROL_HS1 : string = "HS1"
+    + <<const>> CONTROL_HS2 : string = "HS2"
+    + <<const>> CONTROL_HS3 : string = "HS3"
+    + <<const>> CONTROL_HS4 : string = "HS4"
+    + <<const>> CONTROL_HS5 : string = "HS5"
+    + <<const>> CONTROL_HS6 : string = "HS6"
+    + <<const>> CONTROL_HS7 : string = "HS7"
+    + <<const>> CONTROL_HS8 : string = "HS8"
+    + <<const>> CONTROL_HS9 : string = "HS9"
+    + <<const>> CONTROL_INVENTORY : string = "Inventory"
+    + <<const>> CONTROL_JUMP : string = "Jump"
+    + <<const>> CONTROL_SPRINT : string = "Sprint"
+    + <<const>> CONTROL_LEFT : string = "Left"
+    + <<const>> CONTROL_RIGHT : string = "Right"
+    + <<const>> CONTROL_BACK : string = "Back"
+    + <<const>> CONTROL_FOR : string = "Forward"
+    + <<const>> GAME_MODE_CREATIVE : string = "Creative"
+    + <<const>> GAME_MODE_SURVIVAL : string = "Survival"
+    + <<const>> WND_MENU : string = "WindowMenu"
+    + <<const>> VAXEL_STATE_NULL : int = 0
+    + <<const>> VAXEL_STATE_ITEM : int = 1
+    + <<const>> VAXEL_STATE_BLOCK : int = 2
+    + <<const>> VAXEL_STATE_ENTITY : int = 3
+    + <<const>> WORLD_SIZE : int = 513
+    + <<const>> WORLD_HEIGHT : int = 320
+    + <<const>> ANIM_TYPE : string = "AnimType"
+    + <<const>> ANIM_PLAYER_BREATH : int = 1
+    + <<const>> ANIM_PLAYER_WALK : int = 2
+    + <<const>> ANIM_PLAYER_RUN : int = 3
+    + <<const>> ANIM_PLAYER_USE : int = 4
+    + <<const>> TAG_PLAYER : string = "Player"
+    + <<const>> TAG_BLOCK_TOP : string = "Block_Top"
+}
+MonoBehaviour <|-- Constants
+@enduml

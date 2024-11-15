@@ -1,0 +1,12 @@
+@startuml
+class TextButtonParts {
+    + HoverEvent() : void
+    + UnHoverEvent() : void
+    + ClickEvent() : void
+}
+MonoBehaviour <|-- TextButtonParts
+TextButtonParts o-> "clickEvent" UnityEvent
+TextButtonParts o-> "textEl" TextEl
+TextButtonParts o-> "hoverImageGroup" GameObject
+TextButtonParts o-> "hoverText" GameObject
+@enduml

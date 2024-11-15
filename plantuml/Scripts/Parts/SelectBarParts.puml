@@ -1,0 +1,23 @@
+@startuml
+class SelectBarParts {
+    - val : float
+    + Val : float <<get>>
+    - maxVal : float
+    - minVal : float
+    - isClicked : bool = false
+    - isMoving : bool = false
+    + EditTxt(txt:string) : void
+    + HoverEvent() : void
+    - Update() : void
+    + UnHoverEvent() : void
+    + ClickEvent() : void
+}
+MonoBehaviour <|-- SelectBarParts
+SelectBarParts --> "initSelectorPos" Vector2
+SelectBarParts --> "initMousePos" Vector2
+SelectBarParts --> "selectorPos" Vector2
+SelectBarParts --> "SelectorPos" Vector2
+SelectBarParts o-> "mouseEvent" UnityEvent
+SelectBarParts o-> "selectBarEl" SelectBarEl
+SelectBarParts o-> "hoverText" GameObject
+@enduml

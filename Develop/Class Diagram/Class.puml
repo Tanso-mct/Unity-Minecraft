@@ -1,0 +1,709 @@
+@startuml Unity Minecraft Class Diagram
+
+class Constants 
+{
+    + <<const>> SPECIFIED_FPS : int = 60
+    + <<const>> SCREEN_WIDTH : int = 1920
+    + <<const>> SCREEN_HEIGHT : int = 1080
+
+    + <<const>> MSG_NULL : int = 0
+    + <<const>> MSG_SUCCESS : int = 1
+    + <<const>> MSG_FAILED : int = 2
+    + <<const>> MSG_ERROR : int = 3
+    + <<const>> MSG_WARNING : int = 4
+    + <<const>> MSG_CHANGE_SCENE : int = 5
+    + <<const>> MSG_QUIT_GAME : int = 6
+
+    + <<const>> SCENE_MENU : string = "Menu"
+    + <<const>> SCENE_PLAY : string = "Play"
+
+    + <<const>> TYPE_IMAGE : string = "Image"
+    + <<const>> TYPE_INPUT_BOX : string = "InputBox"
+    + <<const>> TYPE_BUTTON : string = "Button"
+    + <<const>> TYPE_TEXT : string = "Text"
+    + <<const>> TYPE_SELECT_BAR : string = "SelectBar"
+
+    + <<const>> CONTROL_ATTACK : string = "Attack"
+    + <<const>> CONTROL_DROP_ITEM : string = "DropItem"
+    + <<const>> CONTROL_USE : string = "Use"
+    + <<const>> CONTROL_HS1 : string = "HS1"
+    + <<const>> CONTROL_HS2 : string = "HS2"
+    + <<const>> CONTROL_HS3 : string = "HS3"
+    + <<const>> CONTROL_HS4 : string = "HS4"
+    + <<const>> CONTROL_HS5 : string = "HS5"
+    + <<const>> CONTROL_HS6 : string = "HS6"
+    + <<const>> CONTROL_HS7 : string = "HS7"
+    + <<const>> CONTROL_HS8 : string = "HS8"
+    + <<const>> CONTROL_HS9 : string = "HS9"
+    + <<const>> CONTROL_INVENTORY : string = "Inventory"
+    + <<const>> CONTROL_JUMP : string = "Jump"
+    + <<const>> CONTROL_SPRINT : string = "Sprint"
+    + <<const>> CONTROL_LEFT : string = "Left"
+    + <<const>> CONTROL_RIGHT : string = "Right"
+    + <<const>> CONTROL_BACK : string = "Back"
+    + <<const>> CONTROL_FOR : string = "Forward"
+
+    + <<const>> GAME_MODE_CREATIVE : string = "Creative"
+    + <<const>> GAME_MODE_SURVIVAL : string = "Survival"
+
+    + <<const>> WND_MENU : string = "WindowMenu"
+
+    + <<const>> VAXEL_STATE_NULL : int = 0
+    + <<const>> VAXEL_STATE_ITEM : int = 1
+    + <<const>> VAXEL_STATE_BLOCK : int = 2
+    + <<const>> VAXEL_STATE_ENTITY : int = 3
+
+    + <<const>> WORLD_SIZE : int = 513
+    + <<const>> WORLD_HEIGHT : int = 320
+
+    + <<const>> ANIM_TYPE : string = "AnimType"
+    + <<const>> ANIM_PLAYER_BREATH : int = 1
+    + <<const>> ANIM_PLAYER_WALK : int = 2
+    + <<const>> ANIM_PLAYER_RUN : int = 3
+    + <<const>> ANIM_PLAYER_USE : int = 4
+
+    + <<const>> TAG_PLAYER : string = "Player"
+    + <<const>> TAG_BLOCK_TOP : string = "Block_Top"
+}
+
+class Param 
+{
+    + {static} msg : int
+    + {static} floPar : float = 0
+    + {static} strPar : string = ""
+    + {static} popUpWindowDone : bool = false
+    + {static} createWorld : bool = true
+    + {static} loadWorld : bool = false
+    + {static} worldInfoId : int
+    + {static} Init() : void
+    + {static} InitWorldParam() : void
+}
+
+class SupportFunc
+{
+
+}
+
+BaseManager *-- Manager
+BaseManager *-- McOption
+BaseManager *-- Param
+class BaseManager 
+{
+    - Awake() : void
+    - Start() : void
+    - Update() : void
+    - Exit() : void
+
+    + ProcessParam() : void
+
+    + QuitGame() : void
+    + SetFps() : int
+    + SetResolution() : int
+    + ChangeScene() : int
+}
+
+Manager *-- GameWindow
+abstract class Manager 
+{
+    - scrollSpeed : float
+
+    # Init() : void
+    # Dispose() : void
+
+    - AddWindows() : void
+    # ShowWindow(wndName:string) : void
+    # CloseWindow(wndName:string) : void
+    # ExecuteWindows() : void
+    # ScrollWindows() : void
+    # ScrollWindows(bottomY:float) : void
+
+    {abstract} + BaseAwake() : void
+    {abstract} + BaseStart() : void
+    {abstract} + BaseUpdate() : void
+    {abstract} + BaseExit() : void
+}
+
+MenuManager --|> Manager
+class MenuManager 
+{
+    - loadingShowFrame : int
+    - controlScrollBottom : float
+    - singlePlayerScrollBottom : float
+    - loadingFrame : int
+
+    + <<override>> BaseAwake() : void
+    + <<override>> BaseStart() : void
+    + <<override>> BaseUpdate() : void
+    + <<override>> BaseExit() : void
+
+    + ShowOption() : void
+    + CloseOption() : void
+
+    + ShowVideoSetting() : void
+    + CloseVideoSetting() : void
+
+    + ShowSoundSetting() : void
+    + CloseSoundSetting() : void
+
+    + ShowControlSetting() : void
+    + CloseControlSetting() : void
+
+    + ShowSinglePlayer() : void
+    + CloseSinglePlayer() : void
+
+    + QuitGame() : void
+
+    + PlaySelectWorld() : void
+    + CreateNewWorld() : void
+    + DestroySelectWorld() : void
+}
+
+PlayManager --|> Manager
+class PlayManager 
+{
+    - controlScrollBottom : float
+
+    + <<override>> BaseAwake() : void
+    + <<override>> BaseStart() : void
+    + <<override>> BaseUpdate() : void
+    + <<override>> BaseExit() : void
+
+    + ShowOption() : void
+    + CloseOption() : void
+
+    + ShowVideoSetting() : void
+    + CloseVideoSetting() : void
+
+    + ShowSoundSetting() : void
+    + CloseSoundSetting() : void
+
+    + ShowControlSetting() : void
+    + CloseControlSetting() : void
+}
+
+abstract class GameWindow 
+{
+    # isCreated : bool = false
+    # isOpening : bool = false
+    # isScroll : bool = false
+    # isPopUp : bool = false
+
+    # GetAllChildren(parent:GameObject) : List<GameObject>
+    # GetElements(parents:List<GameObject>, diEl:Dictionary<string, Element>) : void
+    # ElementsInit(diEl:Dictionary<string, Element>) : void
+
+    # ShowCanvases(val:bool) : void
+    # ShowBackgrounds(val:bool) : void
+
+    # ElementsShow(diEl:Dictionary<string, Element>) : void
+    # ElementsClose(diEl:Dictionary<string, Element>) : void
+    # ElementsExecute(diEl:Dictionary<string, Element>) : void
+    # ElementsMove(diEl:Dictionary<string, Element>, vec:Vector2) : void
+
+    {abstract} + Init() : void
+    {abstract} + Show() : void
+    {abstract} + Close() : void
+    {abstract} + Execute() : void
+    {abstract} + Move(moveVec:Vector2) : void
+}
+
+MenuWindow o-- Element
+MenuWindow --|> GameWindow
+MenuWindow o-- SelectBarParts
+MenuWindow o-- TextButtonParts
+MenuWindow o-- WorldShowParts
+class MenuWindow 
+{
+    + <<override>> Init() : void
+    + <<override>> Show() : void
+    + <<override>> Close() : void
+    + <<override>> Execute() : void
+    + <<override>> Move(moveVec:Vector2) : void
+}
+
+PlayWindow --|> GameWindow
+PlayWindow *-- World
+class PlayWindow 
+{
+    + <<override>> Init() : void
+    + <<override>> Show() : void
+    + <<override>> Close() : void
+    + <<override>> Execute() : void
+    + <<override>> Move(moveVec:Vector2) : void
+}
+
+abstract class Element 
+{
+    - type : string
+    - isShow : bool
+
+    # BaseInit() : void
+    # GetAllChildren(parent:GameObject) : List<GameObject>
+
+    - InitImages() : void
+    + ShowImages(val:bool, groupName:string) : void
+    + ShowAllImages(val:bool) : void
+
+    + ShowText(val:bool, name:string) : void
+    # ShowAllTexts(val:bool) : void
+
+    {abstract} + Init() : void
+    {abstract} + Show() : void
+    {abstract} + Close() : void
+    {abstract} + Execute() : void
+    
+    + Move(vec:Vector2) : void
+    + Move(vec:Vector2, image:Image) : void
+    + Transfer(vec:Vector2, image:Image) : void
+
+    - IsUnderMouse() : bool
+    + IsUnderMouse(image:Image) : bool
+
+    # IsClick() : bool
+    # IsClick(image:Image) : bool
+    # IsHover() : bool
+}
+
+ImageEl --|> Element
+class ImageEl 
+{
+    - isHover : bool
+    + <<override>> Init() : void
+    + <<override>> Show() : void
+    + <<override>> Close() : void
+    + <<override>> Execute() : void
+}
+
+ButtonEl --|> Element
+class ButtonEl 
+{
+    - isHover : bool
+    + <<override>> Init() : void
+    + <<override>> Show() : void
+    + <<override>> Close() : void
+    + <<override>> Execute() : void
+}
+
+TextEl --|> Element
+class TextEl 
+{
+    - isHover : bool
+    - clicked : bool
+
+    + <<override>> Init() : void
+    + <<override>> Show() : void
+    + <<override>> Close() : void
+    + <<override>> Execute() : void
+}
+
+InputBoxEl --|> Element
+class InputBoxEl 
+{
+    + <<override>> Init() : void
+    + <<override>> Show() : void
+    + <<override>> Close() : void
+    + <<override>> Execute() : void
+}
+
+SelectBarEl --|> Element
+class SelectBarEl 
+{
+    - margin : float
+    - isHover : bool
+
+    + <<override>> Init() : void
+    + <<override>> Show() : void
+    + <<override>> Close() : void
+    + <<override>> Execute() : void
+
+    + GetBarMin() : float
+    + GetBarMax() : float
+
+    + GetFrameWidth() : float
+}
+
+TextButtonParts *-- TextEl
+class TextButtonParts 
+{
+    + HoverEvent() : void
+    + UnHoverEvent() : void
+    + ClickEvent() : void
+}
+
+SelectBarParts *-- SelectBarEl
+class SelectBarParts 
+{
+    - val : float
+    + Val : float <<get>>
+    - maxVal : float
+    - minVal : float
+    - isClicked : bool = false
+    - isMoving : bool = false
+    + EditTxt(txt:string) : void
+    + HoverEvent() : void
+    - Update() : void
+    + UnHoverEvent() : void
+    + ClickEvent() : void
+}
+
+WorldShowParts *-- TextEl
+class WorldShowParts 
+{
+    + worldName : string = "World Name"
+    + Create() : void
+    + ClickEvent() : void
+    + UnClickEvent() : void
+}
+
+McOption *-- McVideos
+McOption *-- McSounds
+McOption *-- McControls
+class McOption 
+{
+    + Init() : void
+    + Save() : void
+}
+
+class McVideos 
+{
+    - {static} hasSaveData : bool = false
+    - {static} fov : int = 70
+    + {static} Fov : int <<get>>
+    - {static} renderDistance : int = 8
+    + {static} RenderDistance : int <<get>>
+    - {static} brightness : int = 50
+    + {static} Brightness : int <<get>>
+    + Init() : void
+    + Save() : void
+    + SetFov() : void
+    + SetRenderDistance() : void
+    + SetBrightness() : void
+}
+
+class McSounds 
+{
+    - {static} hasSaveData : bool = false
+    - {static} masterVal : int = 50
+    - {static} musicVal : int = 50
+    - {static} blocksVal : int = 50
+    - {static} uiVal : int = 50
+    - {static} playersVal : int = 50
+    - {static} hostileVal : int = 50
+    - {static} friendlyVal : int = 50
+    + Init() : void
+    + Save() : void
+    + SetMaster() : void
+    + SetMusic() : void
+    + SetBlocks() : void
+    + SetUi() : void
+    + SetPlayers() : void
+    + SetHostile() : void
+    + SetFriendly() : void
+}
+
+class McControls 
+{
+    - {static} hasSaveData : bool = false
+    - {static} sen : int = 2
+    + Init() : void
+    + Save() : void
+    + ControlBackground() : void
+    + SenEdit() : void
+    + BindEdit(name:string) : void
+    + BindReset(name:string) : void
+    + BindResetAll() : void
+    {static} + CursorLock(symbol:bool) : void
+    + {static} GetMouseAxis() : Vector2
+    {static} + IsKey(control:string) : bool
+    {static} + IsKeyDown(control:string) : bool
+    {static} + IsKeyUp(control:string) : bool
+}
+
+World *-- Player
+World *-- Vaxel
+World *-- WorldInfo
+World *-- McHitManager
+World *-- BlockManager
+World *-- ItemManager
+World *-- EntityManager
+class World 
+{
+    - currentInfo : WorldInfo
+    - {static} worldInfos : List<WorldInfo>
+
+    - data : WorldData
+    - entitiesIdToVaxelId : Dictionary<int, List<int>>
+    - itemsIdToVaxelId : Dictionary<int, List<int>> 
+    - blocksID : int[,,] 
+    - entitiesID : int[,,] 
+    - itemsID : int[,,] 
+
+    - player : Player
+
+    - Init() : void
+    + Create() : void
+    + LoadFromJson() : void
+    + SaveToJson() : void
+    + DestroyJson() : void
+    + {static} LoadInfoFromJson() : void
+    + Execute() : void
+}
+
+class WorldInfo {
+    + worldName : string
+    + createdDate : string
+    + gameMode : string
+    + worldJson : string
+    + worldJsonPath : string
+}
+
+class McHitBox 
+{
+    - vaxelId : int
+    - transform : Transform
+    - bc : BoxCollider
+
+    - origin : Vector3
+    - opposite : Vector3
+    - vertices : Vector3[]
+
+    + Init(obj:GameObject) : void
+}
+
+McHitManager *-- McHitBox
+class McHitManager 
+{
+    - hitBoxes : List<McHitBox>
+
+    + Init() : void
+    + RegisterHitBox(hitBox:McHitBox) : void
+    + UnregisterHitBox(hitBox:McHitBox) : void
+
+    + IsHit(hitBox:McHitBox) : bool
+}
+
+Player *-- PlayerData
+class Player 
+{
+    - speed : float = 0.0f
+    - walkingSpeed : float = 7.0f
+    - runningSpeed : float = 10.0f
+    - jumpingSpeedAspect : float = 1.2f
+    - jumpForce : float = 5.0f
+    - isGrounded : bool = true
+    - groundCount : int = 0
+    - notGroundingFrame : int = 0
+    - isRunning : bool = false
+    - isFlying : bool = false
+    - diffRunningFov : float = 30.0f
+    + Init() : void
+    + Create() : void
+    + Load() : void
+    + ViewUpdate() : void
+    + MoveUpdate() : void
+    + FlyUpdate() : void
+    + Jump() : void
+    + Execute() : void
+    + FrameStart() : void
+    + FrameFinish() : void
+    + LoadFromJson() : void
+    + SaveToJson() : void
+    + DestoroyJson() : void
+    - OnCollisionEnter(collision:Collision) : void
+    - OnCollisionStay(collision:Collision) : void
+    - OnCollisionExit(collision:Collision) : void
+}
+
+class PlayerData 
+{
+
+}
+
+interface IBlock
+{
+
+}
+
+BlockManager *-- IBlock
+class BlockManager
+{
+    - blocks : Dictionary<Vector3, IBlock>
+
+    + Init() : void
+    + Execute() : void
+
+    + Register(obj:GameObject) : void
+    + Unregister(obj:GameObject) : void
+}
+
+interface IItem
+{
+
+}
+
+ItemManager *-- IItem
+class ItemManager
+{
+    - items : Dictionary<Vector3, LinkedList<IItem>>
+
+    + Init() : void
+    + Execute() : void
+
+    + Register(obj:GameObject) : void
+    + Unregister(obj:GameObject) : void
+}
+
+interface IEntity
+{
+
+}
+
+EntityManager *-- IEntity
+class EntityManager
+{
+    - entities : Dictionary<Vector3, LinkedList<IEntity>>
+
+    + Init() : void
+    + Execute() : void
+
+    + Register(obj:GameObject) : void
+    + Unregister(obj:GameObject) : void
+}
+
+abstract class Vaxel 
+{
+    + Init() : void
+}
+
+ArmorVaxel --|> IItem
+ArmorVaxel --|> Vaxel
+class ArmorVaxel {
+    
+}
+
+BuildBlockVaxel --|> IBlock
+BuildBlockVaxel --|> IItem
+BuildBlockVaxel --|> Vaxel
+class BuildBlockVaxel 
+{
+    
+}
+
+EnchantBookVaxel --|> IItem
+EnchantBookVaxel --|> Vaxel
+class EnchantBookVaxel 
+{
+    
+}
+
+HostileMobVaxel --|> IEntity
+FallVaxel --|> Vaxel
+class HostileMobVaxel 
+{
+    
+}
+
+FriendlyMobVaxel --|> IEntity
+FriendlyMobVaxel --|> Vaxel
+class FriendlyMobVaxel 
+{
+    
+}
+
+FallVaxel --|> IBlock
+FallVaxel --|> IItem
+FallVaxel --|> IEntity
+FlowerVaxel --|> Vaxel
+class FallVaxel 
+{
+    
+}
+
+FenceVaxel --|> IBlock
+FenceVaxel --|> IItem
+FenceVaxel --|> Vaxel
+class FenceVaxel 
+{
+    
+}
+
+FluidVaxel --|> IBlock
+FluidVaxel --|> IItem
+FlowerVaxel --|> Vaxel
+class FluidVaxel 
+{
+    
+}
+
+
+FoodVaxel --|> IItem
+FoodVaxel --|> Vaxel
+class FoodVaxel 
+{
+    
+}
+
+FurunitureVaxel --|> IBlock
+FurunitureVaxel --|> IItem
+FurunitureVaxel --|> Vaxel
+class FurunitureVaxel 
+{
+    
+}
+
+GlassVaxel --|> IBlock
+GlassVaxel --|> IItem
+GlassVaxel --|> Vaxel
+class GlassVaxel 
+{
+    
+}
+
+GrassVaxel --|> IBlock
+GrassVaxel --|> IItem
+GrassVaxel --|> Vaxel
+class GrassVaxel 
+{
+    
+}
+
+LeafVaxel --|> IBlock
+LeafVaxel --|> IItem
+LeafVaxel --|> Vaxel
+class LeafVaxel 
+{
+    
+}
+
+OreVaxel --|> IBlock
+OreVaxel --|> IItem
+OreVaxel --|> Vaxel
+class OreVaxel 
+{
+    
+}
+
+SeedVaxel --|> IBlock
+SeedVaxel --|> IItem
+SeedVaxel --|> Vaxel
+class SeedVaxel 
+{
+    
+}
+
+ToolVaxel --|> IItem
+ToolVaxel --|> Vaxel
+class ToolVaxel 
+{
+    
+}
+
+MaterialVaxel --|> IItem
+MaterialVaxel --|> Vaxel
+class MaterialVaxel 
+{
+    
+}
+
+
+@enduml

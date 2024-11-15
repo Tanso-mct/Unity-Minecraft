@@ -1,0 +1,7 @@
+@startuml
+class FurunitureData {
+    - Start() : void
+    - Update() : void
+}
+MonoBehaviour <|-- FurunitureData
+@enduml

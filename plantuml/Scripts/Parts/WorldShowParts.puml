@@ -1,0 +1,11 @@
+@startuml
+class WorldShowParts {
+    + worldName : string = "World Name"
+    + Create() : void
+    + ClickEvent() : void
+    + UnClickEvent() : void
+}
+MonoBehaviour <|-- WorldShowParts
+WorldShowParts o-> "textEl" TextEl
+WorldShowParts o-> "selectingImageGroup" GameObject
+@enduml

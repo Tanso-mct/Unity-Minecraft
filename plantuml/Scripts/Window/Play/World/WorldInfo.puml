@@ -1,0 +1,9 @@
+@startuml
+class WorldInfo {
+    + worldName : string
+    + createdDate : string
+    + gameMode : string
+    + worldJson : string
+    + worldJsonPath : string
+}
+@enduml

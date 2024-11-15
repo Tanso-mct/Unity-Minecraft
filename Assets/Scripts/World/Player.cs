@@ -99,6 +99,9 @@ public class Player : MonoBehaviour
     private Animator animSub;
     private Animator animRightArm;
 
+    // ブロックのセレクター
+    [SerializeField] private GameObject selector;
+
     public void Init()
     {
         // プレイヤーの初期位置と回転角度
@@ -151,7 +154,7 @@ public class Player : MonoBehaviour
 
     }
 
-    private void ViewUpdate()
+    private void ViewUpdate(ref List<Vector4> targetBlocks)
     {
         // プレイヤーの視点移動
         Vector2 mouseAxis = McControls.GetMouseAxis();
@@ -163,6 +166,22 @@ public class Player : MonoBehaviour
 
         partsSub.transform.rotation = Quaternion.Euler(partsSub.transform.rotation.x, rot.y, partsSub.transform.rotation.z);
         head.transform.localRotation = Quaternion.Euler(rot.x, 0.0f, 0.0f);
+
+        // セレクター位置更新
+        if (targetBlocks[Constants.TARGET_BLOCK_SELECT].w != 0)
+        {
+            selector.SetActive(true);
+            selector.transform.position = new Vector3
+            (
+                targetBlocks[Constants.TARGET_BLOCK_SELECT].x - Constants.WORLD_HALF_SIZE, 
+                targetBlocks[Constants.TARGET_BLOCK_SELECT].y, 
+                targetBlocks[Constants.TARGET_BLOCK_SELECT].z - Constants.WORLD_HALF_SIZE
+            );
+        }
+        else
+        {
+            selector.SetActive(false);
+        }
     }
 
     private void MoveUpdate()
@@ -293,8 +312,6 @@ public class Player : MonoBehaviour
                 canvasRightArm.SetActive(true);
                 animRightArm.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_USE);
             }
-
-            Debug.Log("Attack block at " + targetBlocks[Constants.TARGET_BLOCK_SELECT].x + ", " + targetBlocks[Constants.TARGET_BLOCK_SELECT].y + ", " + targetBlocks[Constants.TARGET_BLOCK_SELECT].z);
         }
     }
 
@@ -326,7 +343,7 @@ public class Player : MonoBehaviour
         FrameStart();
 
         // プレイヤーの視点更新
-        ViewUpdate();
+        ViewUpdate(ref targetBlocks);
 
         // プレイヤーの着地中移動更新
         if (isGrounded) MoveUpdate();

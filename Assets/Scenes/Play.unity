@@ -480,6 +480,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1414722975}
   m_SourcePrefab: {fileID: 100100000, guid: f9169ac76117e074a938e5cbe1a816ce, type: 3}
+--- !u!1 &596598153 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1644267764276282388, guid: 64aa6cc7255f168418df4433ed545d92, type: 3}
+  m_PrefabInstance: {fileID: 1105945591}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &683285558 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 63622687185951334, guid: b14123b473fcf6f42abd6a0409bb87dd, type: 3}
@@ -1282,7 +1287,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1883744164666102377, guid: 64aa6cc7255f168418df4433ed545d92, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1883744164666102377, guid: 64aa6cc7255f168418df4433ed545d92, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2049,6 +2054,7 @@ MonoBehaviour:
   jumpingSpeedAspect: 1.2
   jumpForce: 1
   diffRunningFov: 10
+  selector: {fileID: 596598153}
 --- !u!65 &1586971690
 BoxCollider:
   m_ObjectHideFlags: 0

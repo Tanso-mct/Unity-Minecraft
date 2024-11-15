@@ -160,8 +160,8 @@ public class Constants : MonoBehaviour
     public const string PREFAB_BLOCK = "World/Block";
 
     // World size
-    public const int WORLD_SIZE = 513;
-    public const int WORLD_HALF_SIZE = 256;
+    public const int WORLD_SIZE = 1025;
+    public const int WORLD_HALF_SIZE = 512;
     public const int WORLD_HEIGHT = 320;
 
 

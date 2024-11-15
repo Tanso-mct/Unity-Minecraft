@@ -404,6 +404,9 @@ public class World : MonoBehaviour
 
         int raycastAtBlock = worldShader.FindKernel("RaycastAtBlock");
 
+        // シェーダーの定数をセット
+        Constants.SetShaderConstants(ref worldShader);
+
         worldShader.SetBuffer(raycastAtBlock, "blocksID", blocksIDBuff);
         worldShader.SetBuffer(raycastAtBlock, "raycastBlocks", raycastBlocksBuff);
 
@@ -525,6 +528,10 @@ public class World : MonoBehaviour
         // ブロックの生成
         int blockUpdate = worldShader.FindKernel("BlockUpdate");
         worldShader.SetBuffer(blockUpdate, "blocksID", blocksIDBuff);
+        
+        // シェーダーの定数をセット
+        Constants.SetShaderConstants(ref worldShader);
+
         for (int i = 0; i < player.frameSetBlocks.Count; i++)
         {
             worldShader.SetInt("TARGET_BLOCK_X", (int)player.frameSetBlocks[i].x);

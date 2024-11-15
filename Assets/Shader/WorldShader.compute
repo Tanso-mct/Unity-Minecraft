@@ -23,16 +23,13 @@ RWStructuredBuffer<int> meshTris;
 float TEXTURE_BLOCK_TILE_U;
 float TEXTURE_BLOCK_TILE_V;
 
-int SOURCE_MESH_BLOCK_FRONT;
-int SOURCE_MESH_BLOCK_BACK;
-int SOURCE_MESH_BLOCK_LEFT;
-int SOURCE_MESH_BLOCK_RIGHT;
-int SOURCE_MESH_BLOCK_TOP;
-int SOURCE_MESH_BLOCK_BOTTOM;
-
 int SOURCE_MESH_BLOCK_FACE_COUNT;
 int SOURCE_MESH_BLOCK_VS_INDEX;
 int SOURCE_MESH_BLOCK_TRIS_INDEX;
+
+int SOURCE_MESH_GRASS_FACE_COUNT;
+int SOURCE_MESH_GRASS_VS_INDEX;
+int SOURCE_MESH_GRASS_TRIS_INDEX;
 
 RWStructuredBuffer<float3> sourceMeshVs;
 RWStructuredBuffer<float2> sourceMeshUVs;
@@ -198,4 +195,24 @@ void RaycastAtBlock (uint3 id : SV_DispatchThreadID)
     raycastBlocks[index].y = blockPos.y;
     raycastBlocks[index].z = blockPos.z;
     raycastBlocks[index].w = blocksID[blockPos.x + blockPos.y * WORLD_SIZE + blockPos.z * WORLD_HEIGHT * WORLD_SIZE];
+}
+
+RWStructuredBuffer<float3> boxPos; // ボックスの底面の中心座標
+RWStructuredBuffer<float3> boxSize; // ボックスのサイズ
+RWStructuredBuffer<float> hitSide; // ヒットした面 543210の6桁の数値でそれぞれの桁が 5:前 4:後 3:左 2:右 1:上 0:下
+
+[numthreads(8,1,1)]
+void GetHitBlock (uint3 id : SV_DispatchThreadID)
+{
+    uint index = id.x;
+
+    float3 boxOrigin = boxPos[index];
+    boxOrigin.x -= boxSize[index].x / 2;
+    boxOrigin.z -= boxSize[index].z / 2;
+
+    float3 boxOpposite = boxPos[index];
+    boxOpposite.x += boxSize[index].x / 2;
+    boxOpposite.y += boxSize[index].y;
+    boxOpposite.z += boxSize[index].z / 2;
+    
 }

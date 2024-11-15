@@ -104,23 +104,26 @@ public class WorldMesh : MonoBehaviour
 
     public void SetData(ref ComputeShader shader, ref List<Vector3> vertices, ref List<Vector2> uv, ref List<int> triangles)
     {
-        shader.SetInt("SOURCE_MESH_BLOCK_FRONT", 0);
-        shader.SetInt("SOURCE_MESH_BLOCK_BACK", 1);
-        shader.SetInt("SOURCE_MESH_BLOCK_LEFT", 2);
-        shader.SetInt("SOURCE_MESH_BLOCK_RIGHT", 3);
-        shader.SetInt("SOURCE_MESH_BLOCK_TOP", 4);
-        shader.SetInt("SOURCE_MESH_BLOCK_BOTTOM", 5);
-
         float textureTileX = 16f / textureAtlas.width;
         float textureTileY = 16f / textureAtlas.height;
 
         shader.SetFloat("TEXTURE_BLOCK_TILE_U", 16f / textureAtlas.width);
         shader.SetFloat("TEXTURE_BLOCK_TILE_V", 16f / textureAtlas.height);
 
+        shader.SetInt("SOURCE_MESH_BLOCK_FACE_COUNT", squares.Count);
         shader.SetInt("SOURCE_MESH_BLOCK_VS_INDEX", vertices.Count);
         shader.SetInt("SOURCE_MESH_BLOCK_TRIS_INDEX", triangles.Count);
+        
+        vertices.AddRange(this.vertices);
+        uv.AddRange(this.uv);
+        triangles.AddRange(this.triangles);
+    }
 
-        shader.SetInt("SOURCE_MESH_BLOCK_FACE_COUNT", squares.Count);
+    public void SetGrassData(ref ComputeShader shader, ref List<Vector3> vertices, ref List<Vector2> uv, ref List<int> triangles)
+    {
+        shader.SetInt("SOURCE_MESH_GRASS_FACE_COUNT", squares.Count);
+        shader.SetInt("SOURCE_MESH_GRASS_VS_INDEX", vertices.Count);
+        shader.SetInt("SOURCE_MESH_GRASS_TRIS_INDEX", triangles.Count);
         
         vertices.AddRange(this.vertices);
         uv.AddRange(this.uv);

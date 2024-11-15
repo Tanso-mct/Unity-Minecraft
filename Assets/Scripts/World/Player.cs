@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    private BoxCollider bc;
-
     // プレイヤーの第何人称
     [SerializeField] private int viewMode = 1;
 
@@ -55,6 +53,9 @@ public class Player : MonoBehaviour
     {
         get { return pos; }
     }
+
+    // プレイヤーのBoxCollider
+    private BoxCollider bc;
 
     // プレイヤーの現在のスピード
     private float speed = 0.0f;
@@ -358,7 +359,6 @@ public class Player : MonoBehaviour
 
                 // 破壊段階に応じてテクスチャを変更
                 int destroyStage = (int)((destroyProgress / blockDurability) * destroyStageTextures.Count);
-                Debug.Log(destroyStage);
 
                 if (destroyStage < destroyStageTextures.Count)
                 {
@@ -505,6 +505,13 @@ public class Player : MonoBehaviour
 
         // プレイヤーの移動
         Transfer();
+
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            Debug.Log("Player position: " + pos);
+            Debug.Log("BoxCollider center: " + bc.center);
+            Debug.Log("BoxCollider size: " + bc.bounds.size);
+        }
 
         // フレーム終了
         FrameFinish();

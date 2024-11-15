@@ -24,9 +24,6 @@ public class World : MonoBehaviour
     [SerializeField] private GameObject objWorldMesh;
     private Mesh worldMesh;
 
-    // 各Vaxelのソースメッシュオブジェクト
-    [SerializeField] private WorldMesh meshBlock;
-
     // プレイヤー
     [SerializeField] private Player player;
 
@@ -35,6 +32,11 @@ public class World : MonoBehaviour
 
     // Shader
     [SerializeField] private ComputeShader worldShader;
+
+    // 各Vaxelのソースメッシュオブジェクト
+    [SerializeField] private WorldMesh meshBlock;
+    [SerializeField] private WorldMesh meshGrass;
+    [SerializeField] private WorldMesh meshStairs;
 
     // [0] 描画するブロックの数 [1][2][3] ブロックのインデックス、頂点の開始位置、頂点インデックスの開始位置
     private ComputeBuffer countsBuff;
@@ -112,9 +114,13 @@ public class World : MonoBehaviour
         sourceMeshTris = new List<int>();
         
         meshBlock.Init();
+        meshGrass.Init();
+        meshStairs.Init();
 
         // ソースメッシュオブジェクトのデータを作成
         meshBlock.SetData(ref worldShader, ref sourceMeshVs, ref sourceMeshUVs, ref sourceMeshTris);
+        meshGrass.SetGrassData(ref worldShader, ref sourceMeshVs, ref sourceMeshUVs, ref sourceMeshTris);
+        meshStairs.SetStairsData(ref worldShader, ref sourceMeshVs, ref sourceMeshUVs, ref sourceMeshTris);
 
         // ソースメッシュオブジェクトのバッファー作成
         sourceMeshVsBuff = new ComputeBuffer(sourceMeshVs.Count, sizeof(float) * 3);
@@ -297,14 +303,6 @@ public class World : MonoBehaviour
         for (int i = 0; i < 3; i++) countsAry[i] = 0;
         countsBuff.SetData(countsAry);
 
-        Debug.Log("Draw Block Count : " + drawBlockCount);
-
-        Debug.Log("Mesh Vs Count : " + meshVsCount);
-        Debug.Log("Mesh Tris Count : " + meshTrisCount);
-
-        Debug.Log("SOURCE_MESH_VS_MAX : " + Constants.SOURCE_MESH_VS_MAX);
-        Debug.Log("SOURCE_MESH_TRIS_MAX : " + Constants.SOURCE_MESH_TRIS_MAX);
-
         // ワールドメッシュの頂点、UV、頂点インデックスを取得
         Vector3[] meshVsAry = new Vector3[meshVsCount];
         Vector2[] meshUVsAry = new Vector2[meshVsCount];
@@ -314,21 +312,11 @@ public class World : MonoBehaviour
         meshUVsBuff.GetData(meshUVsAry);
         meshTrisBuff.GetData(meshTrisAry);
 
-        int verticesCount = meshVsAry.Length;
-        for (int i = 0; i < meshTrisAry.Length; i++)
-        {
-            if (meshTrisAry[i] >= verticesCount)
-            {
-                Debug.Log("Mesh Tris Error : i = " + i + " meshTrisAry[i] = " + meshTrisAry[i]);
-                break;
-            }
-        }
-
         // ワールドメッシュの頂点、UV、頂点インデックスを設定
         worldMesh.Clear();
-        worldMesh.vertices = meshVsAry;
-        worldMesh.uv = meshUVsAry;
-        worldMesh.triangles = meshTrisAry;
+        worldMesh.SetVertices(meshVsAry);
+        worldMesh.SetUVs(0, meshUVsAry);
+        worldMesh.SetTriangles(meshTrisAry, 0);
 
         // ワールドメッシュの更新
         worldMesh.RecalculateTangents();
@@ -512,9 +500,9 @@ public class World : MonoBehaviour
 
         // ワールドメッシュの頂点、UV、頂点インデックスを設定
         worldMesh.Clear();
-        worldMesh.vertices = meshVsAry;
-        worldMesh.uv = meshUVsAry;
-        worldMesh.triangles = meshTrisAry;
+        worldMesh.SetVertices(meshVsAry);
+        worldMesh.SetUVs(0, meshUVsAry);
+        worldMesh.SetTriangles(meshTrisAry, 0);
 
         // ワールドメッシュの更新
         worldMesh.RecalculateTangents();
@@ -528,7 +516,7 @@ public class World : MonoBehaviour
         // ブロックの生成
         int blockUpdate = worldShader.FindKernel("BlockUpdate");
         worldShader.SetBuffer(blockUpdate, "blocksID", blocksIDBuff);
-        
+
         // シェーダーの定数をセット
         Constants.SetShaderConstants(ref worldShader);
 

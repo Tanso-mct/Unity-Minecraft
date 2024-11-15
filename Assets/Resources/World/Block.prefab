@@ -147,7 +147,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 167033e8db2e9374888600294bc9d1c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textureAtlas: {fileID: 2800000, guid: e257a7ec0e6edfc42a9a5807ac07dde5, type: 3}
+  textureAtlas: {fileID: 2800000, guid: 078aecd315234854b8287e5e04e964b1, type: 3}
 --- !u!1 &2132530437049991919
 GameObject:
   m_ObjectHideFlags: 0

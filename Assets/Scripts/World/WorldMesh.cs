@@ -129,4 +129,15 @@ public class WorldMesh : MonoBehaviour
         uv.AddRange(this.uv);
         triangles.AddRange(this.triangles);
     }
+
+    public void SetStairsData(ref ComputeShader shader, ref List<Vector3> vertices, ref List<Vector2> uv, ref List<int> triangles)
+    {
+        shader.SetInt("SOURCE_MESH_STAIRS_FACE_COUNT", squares.Count);
+        shader.SetInt("SOURCE_MESH_STAIRS_VS_INDEX", vertices.Count);
+        shader.SetInt("SOURCE_MESH_STAIRS_TRIS_INDEX", triangles.Count);
+        
+        vertices.AddRange(this.vertices);
+        uv.AddRange(this.uv);
+        triangles.AddRange(this.triangles);
+    }
 }

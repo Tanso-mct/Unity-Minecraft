@@ -24,7 +24,7 @@ public class SquareCombiner : MonoBehaviour
         // 各SquareのUVを設定
         for (int i = 0; i < squaresToCombine.Length; i++)
         {
-            Vector2Int tile = new Vector2Int(i % 5, (textureAtlas.height / 16 - 1) - (int)(i / 5));
+            Vector2Int tile = new Vector2Int(0 % 5, (textureAtlas.height / 16 - 1) - (int)(0 / 5));
 
             Vector2 originUV = new Vector2(tile.x * 16, tile.y * 16);
             originUV.x /= textureAtlas.width;

@@ -26,14 +26,32 @@ float TEXTURE_BLOCK_TILE_V;
 int SOURCE_MESH_BLOCK_FACE_COUNT;
 int SOURCE_MESH_BLOCK_VS_INDEX;
 int SOURCE_MESH_BLOCK_TRIS_INDEX;
+int SOURCE_MESH_BLOCK_FRONT_FACES;
+int SOURCE_MESH_BLOCK_BACK_FACES;
+int SOURCE_MESH_BLOCK_LEFT_FACES;
+int SOURCE_MESH_BLOCK_RIGHT_FACES;
+int SOURCE_MESH_BLOCK_TOP_FACES;
+int SOURCE_MESH_BLOCK_BOTTOM_FACES;
 
 int SOURCE_MESH_GRASS_FACE_COUNT;
 int SOURCE_MESH_GRASS_VS_INDEX;
 int SOURCE_MESH_GRASS_TRIS_INDEX;
+int SOURCE_MESH_GRASS_FRONT_FACES;
+int SOURCE_MESH_GRASS_BACK_FACES;
+int SOURCE_MESH_GRASS_LEFT_FACES;
+int SOURCE_MESH_GRASS_RIGHT_FACES;
+int SOURCE_MESH_GRASS_TOP_FACES;
+int SOURCE_MESH_GRASS_BOTTOM_FACES;
 
 int SOURCE_MESH_STAIRS_FACE_COUNT;
 int SOURCE_MESH_STAIRS_VS_INDEX;
 int SOURCE_MESH_STAIRS_TRIS_INDEX;
+int SOURCE_MESH_STAIRS_FRONT_FACES;
+int SOURCE_MESH_STAIRS_BACK_FACES;
+int SOURCE_MESH_STAIRS_LEFT_FACES;
+int SOURCE_MESH_STAIRS_RIGHT_FACES;
+int SOURCE_MESH_STAIRS_TOP_FACES;
+int SOURCE_MESH_STAIRS_BOTTOM_FACES;
 
 RWStructuredBuffer<float3> sourceMeshVs;
 RWStructuredBuffer<float2> sourceMeshUVs;
@@ -57,7 +75,6 @@ int CheckIsAir(int3 pos)
         {
             return 1;
         }
-        
     }
 
     return 0;
@@ -130,6 +147,56 @@ int GetTrisIndex(int blockId)
     return 0;
 }
 
+int GetFaces(int faceType, int frontFaces, int backFaces, int leftFaces, int rightFaces, int topFaces, int bottomFaces)
+{
+    switch (faceType)
+    {
+        case 0: return frontFaces;
+        case 1: return backFaces;
+        case 2: return leftFaces;
+        case 3: return rightFaces;
+        case 4: return topFaces;
+        case 5: return bottomFaces;
+    }
+
+    return 0;
+}
+
+int GetAmountOfFaces(int blockId, int faceType)
+{
+    switch (blockId)
+    {
+        case 1: // BEDROCK
+        case 2: // DIRT
+            return GetFaces
+            (
+                faceType, 
+                SOURCE_MESH_BLOCK_FRONT_FACES, 
+                SOURCE_MESH_BLOCK_BACK_FACES, 
+                SOURCE_MESH_BLOCK_LEFT_FACES, 
+                SOURCE_MESH_BLOCK_RIGHT_FACES, 
+                SOURCE_MESH_BLOCK_TOP_FACES, 
+                SOURCE_MESH_BLOCK_BOTTOM_FACES
+            );
+
+        case 3: // GRASS_TOP
+        case 4: // GRASS_SIDE
+        case 5: // GRASS_BOTTOM
+            return GetFaces
+            (
+                faceType, 
+                SOURCE_MESH_GRASS_FRONT_FACES, 
+                SOURCE_MESH_GRASS_BACK_FACES, 
+                SOURCE_MESH_GRASS_LEFT_FACES, 
+                SOURCE_MESH_GRASS_RIGHT_FACES, 
+                SOURCE_MESH_GRASS_TOP_FACES, 
+                SOURCE_MESH_GRASS_BOTTOM_FACES
+            );
+    }
+
+    return 0;
+}
+
 [numthreads(8,8,8)]
 void MeshGenerate (uint3 id : SV_DispatchThreadID)
 {
@@ -150,16 +217,24 @@ void MeshGenerate (uint3 id : SV_DispatchThreadID)
         // どれか一つでも空気ブロックがあれば描画対象とする
         int isNeedDraw = isTopNeedDraw + isBottomNeedDraw + isLeftNeedDraw + isRightNeedDraw + isFrontNeedDraw + isBackNeedDraw;
 
+        int drawFaceAmount = 0;
+        drawFaceAmount += GetAmountOfFaces(blocksID[index], 0) * isFrontNeedDraw;
+        drawFaceAmount += GetAmountOfFaces(blocksID[index], 1) * isBackNeedDraw;
+        drawFaceAmount += GetAmountOfFaces(blocksID[index], 2) * isLeftNeedDraw;
+        drawFaceAmount += GetAmountOfFaces(blocksID[index], 3) * isRightNeedDraw;
+        drawFaceAmount += GetAmountOfFaces(blocksID[index], 4) * isTopNeedDraw;
+        drawFaceAmount += GetAmountOfFaces(blocksID[index], 5) * isBottomNeedDraw;
+
         // 描画対象のブロック情報を格納
         if (isNeedDraw > 0)
         {
             InterlockedAdd(counts[0], 1);
 
             int thisVsIndex;
-            InterlockedAdd(counts[1], isNeedDraw * 4, thisVsIndex);
+            InterlockedAdd(counts[1], drawFaceAmount * 4, thisVsIndex);
 
             int thisTrisIndex;
-            InterlockedAdd(counts[2], isNeedDraw * 6, thisTrisIndex);
+            InterlockedAdd(counts[2], drawFaceAmount * 6, thisTrisIndex);
 
             int vsIndex = thisVsIndex;
             int trisIndex = thisTrisIndex;
@@ -168,15 +243,24 @@ void MeshGenerate (uint3 id : SV_DispatchThreadID)
             int meshVsIndex = GetVsIndex(blocksID[index]);
             int meshTrisIndex = GetTrisIndex(blocksID[index]);
             
+            int totalFaceAmount = GetAmountOfFaces(blocksID[index], 0);
+            int faceType = 0;
             for (int i = 0; i < meshFaceCount; i++)
             {
                 int nowDrawing = 0;
-                if (i == 0) nowDrawing = isFrontNeedDraw;
-                else if (i == 1) nowDrawing = isBackNeedDraw;
-                else if (i == 2) nowDrawing = isLeftNeedDraw;
-                else if (i == 3) nowDrawing = isRightNeedDraw;
-                else if (i == 4) nowDrawing = isTopNeedDraw;
-                else if (i == 5) nowDrawing = isBottomNeedDraw;
+
+                if (faceType == 0) nowDrawing = isFrontNeedDraw;
+                else if (faceType == 1) nowDrawing = isBackNeedDraw;
+                else if (faceType == 2) nowDrawing = isLeftNeedDraw;
+                else if (faceType == 3) nowDrawing = isRightNeedDraw;
+                else if (faceType == 4) nowDrawing = isTopNeedDraw;
+                else if (faceType == 5) nowDrawing = isBottomNeedDraw;
+
+                if (i == totalFaceAmount - 1)
+                {
+                    faceType++;
+                    totalFaceAmount += GetAmountOfFaces(blocksID[index], faceType);
+                }
 
                 if (nowDrawing == 1)
                 {

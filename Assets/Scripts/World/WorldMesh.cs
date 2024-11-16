@@ -113,6 +113,13 @@ public class WorldMesh : MonoBehaviour
         shader.SetInt("SOURCE_MESH_BLOCK_FACE_COUNT", squares.Count);
         shader.SetInt("SOURCE_MESH_BLOCK_VS_INDEX", vertices.Count);
         shader.SetInt("SOURCE_MESH_BLOCK_TRIS_INDEX", triangles.Count);
+
+        shader.SetInt("SOURCE_MESH_BLOCK_FRONT_FACES", 1);
+        shader.SetInt("SOURCE_MESH_BLOCK_BACK_FACES", 1);
+        shader.SetInt("SOURCE_MESH_BLOCK_LEFT_FACES", 1);
+        shader.SetInt("SOURCE_MESH_BLOCK_RIGHT_FACES", 1);
+        shader.SetInt("SOURCE_MESH_BLOCK_TOP_FACES", 1);
+        shader.SetInt("SOURCE_MESH_BLOCK_BOTTOM_FACES", 1);
         
         vertices.AddRange(this.vertices);
         uv.AddRange(this.uv);
@@ -124,6 +131,13 @@ public class WorldMesh : MonoBehaviour
         shader.SetInt("SOURCE_MESH_GRASS_FACE_COUNT", squares.Count);
         shader.SetInt("SOURCE_MESH_GRASS_VS_INDEX", vertices.Count);
         shader.SetInt("SOURCE_MESH_GRASS_TRIS_INDEX", triangles.Count);
+
+        shader.SetInt("SOURCE_MESH_GRASS_FRONT_FACES", 1);
+        shader.SetInt("SOURCE_MESH_GRASS_BACK_FACES", 1);
+        shader.SetInt("SOURCE_MESH_GRASS_LEFT_FACES", 1);
+        shader.SetInt("SOURCE_MESH_GRASS_RIGHT_FACES", 1);
+        shader.SetInt("SOURCE_MESH_GRASS_TOP_FACES", 1);
+        shader.SetInt("SOURCE_MESH_GRASS_BOTTOM_FACES", 1);
         
         vertices.AddRange(this.vertices);
         uv.AddRange(this.uv);
@@ -135,6 +149,13 @@ public class WorldMesh : MonoBehaviour
         shader.SetInt("SOURCE_MESH_STAIRS_FACE_COUNT", squares.Count);
         shader.SetInt("SOURCE_MESH_STAIRS_VS_INDEX", vertices.Count);
         shader.SetInt("SOURCE_MESH_STAIRS_TRIS_INDEX", triangles.Count);
+
+        shader.SetInt("SOURCE_MESH_STAIRS_FRONT_FACES", 2);
+        shader.SetInt("SOURCE_MESH_STAIRS_BACK_FACES", 1);
+        shader.SetInt("SOURCE_MESH_STAIRS_LEFT_FACES", 2);
+        shader.SetInt("SOURCE_MESH_STAIRS_RIGHT_FACES", 2);
+        shader.SetInt("SOURCE_MESH_STAIRS_TOP_FACES", 2);
+        shader.SetInt("SOURCE_MESH_STAIRS_BOTTOM_FACES", 1);
         
         vertices.AddRange(this.vertices);
         uv.AddRange(this.uv);

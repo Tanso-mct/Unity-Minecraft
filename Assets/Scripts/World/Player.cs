@@ -534,8 +534,27 @@ public class Player : MonoBehaviour
 
     public void Transfer()
     {
-        pos += hitBoxAdmin.GetMoveVec(hitBoxId);
-        transform.position = pos;
+        // pos += hitBoxAdmin.GetMoveVec(hitBoxId);
+        // transform.position = pos;
+        Rigidbody rb = gameObject.GetComponent<Rigidbody>();;
+
+        // ÉvÉåÉCÉÑÅ[ÇÃà⁄ìÆ
+        if (Input.GetKey(KeyCode.H))
+        {
+            rb.AddForce(new Vector3(0, 0, 1), ForceMode.Impulse);
+        }
+        else if (Input.GetKey(KeyCode.J))
+        {
+            rb.AddForce(new Vector3(0, 0, -1), ForceMode.Impulse);
+        }
+        else if (Input.GetKey(KeyCode.K))
+        {
+            rb.AddForce(new Vector3(1, 0, 0), ForceMode.Impulse);
+        }
+        else if (Input.GetKey(KeyCode.L))
+        {
+            rb.AddForce(new Vector3(-1, 0, 0), ForceMode.Impulse);
+        }
     }
 
     public void FrameStart()
@@ -563,18 +582,33 @@ public class Player : MonoBehaviour
 
     }
 
-    void OnTriggerEnter(Collider collider)
+    // void OnTriggerEnter(Collider collider)
+    // {
+    //     Debug.Log(collider.gameObject.name);
+    // }
+
+    // void OnTriggerStay(Collider collider)
+    // {
+    //     Debug.Log(collider.gameObject.name);
+    // }
+
+    // void OnTriggerExit(Collider collider)
+    // {
+    //     Debug.Log(collider.gameObject.name);
+    // }
+
+    void OnCollisionEnter(Collision collision)
     {
-        // Debug.Log(collider.gameObject.name);
+        Debug.Log("Collision Enter with " + collision.gameObject.name);
     }
 
-    void OnTriggerStay(Collider collider)
+    void OnCollisionStay(Collision collision)
     {
-        Debug.Log(collider.gameObject.name);
+        Debug.Log("Collision Stay with " + collision.gameObject.name);
     }
 
-    void OnTriggerExit(Collider collider)
+    void OnCollisionExit(Collision collision)
     {
-        // Debug.Log(collider.gameObject.name);
+        Debug.Log("Collision Exit with " + collision.gameObject.name);
     }
 }

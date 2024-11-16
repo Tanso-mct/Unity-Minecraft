@@ -23,6 +23,7 @@ public class World : MonoBehaviour
     // ワールドメッシュオブジェクト
     [SerializeField] private GameObject objWorldMesh;
     private Mesh worldMesh;
+    private MeshCollider worldMeshCollider;
     private Material worldMaterial;
 
     // プレイヤー
@@ -143,6 +144,8 @@ public class World : MonoBehaviour
         Texture meshAtlasTexture = null;
         SupportFunc.LoadTexture(ref meshAtlasTexture, Constants.TEXTURE_ATLAS_BLOCK);
         objWorldMesh.GetComponent<MeshRenderer>().material.mainTexture = meshAtlasTexture;
+
+        worldMeshCollider = objWorldMesh.GetComponent<MeshCollider>();
 
         // [0] 描画するブロックの数 [1][2] 頂点の開始位置、頂点インデックスの開始位置を示すバッファー
         countsBuff = new ComputeBuffer(3, sizeof(int));
@@ -328,6 +331,10 @@ public class World : MonoBehaviour
         worldMesh.RecalculateBounds();
         worldMesh.Optimize();
 
+        // ワールドメッシュのコライダーを更新
+        worldMeshCollider.sharedMesh = null;
+        worldMeshCollider.sharedMesh = worldMesh;
+
         // プレイヤーの生成及び配置
         player.Create();
     }
@@ -512,6 +519,10 @@ public class World : MonoBehaviour
         worldMesh.RecalculateNormals();
         worldMesh.RecalculateBounds();
         worldMesh.Optimize();
+
+        // ワールドメッシュのコライダーを更新
+        worldMeshCollider.sharedMesh = null;
+        worldMeshCollider.sharedMesh = worldMesh;
 
     }
 

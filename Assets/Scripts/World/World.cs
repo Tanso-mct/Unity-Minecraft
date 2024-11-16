@@ -23,6 +23,7 @@ public class World : MonoBehaviour
     // ワールドメッシュオブジェクト
     [SerializeField] private GameObject objWorldMesh;
     private Mesh worldMesh;
+    private Material worldMaterial;
 
     // プレイヤー
     [SerializeField] private Player player;

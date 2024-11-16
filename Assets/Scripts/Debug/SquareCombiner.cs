@@ -1,23 +1,33 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class SquareCombiner : MonoBehaviour
 {
-    public GameObject[] squaresToCombine;
+    public GameObject[] squaresToCombine1;
+    public GameObject[] squaresToCombine2;
 
     public Texture2D textureAtlas;
 
+    List<GameObject> children;
+
     void Start()
     {
-        gameObject.AddComponent<MeshFilter>();
-        gameObject.AddComponent<MeshRenderer>();
+        children = new List<GameObject>();
+        children.Add(new GameObject("CombinedSquare"));
+        children.Add(new GameObject("CombinedSquare"));
 
-        gameObject.AddComponent<MeshFilter>();
-        gameObject.AddComponent<MeshRenderer>();
+        for (int i = 0; i < children.Count; i++)
+        {
+            children[i].transform.parent = transform;
+            children[i].AddComponent<MeshFilter>();
+            children[i].AddComponent<MeshRenderer>();
+        }
 
-        CombineSquares();
+        CombineSquares(0, ref squaresToCombine1);
+        CombineSquares(1, ref squaresToCombine2);
     }
 
-    void CombineSquares()
+    void CombineSquares(int meshIndex, ref GameObject[] squaresToCombine)
     {
         // 新しいメッシュを作成
         Mesh combinedMesh = new Mesh();
@@ -67,8 +77,11 @@ public class SquareCombiner : MonoBehaviour
         combinedMesh.CombineMeshes(combine);
 
         // 結合したメッシュを適用
-        GetComponent<MeshFilter>().sharedMesh = combinedMesh;
-        GetComponent<MeshRenderer>().material.mainTexture = textureAtlas;
+        MeshFilter meshFilter = children[meshIndex].GetComponent<MeshFilter>();
+        MeshRenderer meshRenderer = children[meshIndex].GetComponent<MeshRenderer>();
+
+        meshFilter.mesh = combinedMesh;
+        meshRenderer.material.mainTexture = textureAtlas;
 
         // 元のSquareを非表示にする
         foreach (GameObject square in squaresToCombine)
@@ -81,35 +94,35 @@ public class SquareCombiner : MonoBehaviour
         Vector2[] uv = combinedMesh.uv;
         int[] triangles = combinedMesh.triangles;
 
-        // デバッグ用にログ出力
-        Debug.Log("Vertices: " + vertices.Length);
-        for (int i = 0; i < vertices.Length; i++)
-        {
-            Debug.Log("Vertex " + i + ": " + vertices[i]);
-        }
+        // // デバッグ用にログ出力
+        // Debug.Log("Vertices: " + vertices.Length);
+        // for (int i = 0; i < vertices.Length; i++)
+        // {
+        //     Debug.Log("Vertex " + i + ": " + vertices[i]);
+        // }
         
-        Debug.Log("UVs: " + uv.Length);
-        for (int i = 0; i < uv.Length; i++)
-        {
-            Debug.Log("UV " + i + ": " + uv[i]);
-        }
+        // Debug.Log("UVs: " + uv.Length);
+        // for (int i = 0; i < uv.Length; i++)
+        // {
+        //     Debug.Log("UV " + i + ": " + uv[i]);
+        // }
 
-        Debug.Log("Triangles: " + triangles.Length);
-        for (int i = 0; i < triangles.Length; i++)
-        {
-            Debug.Log("Triangle " + i + ": " + triangles[i]);
-        }
+        // Debug.Log("Triangles: " + triangles.Length);
+        // for (int i = 0; i < triangles.Length; i++)
+        // {
+        //     Debug.Log("Triangle " + i + ": " + triangles[i]);
+        // }
 
         // メッシュを移動させる
-        Vector3 offset = new Vector3(2.0f, 0.0f, 0.0f); // 移動量を設定
-        for (int i = 0; i < vertices.Length; i++)
-        {
-            vertices[i] += offset;
-        }
-        combinedMesh.vertices = vertices;
+        // Vector3 offset = new Vector3(2.0f, 0.0f, 0.0f); // 移動量を設定
+        // for (int i = 0; i < vertices.Length; i++)
+        // {
+        //     vertices[i] += offset;
+        // }
+        // combinedMesh.vertices = vertices;
         
-        combinedMesh.RecalculateBounds(); // 境界を再計算
         combinedMesh.RecalculateNormals(); // 法線を再計算
         combinedMesh.RecalculateTangents(); // 接線を再計算
+        combinedMesh.Optimize();
     }
 }

@@ -33,6 +33,10 @@ public class Player : MonoBehaviour
 
     // プレイヤーのカメラ
     [SerializeField] public Camera cam;
+
+    // 当たり判定管理クラス
+    [SerializeField] private McHitBoxAdmin hitBoxAdmin;
+    private int hitBoxId;
     
     // プレイヤーのリーチ
     [SerializeField] private float reach = 5f;
@@ -46,6 +50,10 @@ public class Player : MonoBehaviour
 
     // プレイヤーの回転角度
     private Vector2 rot;
+    public Vector2 Rot
+    {
+        get { return rot; }
+    }
 
     // プレイヤーの現在座標
     private Vector3 pos;
@@ -171,6 +179,9 @@ public class Player : MonoBehaviour
         // フレーム内で設置、破壊したブロックのデータを初期化。Worldクラスで管理する。
         frameSetBlocks = new List<Vector4>();
         frameDestroyBlocks = new List<Vector4>();
+
+        // プレイヤーの当たり判定を設定
+        hitBoxId = hitBoxAdmin.RegisterHitBox(pos, bc.size, Vector3.zero);
     }
 
     public void Create()
@@ -318,11 +329,15 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void Transfer()
+    private void UpdateHitBox()
     {
         // プレイヤーの移動を行う。当たり判定もここで行う
-        gameObject.transform.position += movement;
-        pos += movement;
+        // gameObject.transform.position += movement;
+        // pos += movement;
+
+        // プレイヤーの当たり判定を更新
+        hitBoxAdmin.UpdatePos(hitBoxId, pos);
+        hitBoxAdmin.UpdateMoveVec(hitBoxId, movement);
     }
 
     private void Attack(ref List<Vector4> targetBlocks)
@@ -504,7 +519,7 @@ public class Player : MonoBehaviour
         Use(ref targetBlocks);
 
         // プレイヤーの移動
-        Transfer();
+        UpdateHitBox();
 
         if (Input.GetKeyDown(KeyCode.G))
         {
@@ -515,6 +530,12 @@ public class Player : MonoBehaviour
 
         // フレーム終了
         FrameFinish();
+    }
+
+    public void Transfer()
+    {
+        pos += hitBoxAdmin.GetMoveVec(hitBoxId);
+        transform.position = pos;
     }
 
     public void FrameStart()

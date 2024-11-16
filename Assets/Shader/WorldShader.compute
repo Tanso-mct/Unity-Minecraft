@@ -1,6 +1,7 @@
 #pragma kernel MeshGenerate
 #pragma kernel BlockUpdate
 #pragma kernel RaycastAtBlock
+#pragma kernel HitBox
 
 int CHUCK_SIZE;
 int WORLD_SIZE;
@@ -80,17 +81,22 @@ int CheckIsAir(int3 pos)
     return 0;
 }
 
-float3 ToCoordsIntConvert(int3 pos)
+float3 ToCoordsConvert(int3 pos)
 {
     return float3((float)pos.x - WORLD_HALF_SIZE, (float)pos.y, (float)pos.z - WORLD_HALF_SIZE);
 }
 
-float2 GetUVFromID(int blockId)
+int3 ToPosConvert(float3 pos)
+{
+    return int3((int)pos.x + WORLD_HALF_SIZE, (int)pos.y, (int)pos.z + WORLD_HALF_SIZE);
+}
+
+float2 GetUVFromID(int blockIndex)
 {
     float2 rtValue = float2
     (
-        (blockId - 1) % 5 * TEXTURE_BLOCK_TILE_U, 
-        (int)((blockId - 1) / 5) * TEXTURE_BLOCK_TILE_V
+        (blockIndex - 1) % 5 * TEXTURE_BLOCK_TILE_U, 
+        (int)((blockIndex - 1) / 5) * TEXTURE_BLOCK_TILE_V
     );
 
     return rtValue;
@@ -197,6 +203,44 @@ int GetAmountOfFaces(int blockId, int faceType)
     return 0;
 }
 
+int GetHitboxType(int blockId)
+{
+    switch (blockId)
+    {
+        // Normal Block
+        case 1: // BEDROCK
+        case 2: // DIRT
+        case 3: // GRASS_TOP
+        case 4: // GRASS_SIDE
+        case 5: // GRASS_BOTTOM
+            return 10;
+    }
+
+    return 10;
+}
+
+float3 GetHitboxOrigin(int hitboxType, float3 blockCoords)
+{
+    switch (hitboxType)
+    {
+        case 10: // Normal Block
+            return float3(blockCoords.x - 0.5f, blockCoords.y - 0.5f, blockCoords.z - 0.5f);
+    }
+
+    return float3(0, 0, 0);
+}
+
+float3 GetHitboxOpposite(int hitboxType, float3 blockCoords)
+{
+    switch (hitboxType)
+    {
+        case 10: // Normal Block
+            return float3(blockCoords.x + 0.5f, blockCoords.y + 0.5f, blockCoords.z + 0.5f);
+    }
+
+    return float3(0, 0, 0);
+}
+
 [numthreads(8,8,8)]
 void MeshGenerate (uint3 id : SV_DispatchThreadID)
 {
@@ -265,7 +309,7 @@ void MeshGenerate (uint3 id : SV_DispatchThreadID)
                 if (nowDrawing == 1)
                 {
                     // ブロックの座標を変換
-                    float3 blockCoords = ToCoordsIntConvert(voxel);
+                    float3 blockCoords = ToCoordsConvert(voxel);
 
                     for (int j = 0; j < 4; j++)
                     {
@@ -334,6 +378,9 @@ void RaycastAtBlock (uint3 id : SV_DispatchThreadID)
     if (rayFloatPart.x >= 0.5) blockPos.x += 1;
     if (rayFloatPart.y >= 0.5) blockPos.y += 1;
     if (rayFloatPart.z >= 0.5) blockPos.z += 1;
+    if (rayFloatPart.x <= -0.5) blockPos.x -= 1;
+    if (rayFloatPart.y <= -0.5) blockPos.y -= 1;
+    if (rayFloatPart.z <= -0.5) blockPos.z -= 1;
 
     raycastBlocks[index].x = blockPos.x;
     raycastBlocks[index].y = blockPos.y;
@@ -343,20 +390,266 @@ void RaycastAtBlock (uint3 id : SV_DispatchThreadID)
 
 RWStructuredBuffer<float3> boxPos; // ボックスの底面の中心座標
 RWStructuredBuffer<float3> boxSize; // ボックスのサイズ
-RWStructuredBuffer<float> hitSide; // ヒットした面 543210の6桁の数値でそれぞれの桁が 5:前 4:後 3:左 2:右 1:上 0:下
+RWStructuredBuffer<float3> moveVec; // ボックスの移動ベクトル
 
-[numthreads(8,1,1)]
-void GetHitBlock (uint3 id : SV_DispatchThreadID)
+RWStructuredBuffer<float3> debug1;
+RWStructuredBuffer<float3> debug2;
+
+// ヒットした面 
+// 特別なブロックとは当たっていない:0, 水:1, 溶岩:2
+RWStructuredBuffer<int> hitBlockType;
+
+[numthreads(1,1,1)]
+void HitBox (uint3 id : SV_DispatchThreadID)
 {
     uint index = id.x;
 
+    // Originのブロック座標を取得
     float3 boxOrigin = boxPos[index];
     boxOrigin.x -= boxSize[index].x / 2;
     boxOrigin.z -= boxSize[index].z / 2;
 
+    float3 boxOriginFloatPart = boxOrigin - float3(int3(boxOrigin));
+
+    int3 originBlock = int3(boxOrigin);
+    if (boxOriginFloatPart.x >= 0.5) originBlock.x += 1;
+    if (boxOriginFloatPart.y >= 0.5) originBlock.y += 1;
+    if (boxOriginFloatPart.z >= 0.5) originBlock.z += 1;
+    if (boxOriginFloatPart.x <= -0.5) originBlock.x -= 1;
+    if (boxOriginFloatPart.y <= -0.5) originBlock.y -= 1;
+    if (boxOriginFloatPart.z <= -0.5) originBlock.z -= 1;
+
+    // Oppositeのブロック座標を取得
     float3 boxOpposite = boxPos[index];
     boxOpposite.x += boxSize[index].x / 2;
     boxOpposite.y += boxSize[index].y;
     boxOpposite.z += boxSize[index].z / 2;
-    
+
+    float3 boxOppositeFloatPart = boxOpposite - float3(int3(boxOpposite));
+
+    int3 oppositeBlock = int3(boxOpposite);
+    if (boxOppositeFloatPart.x >= 0.5) oppositeBlock.x += 1;
+    if (boxOppositeFloatPart.y >= 0.5) oppositeBlock.y += 1;
+    if (boxOppositeFloatPart.z >= 0.5) oppositeBlock.z += 1;
+    if (boxOppositeFloatPart.x <= -0.5) oppositeBlock.x -= 1;
+    if (boxOppositeFloatPart.y <= -0.5) oppositeBlock.y -= 1;
+    if (boxOppositeFloatPart.z <= -0.5) oppositeBlock.z -= 1;
+
+    debug1[index] = float3(originBlock);
+    debug1[index + 1] = float3(oppositeBlock);
+
+    // 現在の移動ベクトルを格納
+    float3 move = moveVec[index];
+
+    // 各方向の当たるブロックのヒットボックスを格納
+    int frontHitboxType = 0;
+    int backHitboxType = 0;
+    int leftHitboxType = 0;
+    int rightHitboxType = 0;
+    int topHitboxType = 0;
+    int bottomHitboxType = 0;
+
+    // 特殊ブロックがあるかどうか
+    bool isWater = false;
+    bool isLava = false;
+
+    int debugIndex = index;
+
+    // OriginとOppositeから当たる可能性があるブロックらに対して処理を行う
+    // 各方向の当たるブロックのヒットボックスの種類を取得
+    for (int i = originBlock.x; i < oppositeBlock.x + 1; i++)
+    {
+        for (int j = originBlock.y; j < oppositeBlock.y + 1; j++)
+        {
+            for (int k = originBlock.z; k < oppositeBlock.z + 1; k++)
+            {
+                int3 blockPos = ToPosConvert(int3(i, j, k));
+
+                debug2[index + debugIndex] = float3((float)blockPos.x, (float)blockPos.y, (float)blockPos.z);
+                debugIndex++;
+
+                // // ブロックがワールド範囲内かチェック
+                // if (blockPos.x >= 0 && blockPos.x < WORLD_SIZE &&
+                //     blockPos.y >= 0 && blockPos.y < WORLD_HEIGHT &&
+                //     blockPos.z >= 0 && blockPos.z < WORLD_SIZE)
+                // {
+                    
+                //     // ブロックのIDを取得
+                //     int blockID = blocksID[blockPos.x + blockPos.y * WORLD_SIZE + blockPos.z * WORLD_HEIGHT * WORLD_SIZE];
+
+                //     // ブロックが空気ブロックでない場合処理を行う
+                //     if (blockID != 0)
+                //     {
+                //         // ブロックの座標を取得
+                //         float3 blockCoords = float3((float)x, (float)y, (float)z);
+
+                //         // ブロックのヒットボックスの種類を取得
+                //         int hitboxType = GetHitboxType(blockID);
+
+                //         // 移動後のボックスのOriginとOppositeを取得
+                //         float3 newBoxOrigin = boxOrigin + move;
+                //         float3 newBoxOpposite = boxOpposite + move;
+
+                //         // ブロックのヒットボックスのOriginとOppositeを取得
+                //         float3 hitboxOrigin = GetHitboxOrigin(blockID, blockCoords);
+                //         float3 hitboxOpposite = GetHitboxOpposite(blockID, blockCoords);
+
+                //         if 
+                //         (
+                //             newBoxOrigin.x <= hitboxOpposite.x + 0.5 && newBoxOpposite.x >= hitboxOrigin.x - 0.5 &&
+                //             newBoxOrigin.y <= hitboxOpposite.y + 0.5 && newBoxOpposite.y >= hitboxOrigin.y - 0.5 &&
+                //             newBoxOrigin.z <= hitboxOpposite.z + 0.5 && newBoxOpposite.z >= hitboxOrigin.z - 0.5
+                //         ){
+                //             // このヒットボックスがどの方面に当たるかを判定
+                //             if (y == originBlock.y)
+                //             {
+                //                 bottomHitboxType = (hitboxType > bottomHitboxType) ? hitboxType : bottomHitboxType;
+                //             }
+                //             else if (y == oppositeBlock.y)
+                //             {
+                //                 topHitboxType = (hitboxType > topHitboxType) ? hitboxType : topHitboxType;
+                //             }
+                //             else if (x == originBlock.x)
+                //             {
+                //                 leftHitboxType = (hitboxType > leftHitboxType) ? hitboxType : leftHitboxType;
+                //             }
+                //             else if (x == oppositeBlock.x)
+                //             {
+                //                 rightHitboxType = (hitboxType > rightHitboxType) ? hitboxType : rightHitboxType;
+                //             }
+                //             else if (z == originBlock.z)
+                //             {
+                //                 frontHitboxType = (hitboxType > frontHitboxType) ? hitboxType : frontHitboxType;
+                //             }
+                //             else if (z == oppositeBlock.z)
+                //             {
+                //                 backHitboxType = (hitboxType > backHitboxType) ? hitboxType : backHitboxType;
+                //             }
+
+                //             // 特殊ブロックがあるかどうかを判定
+                //             // if (blockID == 6) isWater = true;
+                //             // else if (blockID == 7) isLava = true;
+                //         }
+                //     }
+                // }
+            }
+        }
+    }
+
+    // // 移動ベクトルから当たる可能性のある方向を取得
+    // int3 hitDirection = int3(0, 0, 0);
+
+    // if (move.x > 0) hitDirection.x = 1;
+    // else if (move.x < 0) hitDirection.x = -1;
+
+    // if (move.y > 0) hitDirection.y = 1;
+    // else if (move.y < 0) hitDirection.y = -1;
+
+    // if (move.z > 0) hitDirection.z = 1;
+    // else if (move.z < 0) hitDirection.z = -1;
+
+    // // 各方向において移動ベクトルを変更
+
+    // // 現在のブロックの座標を取得
+    // float3 boxPosFloatPart = boxPos[index] - float3(int3(boxPos[index]));
+
+    // int3 boxBlock = int3(boxPos[index]);
+    // boxBlock.x += boxPosFloatPart.x >= 0.5 ? 1 : 0;
+    // boxBlock.y += boxPosFloatPart.y >= 0.5 ? 1 : 0;
+    // boxBlock.z += boxPosFloatPart.z >= 0.5 ? 1 : 0;
+
+    // float boxFrontZ = boxPos[index].z - boxSize[index].z / 2;
+    // float boxBackZ = boxPos[index].z + boxSize[index].z / 2;
+    // float boxLeftX = boxPos[index] - boxSize[index].x / 2;
+    // float boxRightX = boxPos[index] + boxSize[index].x / 2;
+    // float boxTopY = boxPos[index] + boxSize[index].y;
+    // float boxBottomY = boxPos[index];
+
+    // // X軸方向
+    // if (hitDirection.x == 1)
+    // {
+    //     float3 hitbox = GetHitboxOrigin
+    //     (
+    //         rightHitboxType, 
+    //         float3(boxBlock.x + 1, boxBlock.y, boxBlock.z)
+    //     );
+
+    //     if (boxRightX > hitbox.x)
+    //     {
+    //         move.x -= boxRightX - hitbox.x;
+    //     }
+    // }
+    // else if (hitDirection.x == -1)
+    // {
+    //     float3 hitbox = GetHitboxOpposite
+    //     (
+    //         leftHitboxType, 
+    //         float3(boxBlock.x - 1, boxBlock.y, boxBlock.z)
+    //     );
+
+    //     if (boxLeftX < hitbox.x)
+    //     {
+    //         move.x += hitbox.x - boxLeftX;
+    //     }
+    // }
+
+    // // Y軸方向
+    // if (hitDirection.y == 1)
+    // {
+    //     float3 hitbox = GetHitboxOrigin
+    //     (
+    //         topHitboxType, 
+    //         float3(boxBlock.x, boxBlock.y + 1, boxBlock.z)
+    //     );
+
+    //     if (boxTopY > hitbox.y)
+    //     {
+    //         move.y -= boxTopY - hitbox.y;
+    //     }
+    // }
+    // else if (hitDirection.y == -1)
+    // {
+    //     float3 hitbox = GetHitboxOpposite
+    //     (
+    //         bottomHitboxType, 
+    //         float3(boxBlock.x, boxBlock.y - 1, boxBlock.z)
+    //     );
+
+    //     if (boxBottomY < hitbox.y)
+    //     {
+    //         move.y += hitbox.y - boxBottomY;
+    //     }
+    // }
+
+    // // Z軸方向
+    // if (hitDirection.z == 1)
+    // {
+    //     float3 hitbox = GetHitboxOrigin
+    //     (
+    //         backHitboxType, 
+    //         float3(boxBlock.x, boxBlock.y, boxBlock.z + 1)
+    //     );
+
+    //     if (boxBackZ > hitbox.z)
+    //     {
+    //         move.z -= boxBackZ - hitbox.z;
+    //     }
+    // }
+    // else if (hitDirection.z == -1)
+    // {
+    //     float3 hitbox = GetHitboxOpposite
+    //     (
+    //         frontHitboxType, 
+    //         float3(boxBlock.x, boxBlock.y, boxBlock.z - 1)
+    //     );
+
+    //     if (boxFrontZ < hitbox.z)
+    //     {
+    //         move.z += hitbox.z - boxFrontZ;
+    //     }
+    // }
+
+    // // 結果を格納
+    // moveVec[index] = move;
+    // hitBlockType[index] = (isWater) ? 1 : (isLava) ? 2 : 0;
 }

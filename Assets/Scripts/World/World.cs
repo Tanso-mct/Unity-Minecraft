@@ -31,6 +31,9 @@ public class World : MonoBehaviour
     // Vaxelの管理クラス
     private VaxelAdmin vaxelAdmin;
 
+    // HitBoxの管理クラス
+    [SerializeField] private McHitBoxAdmin hitboxAdmin;
+
     // Shader
     [SerializeField] private ComputeShader worldShader;
 
@@ -267,7 +270,7 @@ public class World : MonoBehaviour
             }
 
             // 横長の柱を生成
-            for (int x = Constants.WORLD_HALF_SIZE + 1; x < Constants.WORLD_HALF_SIZE + 10; x++)
+            for (int x = Constants.WORLD_HALF_SIZE + 2; x < Constants.WORLD_HALF_SIZE + 10; x++)
             {
                 int y = 5;
                 int z = Constants.WORLD_HALF_SIZE;
@@ -326,7 +329,6 @@ public class World : MonoBehaviour
         worldMesh.Optimize();
 
         // プレイヤーの生成及び配置
-        player.Init();
         player.Create();
     }
 
@@ -371,9 +373,8 @@ public class World : MonoBehaviour
     // X = Block.x, Y = Block.y, Z = Block.z W = BlockType
     private List<Vector4> RaycastAtBlock()
     {
-        Vector3 origin = player.Pos;
+        Vector3 origin = player.cam.transform.position;
         origin.x += Constants.WORLD_HALF_SIZE;
-        origin.y += 1.75f;
         origin.z += Constants.WORLD_HALF_SIZE;
 
         Vector3 direction = player.cam.transform.forward;
@@ -555,6 +556,94 @@ public class World : MonoBehaviour
 
     }
 
+    private void HitBoxUpdate()
+    {
+        // プレイヤーのヒットボックスの更新
+        int hitBox = worldShader.FindKernel("HitBox");
+        worldShader.SetBuffer(hitBox, "blocksID", blocksIDBuff);
+
+        // シェーダーの定数をセット
+        Constants.SetShaderConstants(ref worldShader);
+
+        // 配列の生成
+        hitboxAdmin.CreateAry();
+
+        // 各バッファを作成
+        ComputeBuffer boxPosBuff = new ComputeBuffer(hitboxAdmin.GetHitBoxAmount(), sizeof(float) * 3);
+        ComputeBuffer boxSizeBuff = new ComputeBuffer(hitboxAdmin.GetHitBoxAmount(), sizeof(float) * 3);
+        ComputeBuffer moveVecBuff = new ComputeBuffer(hitboxAdmin.GetHitBoxAmount(), sizeof(float) * 3);
+        ComputeBuffer hitBlockTypeBuff = new ComputeBuffer(hitboxAdmin.GetHitBoxAmount(), sizeof(int));
+
+        // Debug用バッファ
+        ComputeBuffer debugBuff = new ComputeBuffer(500, sizeof(float) * 3);
+        ComputeBuffer debugBuff2 = new ComputeBuffer(500, sizeof(float) * 3);
+
+        Vector3[] debugAry1 = new Vector3[500];
+        Vector3[] debugAry2 = new Vector3[500];
+
+        for (int i = 0; i < 500; i++)
+        {
+            debugAry1[i] = Vector3.zero;
+            debugAry2[i] = Vector3.zero;
+        }
+
+        debugBuff.SetData(debugAry1);
+        debugBuff2.SetData(debugAry2);
+
+        worldShader.SetBuffer(hitBox, "debug1", debugBuff);
+        worldShader.SetBuffer(hitBox, "debug2", debugBuff2);
+
+        // データをセット
+        boxPosBuff.SetData(hitboxAdmin.boxPosAry);
+        boxSizeBuff.SetData(hitboxAdmin.boxSizeAry);
+        moveVecBuff.SetData(hitboxAdmin.moveVecAry);
+
+        // バッファーのセット
+        worldShader.SetBuffer(hitBox, "boxPos", boxPosBuff);
+        worldShader.SetBuffer(hitBox, "boxSize", boxSizeBuff);
+        worldShader.SetBuffer(hitBox, "moveVec", moveVecBuff);
+        worldShader.SetBuffer(hitBox, "hitBlockType", hitBlockTypeBuff);
+
+        int threadGroupsX = Mathf.CeilToInt(hitboxAdmin.GetHitBoxAmount() / 8.0f);
+        int threadGroupsY = Mathf.CeilToInt(1 / 8.0f);
+        int threadGroupsZ = Mathf.CeilToInt(1 / 8.0f);
+
+        // ヒットボックスの更新
+        worldShader.Dispatch(hitBox, 1, 1, 1);
+
+        // データの取得
+        moveVecBuff.GetData(hitboxAdmin.moveVecAry);
+        hitBlockTypeBuff.GetData(hitboxAdmin.hitBlockTypeAry);
+
+        debugBuff.GetData(debugAry1);
+        debugBuff2.GetData(debugAry2);
+
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            Debug.Log("====================================");
+
+            Debug.Log("Amount : " + hitboxAdmin.GetHitBoxAmount());
+
+            Debug.Log("Debug 1 [0] : " + debugAry1[0]);
+            Debug.Log("Debug 1 [1] : " + debugAry1[1]);
+
+            for (int i = 0; i < 9; i++)
+            {
+                Debug.Log("Debug 2 [" + i + "] : " + debugAry2[i]);
+            }
+            
+        }
+
+        // バッファーの解放
+        boxPosBuff.Release();
+        boxSizeBuff.Release();
+        moveVecBuff.Release();
+        hitBlockTypeBuff.Release();
+
+        debugBuff.Release();
+        debugBuff2.Release();
+    }
+
     public void Execute()
     {
         // プレイヤーの実行。Raycastの結果を送信
@@ -571,6 +660,13 @@ public class World : MonoBehaviour
 
         // アイテムの更新
         ItemUpdate();
+
+        // 当たり判定の更新
+        HitBoxUpdate();
+
+        // プレイヤーの位置更新
+        player.Transfer();
+        
     }
 
     void OnDestroy()

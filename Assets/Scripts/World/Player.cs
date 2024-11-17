@@ -65,6 +65,9 @@ public class Player : MonoBehaviour
     // プレイヤーのBoxCollider
     private BoxCollider bc;
 
+    // プレイヤーのRigidbody
+    private Rigidbody rb;
+
     // プレイヤーの現在のスピード
     private float speed = 0.0f;
 
@@ -137,6 +140,9 @@ public class Player : MonoBehaviour
 
         // プレイヤーのBoxColliderを取得
         bc = GetComponent<BoxCollider>();
+
+        // プレイヤーのRigidbodyを取得
+        rb = GetComponent<Rigidbody>();
 
         // カーソルをロック
         McControls.CursorLock(true);
@@ -323,9 +329,9 @@ public class Player : MonoBehaviour
 
     private void Jump()
     {
-        if (McControls.IsKey(Constants.CONTROL_JUMP) && isGrounded)
+        if (McControls.IsKeyDown(Constants.CONTROL_JUMP) && isGrounded)
         {
-            
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
     }
 
@@ -416,6 +422,81 @@ public class Player : MonoBehaviour
         }
     }
 
+    private bool IsBlockInPlayer(Vector4 target)
+    {
+        Vector3 boxOrigin = new Vector3
+        (
+            pos.x - bc.size.x / 2, pos.y, pos.z - bc.size.z / 2
+        );
+
+        Vector3 boxOriginFloatPart = new Vector3
+        (
+            boxOrigin.x - (float)((int)boxOrigin.x),
+            boxOrigin.y - (float)((int)boxOrigin.y),
+            boxOrigin.z - (float)((int)boxOrigin.z)
+        );
+
+        Vector3Int blockOrigin = new Vector3Int
+        (
+            (int)boxOrigin.x, (int)boxOrigin.y, (int)boxOrigin.z
+        );
+
+        if (boxOriginFloatPart.x >= 0.5) blockOrigin.x++;
+        if (boxOriginFloatPart.y >= 0.5) blockOrigin.y++;
+        if (boxOriginFloatPart.z >= 0.5) blockOrigin.z++;
+        if (boxOriginFloatPart.x <= -0.5) blockOrigin.x--;
+        if (boxOriginFloatPart.y <= -0.5) blockOrigin.y--;
+        if (boxOriginFloatPart.z <= -0.5) blockOrigin.z--;
+
+        Vector3 boxOpposite = new Vector3
+        (
+            pos.x + bc.size.x / 2,
+            pos.y + bc.size.y,
+            pos.z + bc.size.z / 2
+        );
+
+        Vector3 boxOppositeFloatPart = new Vector3
+        (
+            boxOpposite.x - (float)((int)boxOpposite.x),
+            boxOpposite.y - (float)((int)boxOpposite.y),
+            boxOpposite.z - (float)((int)boxOpposite.z)
+        );
+
+        Vector3Int blockOpposite = new Vector3Int
+        (
+            (int)boxOpposite.x, (int)boxOpposite.y, (int)boxOpposite.z
+        );
+
+        if (boxOppositeFloatPart.x >= 0.5) blockOpposite.x++;
+        if (boxOppositeFloatPart.y >= 0.5) blockOpposite.y++;
+        if (boxOppositeFloatPart.z >= 0.5) blockOpposite.z++;
+        if (boxOppositeFloatPart.x <= -0.5) blockOpposite.x--;
+        if (boxOppositeFloatPart.y <= -0.5) blockOpposite.y--;
+        if (boxOppositeFloatPart.z <= -0.5) blockOpposite.z--;
+
+        blockOrigin.x += Constants.WORLD_HALF_SIZE;
+        blockOrigin.z += Constants.WORLD_HALF_SIZE;
+
+        blockOpposite.x += Constants.WORLD_HALF_SIZE;
+        blockOpposite.z += Constants.WORLD_HALF_SIZE;
+
+        for (int x = blockOrigin.x; x <= blockOpposite.x; x++)
+        {
+            for (int y = blockOrigin.y; y <= blockOpposite.y; y++)
+            {
+                for (int z = blockOrigin.z; z <= blockOpposite.z; z++)
+                {
+                    if (target.x == x && target.y == y && target.z == z)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
     private void Use(ref List<Vector4> targetBlocks)
     {
         if (McControls.IsKeyDown(Constants.CONTROL_USE))
@@ -434,8 +515,11 @@ public class Player : MonoBehaviour
             }
 
             // ブロックの設置
-            if (targetBlocks[Constants.TARGET_BLOCK_SET].w == 0)
-            {
+            if 
+            (
+                targetBlocks[Constants.TARGET_BLOCK_SET].w == 0 && 
+                !IsBlockInPlayer(targetBlocks[Constants.TARGET_BLOCK_SET])
+            ){
                 lastSetFrame = Time.frameCount;
                 frameSetBlocks.Add
                 (
@@ -465,8 +549,11 @@ public class Player : MonoBehaviour
             }
 
             // ブロックの設置
-            if (targetBlocks[Constants.TARGET_BLOCK_SET].w == 0 && Time.frameCount - lastSetFrame > 10)
-            {
+            if 
+            (
+                targetBlocks[Constants.TARGET_BLOCK_SET].w == 0 && Time.frameCount - lastSetFrame > 10 &&
+                !IsBlockInPlayer(targetBlocks[Constants.TARGET_BLOCK_SET])
+            ){
                 lastSetFrame = Time.frameCount;
                 frameSetBlocks.Add
                 (
@@ -535,31 +622,13 @@ public class Player : MonoBehaviour
     public void Transfer()
     {
         // pos += hitBoxAdmin.GetMoveVec(hitBoxId);
-        // transform.position = pos;
-        Rigidbody rb = gameObject.GetComponent<Rigidbody>();;
-
-        // プレイヤーの移動
-        if (Input.GetKey(KeyCode.H))
-        {
-            rb.AddForce(new Vector3(0, 0, 1), ForceMode.Impulse);
-        }
-        else if (Input.GetKey(KeyCode.J))
-        {
-            rb.AddForce(new Vector3(0, 0, -1), ForceMode.Impulse);
-        }
-        else if (Input.GetKey(KeyCode.K))
-        {
-            rb.AddForce(new Vector3(1, 0, 0), ForceMode.Impulse);
-        }
-        else if (Input.GetKey(KeyCode.L))
-        {
-            rb.AddForce(new Vector3(-1, 0, 0), ForceMode.Impulse);
-        }
+        movement.y = rb.velocity.y;
+        rb.velocity = movement;
     }
 
     public void FrameStart()
     {
-        
+        pos = transform.position;
     }
 
     private void FrameFinish()
@@ -599,16 +668,16 @@ public class Player : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("Collision Enter with " + collision.gameObject.name);
+        // Debug.Log("Collision Enter with " + collision.gameObject.name);
     }
 
     void OnCollisionStay(Collision collision)
     {
-        Debug.Log("Collision Stay with " + collision.gameObject.name);
+        // Debug.Log("Collision Stay with " + collision.gameObject.name);
     }
 
     void OnCollisionExit(Collision collision)
     {
-        Debug.Log("Collision Exit with " + collision.gameObject.name);
+        // Debug.Log("Collision Exit with " + collision.gameObject.name);
     }
 }

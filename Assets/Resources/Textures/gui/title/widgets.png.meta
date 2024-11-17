@@ -160,7 +160,7 @@ TextureImporter:
         width: 200
         height: 20
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -168,6 +168,27 @@ TextureImporter:
       bones: []
       spriteID: dd60973cf11d5694eae7e7644ff7ba5f
       internalID: -1874150860
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hotbar
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 234
+        width: 182
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4cd065882e7f9fe4b926e7f846d3809e
+      internalID: 1669477413
       vertices: []
       indices: 
       edges: []
@@ -183,6 +204,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      hotbar: 1669477413
       select_bar: -748194229
       selecting_bar: 264530965
       unselect_bar: -1874150860

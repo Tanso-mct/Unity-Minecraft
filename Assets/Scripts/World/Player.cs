@@ -139,6 +139,10 @@ public class Player : MonoBehaviour
     private float blockDurability = 10f;
     private Vector4 destroyingBlock;
 
+    // 何らかのインベントリを開いているかどうか
+    public bool isInventoryOpen = false;
+    
+
     public void Init()
     {
         // プレイヤーの初期位置と回転角度
@@ -209,6 +213,8 @@ public class Player : MonoBehaviour
 
     private void ViewUpdate(ref List<Vector4> targetBlocks)
     {
+        if (isInventoryOpen) return;
+
         // プレイヤーの視点移動
         Vector2 mouseAxis = McControls.GetMouseAxis();
 
@@ -239,6 +245,8 @@ public class Player : MonoBehaviour
 
     private void MoveUpdate()
     {
+        if (isInventoryOpen) return;
+
         if (McControls.IsKey(Constants.CONTROL_SPRINT)) isRunning = true;
 
         int isFor = (McControls.IsKey(Constants.CONTROL_FOR)) ? 1 : 0;
@@ -402,6 +410,8 @@ public class Player : MonoBehaviour
 
     private void Jump()
     {
+        if (isInventoryOpen) return;
+
         if (McControls.IsKey(Constants.CONTROL_JUMP) && isGrounded)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
@@ -417,6 +427,8 @@ public class Player : MonoBehaviour
 
     private void Attack(ref List<Vector4> targetBlocks)
     {
+        if (isInventoryOpen) return;
+
         if (McControls.IsKey(Constants.CONTROL_ATTACK) && !isDestroying)
         {
             // ブロックの破壊
@@ -568,6 +580,8 @@ public class Player : MonoBehaviour
 
     private void Use(ref List<Vector4> targetBlocks)
     {
+        if (isInventoryOpen) return;
+
         if (McControls.IsKeyDown(Constants.CONTROL_USE))
         {
             // ブロックの設置
@@ -597,7 +611,7 @@ public class Player : MonoBehaviour
                         targetBlocks[Constants.TARGET_BLOCK_SET].x,
                         targetBlocks[Constants.TARGET_BLOCK_SET].y,
                         targetBlocks[Constants.TARGET_BLOCK_SET].z,
-                        (float)Constants.BLOCK_TYPE.DIRT
+                        (float)Constants.BLOCK_TYPE.LAVA
                     )
                 );
             }
@@ -631,7 +645,7 @@ public class Player : MonoBehaviour
                         targetBlocks[Constants.TARGET_BLOCK_SET].x,
                         targetBlocks[Constants.TARGET_BLOCK_SET].y,
                         targetBlocks[Constants.TARGET_BLOCK_SET].z,
-                        (float)Constants.BLOCK_TYPE.DIRT
+                        (float)Constants.BLOCK_TYPE.LAVA
                     )
                 );
             }
@@ -683,10 +697,20 @@ public class Player : MonoBehaviour
 
     public void Transfer()
     {
-        // pos += hitBoxAdmin.GetMoveVec(hitBoxId);
-        movement.y = rb.velocity.y;
-        rb.velocity = movement;
-        
+        if (!isInventoryOpen)
+        {
+            movement.y = rb.velocity.y;
+            rb.velocity = movement;
+        }
+        else
+        {
+            if (isFlying && !isLanded)
+            {
+                movement.y = rb.velocity.y;
+                rb.velocity = movement;
+            }
+            else rb.velocity = Vector3.zero;
+        }        
     }
 
     public void FrameStart()

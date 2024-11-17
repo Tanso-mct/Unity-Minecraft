@@ -65,18 +65,12 @@ public class PlayWindow : GameWindow
 
     public override void Execute()
     {
-        // 開いていない場合は処理しない
         if (!isOpening) return;
-
         world.Execute();
     }
 
     public override void Move(ref Vector2 moveVec)
     {
-        if (!isOpening) return;
-
-        // 各要素を移動
-        ElementsMove(ref diImageEl, ref moveVec);
-        ElementsMove(ref diTextEl, ref moveVec);
+        
     }
 }

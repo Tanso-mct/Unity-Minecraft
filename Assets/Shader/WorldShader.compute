@@ -115,7 +115,7 @@ float2 GetUVFromID(int blockIndex)
     float2 rtValue = float2
     (
         (blockIndex - 1) % 5 * TEXTURE_BLOCK_TILE_U, 
-        (int)((blockIndex - 1) / 5) * TEXTURE_BLOCK_TILE_V
+        -(int)((blockIndex - 1) / 5) * TEXTURE_BLOCK_TILE_V
     );
 
     return rtValue;

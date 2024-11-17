@@ -12,6 +12,10 @@ public class PlayManager : Manager
     [SerializeField] private GameObject wndControlSetting;
     [SerializeField] private GameObject wndControlSettingScroll;
 
+    [SerializeField] private Player player;
+
+    [SerializeField] private GameObject wndPlayerInventory;
+
     [SerializeField] private float controlScrollBottom;
 
     public override void BaseAwake()
@@ -36,7 +40,19 @@ public class PlayManager : Manager
 
     public override void BaseUpdate()
     {
-        if (Input.GetKeyUp(KeyCode.Escape) && wndPlay.gameObject.GetComponent<PlayWindow>().IsOpening) ShowOption();
+        if (Input.GetKeyUp(KeyCode.Escape) && wndPlay.gameObject.GetComponent<PlayWindow>().IsOpening)
+        {
+            ShowOption();
+        }
+
+        if (McControls.IsKeyDown(Constants.CONTROL_INVENTORY) && !player.isInventoryOpen)
+        {
+            ShowPlayerInventory();
+        }
+        else if (McControls.IsKeyDown(Constants.CONTROL_INVENTORY) && player.isInventoryOpen)
+        {
+            ClosePlayerInventory();
+        }
 
         // 各ウィンドウの処理を実行
         ExecuteWindows();
@@ -53,8 +69,8 @@ public class PlayManager : Manager
 
     public void ShowOption()
     {
-        Debug.Log("ShowOption");
         CloseWindow(wndPlay.name);
+        Physics.simulationMode = SimulationMode.Script;
 
         McControls.CursorLock(false);
         ShowWindow(wndOption.name);
@@ -62,11 +78,29 @@ public class PlayManager : Manager
 
     public void CloseOption()
     {
-        Debug.Log("CloseOption");
         CloseWindow(wndOption.name);
+        Physics.simulationMode = SimulationMode.FixedUpdate;
 
         ShowWindow(wndPlay.name);
         McControls.CursorLock(true);
+    }
+
+    public void ShowPlayerInventory()
+    {
+        Debug.Log("ShowPlayerInventory");
+
+        McControls.CursorLock(false);
+        player.isInventoryOpen = true;
+        ShowWindow(wndPlayerInventory.name);
+    }
+
+    public void ClosePlayerInventory()
+    {
+        Debug.Log("ClosePlayerInventory");
+
+        McControls.CursorLock(true);
+        player.isInventoryOpen = false;
+        CloseWindow(wndPlayerInventory.name);
     }
 
     public void ShowVideoSetting()

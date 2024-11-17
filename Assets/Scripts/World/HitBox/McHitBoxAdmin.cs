@@ -11,9 +11,6 @@ public class McHitBoxAdmin : MonoBehaviour
     private List<KeyValuePair<int, Vector3>> boxSizeList = new List<KeyValuePair<int, Vector3>>();
     [HideInInspector] public Vector3[] boxSizeAry;
 
-    private List<KeyValuePair<int, Vector3>> moveVecList = new List<KeyValuePair<int, Vector3>>();
-    [HideInInspector] public Vector3[] moveVecAry;
-
     [HideInInspector] public int[] hitBlockTypeAry;
 
     public int RegisterHitBox(Vector3 pos, Vector3 size, Vector3 moveVec)
@@ -22,7 +19,6 @@ public class McHitBoxAdmin : MonoBehaviour
 
         boxPosList.Add(new KeyValuePair<int, Vector3>(id, pos));
         boxSizeList.Add(new KeyValuePair<int, Vector3>(id, size));
-        moveVecList.Add(new KeyValuePair<int, Vector3>(id, moveVec));
 
         return id;
     }
@@ -34,18 +30,6 @@ public class McHitBoxAdmin : MonoBehaviour
             if (boxPosList[i].Key == id)
             {
                 boxPosList[i] = new KeyValuePair<int, Vector3>(id, pos);
-                break;
-            }
-        }
-    }
-
-    public void UpdateMoveVec(int id, Vector3 moveVec)
-    {
-        for (int i = 0; i < moveVecList.Count; i++)
-        {
-            if (moveVecList[i].Key == id)
-            {
-                moveVecList[i] = new KeyValuePair<int, Vector3>(id, moveVec);
                 break;
             }
         }
@@ -70,28 +54,6 @@ public class McHitBoxAdmin : MonoBehaviour
                 break;
             }
         }
-
-        for (int i = 0; i < moveVecList.Count; i++)
-        {
-            if (moveVecList[i].Key == id)
-            {
-                moveVecList.RemoveAt(i);
-                break;
-            }
-        }
-    }
-
-    public Vector3 GetMoveVec(int hitBoxId)
-    {
-        for (int i = 0; i < moveVecList.Count; i++)
-        {
-            if (moveVecList[i].Key == hitBoxId)
-            {
-                return moveVecAry[i];
-            }
-        }
-
-        return Vector3.zero;
     }
 
     public int GetHitBlockType(int hitBoxId)
@@ -126,11 +88,7 @@ public class McHitBoxAdmin : MonoBehaviour
             boxSizeAry[i] = boxSizeList[i].Value;
         }
 
-        moveVecAry = new Vector3[moveVecList.Count];
-        for (int i = 0; i < moveVecList.Count; i++)
-        {
-            moveVecAry[i] = moveVecList[i].Value;
-        }
+        hitBlockTypeAry = new int[boxPosList.Count];
     }
 
 

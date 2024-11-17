@@ -411,13 +411,8 @@ public class Player : MonoBehaviour
 
     private void UpdateHitBox()
     {
-        // プレイヤーの移動を行う。当たり判定もここで行う
-        // gameObject.transform.position += movement;
-        // pos += movement;
-
         // プレイヤーの当たり判定を更新
         hitBoxAdmin.UpdatePos(hitBoxId, pos);
-        hitBoxAdmin.UpdateMoveVec(hitBoxId, movement);
     }
 
     private void Attack(ref List<Vector4> targetBlocks)
@@ -736,8 +731,6 @@ public class Player : MonoBehaviour
                     isLanded = true;
                 }
             }
-
-            Debug.Log("Rigidbody Velocity: " + rb.velocity.y);
         }
     }
 

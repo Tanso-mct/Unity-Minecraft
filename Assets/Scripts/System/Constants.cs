@@ -100,6 +100,7 @@ public class Constants : MonoBehaviour
         BEDROCK,
         DIRT,
         GRASS_TOP, GRASS_SIDE, GRASS_BOTTOM,
+        WATER, LAVA, OBSIDIAN,
         STONE, COBBLESTONE, STONE_ANDESITE, STONE_DIORITE, STONE_GRANITE,
         COAL_ORE,
         IRON_ORE,

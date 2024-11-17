@@ -15,6 +15,9 @@ public class World : MonoBehaviour
     // ブロックのバッファー。その座標に存在しているブロックの種類を示す。
     private ComputeBuffer blocksIDBuff;
 
+    // 当たり判定を持たないブロックのバッファー。その座標に存在しているブロックの種類を示す。
+    private ComputeBuffer throughBlocksIDBuff;
+
     // ワールド上のブロックとエンティティとアイテムのオブジェクト
     Dictionary<Vector3Int, Vaxel> blocks;
     List<Vaxel> entities;
@@ -24,7 +27,10 @@ public class World : MonoBehaviour
     [SerializeField] private GameObject objWorldMesh;
     private Mesh worldMesh;
     private MeshCollider worldMeshCollider;
-    private Material worldMaterial;
+
+    // ワールドすり抜けメッシュオブジェクト
+    [SerializeField] private GameObject objWorldThroughMesh;
+    private Mesh worldThroughMesh;
 
     // プレイヤー
     [SerializeField] private Player player;
@@ -105,6 +111,9 @@ public class World : MonoBehaviour
         // ワールドの初期化
         blocksIDBuff = new ComputeBuffer(Constants.WORLD_SIZE * Constants.WORLD_HEIGHT * Constants.WORLD_SIZE, sizeof(int));
 
+        // ワールドすり抜けブロックらの初期化
+        throughBlocksIDBuff = new ComputeBuffer(Constants.WORLD_SIZE * Constants.WORLD_HEIGHT * Constants.WORLD_SIZE, sizeof(int));
+
         blocks = new Dictionary<Vector3Int, Vaxel>();
         entities = new List<Vaxel>();
         items = new List<Vaxel>();
@@ -146,6 +155,15 @@ public class World : MonoBehaviour
         objWorldMesh.GetComponent<MeshRenderer>().material.mainTexture = meshAtlasTexture;
 
         worldMeshCollider = objWorldMesh.GetComponent<MeshCollider>();
+
+        // ワールドすり抜けメッシュの初期化
+        worldThroughMesh = new Mesh();
+        objWorldThroughMesh.GetComponent<MeshFilter>().mesh = worldThroughMesh;
+        worldThroughMesh.MarkDynamic();
+
+        Texture throughMeshAtlasTexture = null;
+        SupportFunc.LoadTexture(ref throughMeshAtlasTexture, Constants.TEXTURE_ATLAS_BLOCK);
+        objWorldThroughMesh.GetComponent<MeshRenderer>().material.mainTexture = throughMeshAtlasTexture;
 
         // [0] 描画するブロックの数 [1][2] 頂点の開始位置、頂点インデックスの開始位置を示すバッファー
         countsBuff = new ComputeBuffer(3, sizeof(int));
@@ -190,13 +208,34 @@ public class World : MonoBehaviour
         else LoadFromJson();
     }
 
-    public void SetBuffer(int kernelIndex)
+    private void SetMeshGenerateBuff(int kernelIndex)
     {
         // シェーダーの定数をセット
         Constants.SetShaderConstants(ref worldShader);
 
         // 各バッファーをシェーダーにセット
         worldShader.SetBuffer(kernelIndex, "blocksID", blocksIDBuff);
+
+        worldShader.SetInt("RENDER_DISTANCE", McVideos.RenderDistance);
+
+        worldShader.SetBuffer(kernelIndex, "counts", countsBuff);
+
+        worldShader.SetBuffer(kernelIndex, "meshVs", meshVsBuff);
+        worldShader.SetBuffer(kernelIndex, "meshUVs", meshUVsBuff);
+        worldShader.SetBuffer(kernelIndex, "meshTris", meshTrisBuff);
+
+        worldShader.SetBuffer(kernelIndex, "sourceMeshVs", sourceMeshVsBuff);
+        worldShader.SetBuffer(kernelIndex, "sourceMeshUVs", sourceMeshUVsBuff);
+        worldShader.SetBuffer(kernelIndex, "sourceMeshTris", sourceMeshTrisBuff);
+    }
+
+    private void SetThroughMeshGenerateBuff(int kernelIndex)
+    {
+        // シェーダーの定数をセット
+        Constants.SetShaderConstants(ref worldShader);
+
+        // 各バッファーをシェーダーにセット
+        worldShader.SetBuffer(kernelIndex, "blocksID", throughBlocksIDBuff);
 
         worldShader.SetInt("RENDER_DISTANCE", McVideos.RenderDistance);
 
@@ -254,6 +293,7 @@ public class World : MonoBehaviour
         worldShader.SetInt("VIEW_ORIGIN_Z", worldOrigin.z);
 
         int[] blocksId = new int[Constants.WORLD_SIZE * Constants.WORLD_HEIGHT * Constants.WORLD_SIZE];
+        int[] throughBlocksId = new int[Constants.WORLD_SIZE * Constants.WORLD_HEIGHT * Constants.WORLD_SIZE];
         if (thisInfo.worldType == "Flat")
         {
             // フラットワールドの生成
@@ -280,6 +320,57 @@ public class World : MonoBehaviour
                 int index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
                 blocksId[index] = (int)Constants.BLOCK_TYPE.BEDROCK;
             }
+
+            // 池を生成
+            for (int x = Constants.WORLD_HALF_SIZE + 2; x < Constants.WORLD_HALF_SIZE + 10; x++)
+            {
+                int y = 4;
+                int z = Constants.WORLD_HALF_SIZE + 4;
+                int index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
+                throughBlocksId[index] = (int)Constants.BLOCK_TYPE.WATER;
+
+                y = 5;
+                index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
+                throughBlocksId[index] = (int)Constants.BLOCK_TYPE.WATER;
+
+                y = 6;
+                index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
+                throughBlocksId[index] = (int)Constants.BLOCK_TYPE.WATER;
+
+                z = Constants.WORLD_HALF_SIZE + 5;
+                y = 4;
+                index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
+                throughBlocksId[index] = (int)Constants.BLOCK_TYPE.WATER;
+
+                y = 5;
+                index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
+                throughBlocksId[index] = (int)Constants.BLOCK_TYPE.WATER;
+
+                y = 6;
+                index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
+                throughBlocksId[index] = (int)Constants.BLOCK_TYPE.WATER;
+
+                z = Constants.WORLD_HALF_SIZE + 6;
+                y = 4;
+                index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
+                throughBlocksId[index] = (int)Constants.BLOCK_TYPE.WATER;
+
+                y = 5;
+                index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
+                throughBlocksId[index] = (int)Constants.BLOCK_TYPE.WATER;
+
+                y = 6;
+                index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
+                throughBlocksId[index] = (int)Constants.BLOCK_TYPE.WATER;
+            }
+
+            for (int x = Constants.WORLD_HALF_SIZE + 12; x < Constants.WORLD_HALF_SIZE + 20; x++)
+            {
+                int y = 4;
+                int z = Constants.WORLD_HALF_SIZE + 4;
+                int index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
+                throughBlocksId[index] = (int)Constants.BLOCK_TYPE.WATER;
+            }
         }
         else 
         {
@@ -288,6 +379,7 @@ public class World : MonoBehaviour
         }
 
         blocksIDBuff.SetData(blocksId);
+        throughBlocksIDBuff.SetData(throughBlocksId);
 
         int viewThreadGroupsX = Mathf.CeilToInt((worldOpposite.x - worldOrigin.x) / 8.0f);
         int viewThreadGroupsY = Mathf.CeilToInt((worldOpposite.y - worldOrigin.y) / 8.0f);
@@ -295,7 +387,7 @@ public class World : MonoBehaviour
 
         // 空気と隣接するブロックを描画ブロックとし、それらの情報を取得
         int meshGenerate = worldShader.FindKernel("MeshGenerate");
-        SetBuffer(meshGenerate);
+        SetMeshGenerateBuff(meshGenerate);
         worldShader.Dispatch(meshGenerate, viewThreadGroupsX, viewThreadGroupsY, viewThreadGroupsZ);
 
         // 各数を取得
@@ -336,6 +428,47 @@ public class World : MonoBehaviour
             // ワールドメッシュのコライダーを更新
             worldMeshCollider.sharedMesh = null;
             worldMeshCollider.sharedMesh = worldMesh;
+        }
+
+
+        // 空気もしくは流体と隣接するブロックを描画ブロックとし、それらの情報を取得
+        int throughMeshGenerate = worldShader.FindKernel("ThroughMeshGenerate");
+        SetThroughMeshGenerateBuff(throughMeshGenerate);
+        worldShader.Dispatch(throughMeshGenerate, viewThreadGroupsX, viewThreadGroupsY, viewThreadGroupsZ);
+
+        // 各数を取得
+        countsBuff.GetData(countsAry);
+
+        drawBlockCount = countsAry[0];
+        meshVsCount = countsAry[1];
+        meshTrisCount = countsAry[2];
+
+        // カウント配列を初期化
+        for (int i = 0; i < 3; i++) countsAry[i] = 0;
+        countsBuff.SetData(countsAry);
+
+        // ワールドメッシュの頂点、UV、頂点インデックスを取得
+        Vector3[] throughMeshVsAry = new Vector3[meshVsCount];
+        Vector2[] throughMeshUVsAry = new Vector2[meshVsCount];
+        int[] throughMeshTrisAry = new int[meshTrisCount];
+
+        meshVsBuff.GetData(throughMeshVsAry);
+        meshUVsBuff.GetData(throughMeshUVsAry);
+        meshTrisBuff.GetData(throughMeshTrisAry);
+
+        // ワールドメッシュの頂点、UV、頂点インデックスを設定
+        worldThroughMesh.Clear();
+        worldThroughMesh.SetVertices(meshVsAry);
+        worldThroughMesh.SetUVs(0, meshUVsAry);
+        worldThroughMesh.SetTriangles(meshTrisAry, 0);
+
+        // ワールドメッシュの更新
+        if (worldThroughMesh.vertices.Length > 0)
+        {
+            worldThroughMesh.RecalculateTangents();
+            worldThroughMesh.RecalculateNormals();
+            worldThroughMesh.RecalculateBounds();
+            worldThroughMesh.Optimize();
         }
 
         // プレイヤーの生成及び配置
@@ -487,7 +620,7 @@ public class World : MonoBehaviour
 
         // 空気と隣接するブロックを描画ブロックとし、それらの情報を取得
         int meshGenerate = worldShader.FindKernel("MeshGenerate");
-        SetBuffer(meshGenerate);
+        SetMeshGenerateBuff(meshGenerate);
         worldShader.Dispatch(meshGenerate, viewThreadGroupsX, viewThreadGroupsY, viewThreadGroupsZ);
 
         // 各数を取得
@@ -532,15 +665,101 @@ public class World : MonoBehaviour
 
     }
 
+    private void ThroughMeshUpdate()
+    {
+        // プレイヤーの座標を変換
+        Vector3Int convertedPos = SupportFunc.CoordsIntConvert(player.Pos);
+
+        // 描画範囲を処理するためのスレッドグループ数
+        Vector3Int worldOrigin = new Vector3Int
+        (
+            convertedPos.x - McVideos.RenderDistance * Constants.CHUCK_SIZE,
+            convertedPos.y - McVideos.RenderDistance * Constants.CHUCK_SIZE,
+            convertedPos.z - McVideos.RenderDistance * Constants.CHUCK_SIZE
+        );
+
+        Vector3Int worldOpposite = new Vector3Int
+        (
+            convertedPos.x + McVideos.RenderDistance * Constants.CHUCK_SIZE,
+            convertedPos.y + McVideos.RenderDistance * Constants.CHUCK_SIZE,
+            convertedPos.z + McVideos.RenderDistance * Constants.CHUCK_SIZE
+        );
+
+        worldOrigin.x = Mathf.Clamp(worldOrigin.x, 0, Constants.WORLD_SIZE - 1);
+        worldOrigin.y = Mathf.Clamp(worldOrigin.y, 0, Constants.WORLD_HEIGHT - 1);
+        worldOrigin.z = Mathf.Clamp(worldOrigin.z, 0, Constants.WORLD_SIZE - 1);
+
+        worldOpposite.x = Mathf.Clamp(worldOpposite.x, 0, Constants.WORLD_SIZE - 1);
+        worldOpposite.y = Mathf.Clamp(worldOpposite.y, 0, Constants.WORLD_HEIGHT - 1);
+        worldOpposite.z = Mathf.Clamp(worldOpposite.z, 0, Constants.WORLD_SIZE - 1);
+
+        int viewThreadGroupsX = Mathf.CeilToInt((worldOpposite.x - worldOrigin.x) / 8.0f);
+        int viewThreadGroupsY = Mathf.CeilToInt((worldOpposite.y - worldOrigin.y) / 8.0f);
+        int viewThreadGroupsZ = Mathf.CeilToInt((worldOpposite.z - worldOrigin.z) / 8.0f);
+
+        // 処理するインデックスの開始地点、終了地点をセット
+        worldShader.SetInt("VIEW_ORIGIN_X", worldOrigin.x);
+        worldShader.SetInt("VIEW_ORIGIN_Y", worldOrigin.y);
+        worldShader.SetInt("VIEW_ORIGIN_Z", worldOrigin.z);
+
+        // 空気と隣接するブロックを描画ブロックとし、それらの情報を取得
+        int throughMeshGenerate = worldShader.FindKernel("ThroughMeshGenerate");
+        SetThroughMeshGenerateBuff(throughMeshGenerate);
+        worldShader.Dispatch(throughMeshGenerate, viewThreadGroupsX, viewThreadGroupsY, viewThreadGroupsZ);
+
+        // 各数を取得
+        int[] countsAry = new int[3];
+        countsBuff.GetData(countsAry);
+
+        drawBlockCount = countsAry[0];
+        meshVsCount = countsAry[1];
+        meshTrisCount = countsAry[2];
+
+        // カウント配列を初期化
+        for (int i = 0; i < 3; i++) countsAry[i] = 0;
+        countsBuff.SetData(countsAry);
+
+        // ワールドメッシュの頂点、UV、頂点インデックスを取得
+        Vector3[] meshVsAry = new Vector3[meshVsCount];
+        Vector2[] meshUVsAry = new Vector2[meshVsCount];
+        int[] meshTrisAry = new int[meshTrisCount];
+
+        meshVsBuff.GetData(meshVsAry);
+        meshUVsBuff.GetData(meshUVsAry);
+        meshTrisBuff.GetData(meshTrisAry);
+
+        // ワールドメッシュの頂点、UV、頂点インデックスを設定
+        worldThroughMesh.Clear();
+        worldThroughMesh.SetVertices(meshVsAry);
+        worldThroughMesh.SetUVs(0, meshUVsAry);
+        worldThroughMesh.SetTriangles(meshTrisAry, 0);
+
+        if (worldMesh.vertices.Length > 0)
+        {
+            // ワールドメッシュの更新
+            worldThroughMesh.RecalculateTangents();
+            worldThroughMesh.RecalculateNormals();
+            worldThroughMesh.RecalculateBounds();
+            worldThroughMesh.Optimize();
+        }
+
+    }
+
     private void BlockUpdate()
     {
         // ブロックの生成
         int blockUpdate = worldShader.FindKernel("BlockUpdate");
         worldShader.SetBuffer(blockUpdate, "blocksID", blocksIDBuff);
+        worldShader.SetBuffer(blockUpdate, "throughBlocksID", throughBlocksIDBuff);
+
+        int[] targetBlockID = new int[1];
+        ComputeBuffer targetBlockIDBuff = new ComputeBuffer(1, sizeof(int));
+        worldShader.SetBuffer(blockUpdate, "targetBlockID", targetBlockIDBuff);
 
         // シェーダーの定数をセット
         Constants.SetShaderConstants(ref worldShader);
 
+        // ブロックの生成
         for (int i = 0; i < player.frameSetBlocks.Count; i++)
         {
             worldShader.SetInt("TARGET_BLOCK_X", (int)player.frameSetBlocks[i].x);
@@ -548,6 +767,10 @@ public class World : MonoBehaviour
             worldShader.SetInt("TARGET_BLOCK_Z", (int)player.frameSetBlocks[i].z);
             worldShader.SetInt("GENERATE_BLOCK_ID", (int)player.frameSetBlocks[i].w);
             worldShader.Dispatch(blockUpdate, 1, 1, 1);
+
+            targetBlockIDBuff.GetData(targetBlockID);
+
+            Debug.Log("Set TargetBlockID : " + targetBlockID[0]);
         }
         player.frameSetBlocks.Clear();
 
@@ -559,8 +782,15 @@ public class World : MonoBehaviour
             worldShader.SetInt("TARGET_BLOCK_Z", (int)player.frameDestroyBlocks[i].z);
             worldShader.SetInt("GENERATE_BLOCK_ID", (int)Constants.BLOCK_TYPE.AIR);
             worldShader.Dispatch(blockUpdate, 1, 1, 1);
+
+            targetBlockIDBuff.GetData(targetBlockID);
+
+            Debug.Log("Destroy TargetBlockID : " + targetBlockID[0]);
         }
         player.frameDestroyBlocks.Clear();
+
+        // バッファの解放
+        targetBlockIDBuff.Release();
     }
 
     private void EntityUpdate()
@@ -577,7 +807,7 @@ public class World : MonoBehaviour
     {
         // プレイヤーのヒットボックスの更新
         int hitBox = worldShader.FindKernel("HitBox");
-        worldShader.SetBuffer(hitBox, "blocksID", blocksIDBuff);
+        worldShader.SetBuffer(hitBox, "blocksID", throughBlocksIDBuff);
 
         // シェーダーの定数をセット
         Constants.SetShaderConstants(ref worldShader);
@@ -588,37 +818,15 @@ public class World : MonoBehaviour
         // 各バッファを作成
         ComputeBuffer boxPosBuff = new ComputeBuffer(hitboxAdmin.GetHitBoxAmount(), sizeof(float) * 3);
         ComputeBuffer boxSizeBuff = new ComputeBuffer(hitboxAdmin.GetHitBoxAmount(), sizeof(float) * 3);
-        ComputeBuffer moveVecBuff = new ComputeBuffer(hitboxAdmin.GetHitBoxAmount(), sizeof(float) * 3);
         ComputeBuffer hitBlockTypeBuff = new ComputeBuffer(hitboxAdmin.GetHitBoxAmount(), sizeof(int));
-
-        // Debug用バッファ
-        ComputeBuffer debugBuff = new ComputeBuffer(500, sizeof(float) * 3);
-        ComputeBuffer debugBuff2 = new ComputeBuffer(500, sizeof(float) * 3);
-
-        Vector3[] debugAry1 = new Vector3[500];
-        Vector3[] debugAry2 = new Vector3[500];
-
-        for (int i = 0; i < 500; i++)
-        {
-            debugAry1[i] = Vector3.zero;
-            debugAry2[i] = Vector3.zero;
-        }
-
-        debugBuff.SetData(debugAry1);
-        debugBuff2.SetData(debugAry2);
-
-        worldShader.SetBuffer(hitBox, "debug1", debugBuff);
-        worldShader.SetBuffer(hitBox, "debug2", debugBuff2);
 
         // データをセット
         boxPosBuff.SetData(hitboxAdmin.boxPosAry);
         boxSizeBuff.SetData(hitboxAdmin.boxSizeAry);
-        moveVecBuff.SetData(hitboxAdmin.moveVecAry);
 
         // バッファーのセット
         worldShader.SetBuffer(hitBox, "boxPos", boxPosBuff);
         worldShader.SetBuffer(hitBox, "boxSize", boxSizeBuff);
-        worldShader.SetBuffer(hitBox, "moveVec", moveVecBuff);
         worldShader.SetBuffer(hitBox, "hitBlockType", hitBlockTypeBuff);
 
         int threadGroupsX = Mathf.CeilToInt(hitboxAdmin.GetHitBoxAmount() / 8.0f);
@@ -629,36 +837,22 @@ public class World : MonoBehaviour
         worldShader.Dispatch(hitBox, 1, 1, 1);
 
         // データの取得
-        moveVecBuff.GetData(hitboxAdmin.moveVecAry);
         hitBlockTypeBuff.GetData(hitboxAdmin.hitBlockTypeAry);
-
-        debugBuff.GetData(debugAry1);
-        debugBuff2.GetData(debugAry2);
 
         if (Input.GetKeyDown(KeyCode.H))
         {
             Debug.Log("====================================");
 
-            Debug.Log("Amount : " + hitboxAdmin.GetHitBoxAmount());
-
-            Debug.Log("Debug 1 [0] : " + debugAry1[0]);
-            Debug.Log("Debug 1 [1] : " + debugAry1[1]);
-
-            for (int i = 0; i < 9; i++)
+            for (int i = 0; i < hitboxAdmin.GetHitBoxAmount(); i++)
             {
-                Debug.Log("Debug 2 [" + i + "] : " + debugAry2[i]);
+                Debug.Log("HitBlockType : " + hitboxAdmin.hitBlockTypeAry[i]);
             }
-            
         }
 
         // バッファーの解放
         boxPosBuff.Release();
         boxSizeBuff.Release();
-        moveVecBuff.Release();
         hitBlockTypeBuff.Release();
-
-        debugBuff.Release();
-        debugBuff2.Release();
     }
 
     public void Execute()
@@ -671,6 +865,7 @@ public class World : MonoBehaviour
 
         // メッシュの更新
         MeshUpdate();
+        ThroughMeshUpdate();
 
         // エンティティの更新
         EntityUpdate();
@@ -679,7 +874,7 @@ public class World : MonoBehaviour
         ItemUpdate();
 
         // 当たり判定の更新
-        // HitBoxUpdate();
+        HitBoxUpdate();
 
         // プレイヤーの位置更新
         player.Transfer();
@@ -690,6 +885,7 @@ public class World : MonoBehaviour
     {
         // バッファを解放
         if (blocksIDBuff != null) blocksIDBuff.Release();
+        if (throughBlocksIDBuff != null) throughBlocksIDBuff.Release();
 
         if (countsBuff != null) countsBuff.Release();
 

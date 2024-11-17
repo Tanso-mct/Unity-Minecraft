@@ -326,14 +326,17 @@ public class World : MonoBehaviour
         worldMesh.SetTriangles(meshTrisAry, 0);
 
         // ワールドメッシュの更新
-        worldMesh.RecalculateTangents();
-        worldMesh.RecalculateNormals();
-        worldMesh.RecalculateBounds();
-        worldMesh.Optimize();
+        if (worldMesh.vertices.Length > 0)
+        {
+            worldMesh.RecalculateTangents();
+            worldMesh.RecalculateNormals();
+            worldMesh.RecalculateBounds();
+            worldMesh.Optimize();
 
-        // ワールドメッシュのコライダーを更新
-        worldMeshCollider.sharedMesh = null;
-        worldMeshCollider.sharedMesh = worldMesh;
+            // ワールドメッシュのコライダーを更新
+            worldMeshCollider.sharedMesh = null;
+            worldMeshCollider.sharedMesh = worldMesh;
+        }
 
         // プレイヤーの生成及び配置
         player.Create();
@@ -416,11 +419,11 @@ public class World : MonoBehaviour
 
         raycastBlocksBuff.GetData(raycastBlocks);
 
-        Vector4 selectBlock = new Vector4(0, 0, 0, 0);
-        Vector4 setBlock = new Vector4(0, 0, 0, 0);
+        Vector4 selectBlock = new Vector4(0, 0, 0, Constants.BLOCK_TYPE_CANT_SET);
+        Vector4 setBlock = new Vector4(0, 0, 0, Constants.BLOCK_TYPE_CANT_SET);
         for (int i = 0; i < raycastBlocks.Length; i++)
         {
-            if (raycastBlocks[i].w != 0f)
+            if (raycastBlocks[i].w != (int)Constants.BLOCK_TYPE.AIR)
             {
                 selectBlock.x = raycastBlocks[i].x;
                 selectBlock.y = raycastBlocks[i].y;
@@ -514,15 +517,18 @@ public class World : MonoBehaviour
         worldMesh.SetUVs(0, meshUVsAry);
         worldMesh.SetTriangles(meshTrisAry, 0);
 
-        // ワールドメッシュの更新
-        worldMesh.RecalculateTangents();
-        worldMesh.RecalculateNormals();
-        worldMesh.RecalculateBounds();
-        worldMesh.Optimize();
+        if (worldMesh.vertices.Length > 0)
+        {
+            // ワールドメッシュの更新
+            worldMesh.RecalculateTangents();
+            worldMesh.RecalculateNormals();
+            worldMesh.RecalculateBounds();
+            worldMesh.Optimize();
 
-        // ワールドメッシュのコライダーを更新
-        worldMeshCollider.sharedMesh = null;
-        worldMeshCollider.sharedMesh = worldMesh;
+            // ワールドメッシュのコライダーを更新
+            worldMeshCollider.sharedMesh = null;
+            worldMeshCollider.sharedMesh = worldMesh;
+        }
 
     }
 
@@ -673,7 +679,7 @@ public class World : MonoBehaviour
         ItemUpdate();
 
         // 当たり判定の更新
-        HitBoxUpdate();
+        // HitBoxUpdate();
 
         // プレイヤーの位置更新
         player.Transfer();

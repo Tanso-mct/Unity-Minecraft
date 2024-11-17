@@ -64,6 +64,7 @@ public class Player : MonoBehaviour
 
     // プレイヤーのBoxCollider
     private BoxCollider bc;
+    private float collisionOffset = 0.2f;
 
     // プレイヤーのRigidbody
     private Rigidbody rb;
@@ -74,15 +75,18 @@ public class Player : MonoBehaviour
     // プレイヤーの各種スピード
     [SerializeField] private float walkingSpeed = 7.0f;
     [SerializeField] private float runningSpeed = 10.0f;
-    [SerializeField] private float jumpingSpeedAspect = 1.2f;
+    [SerializeField] private float walkFlySpeedAspect = 0.5f;
+    [SerializeField] private float runFlySpeedAspect = 1f;
+
 
     // プレイヤーのジャンプ力
     [SerializeField] private float jumpForce = 5.0f;
 
     // プレイヤーの地面に接地しているかどうか
     private bool isGrounded = true;
-    private int groundCount = 0;
-    private int notGroundingFrame = 0;
+
+    // プレイヤーが着地したかどうか
+    private bool isLanded = false;
 
     // プレイヤーが走っているかどうか
     private bool isRunning = false;
@@ -90,8 +94,11 @@ public class Player : MonoBehaviour
     // プレイヤーが空中にいるかどうか
     private bool isFlying = false;
 
-    // プレイヤーが飛び始めた際の移動ベクトル
-    private Vector3 flyDirection = Vector3.zero;
+    // ジャンプベクトル
+    private Vector3 jumpVec = Vector3.zero;
+
+    // 慣性の強さ
+    [SerializeField] private float inertia = 0.9f;
 
     // プレイヤーの移動ベクトル
     private Vector3 movement = Vector3.zero;
@@ -319,19 +326,86 @@ public class Player : MonoBehaviour
     private void FlyUpdate()
     {
         // 飛び始めた際の移動ベクトルを設定
-        if (!isFlying)
+        if (!isFlying && !isGrounded)
         {
-            flyDirection = movement;
             isFlying = true;
+            jumpVec = movement;
         }
-        
+        else if (isFlying && !isLanded)
+        {
+            int isFor = (McControls.IsKey(Constants.CONTROL_FOR)) ? 1 : 0;
+            int isBack = (McControls.IsKey(Constants.CONTROL_BACK)) ? 1 : 0;
+            int isLeft = (McControls.IsKey(Constants.CONTROL_LEFT)) ? 1 : 0;
+            int isRight = (McControls.IsKey(Constants.CONTROL_RIGHT)) ? 1 : 0;
+
+            // 移動方向を取得
+            int vertical = isFor + isBack;
+            int horizontal = isLeft + isRight;
+            int diagonal = vertical + horizontal;
+
+            // 移動ベクトル
+            Vector3 newMovement = Vector3.zero;
+
+            // 移動ベクトルのZ成分を設定
+            if (diagonal != 0) // 移動
+            {
+                if (isRunning && isFor == 1 && vertical == 1)
+                {
+                    speed = runningSpeed * runFlySpeedAspect;
+                    animParts.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_RUN);
+                }
+                else
+                {
+                    speed = walkingSpeed * walkFlySpeedAspect;
+                    animParts.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_WALK);
+                }
+
+                newMovement.z = -speed;
+            }
+
+            // 移動ベクトルを設定
+            if (diagonal == 2) // 斜め移動
+            {
+                if (isFor == 1)
+                {
+                    if (isLeft == 1) newMovement = m45Rot * newMovement;
+                    else if (isRight == 1) newMovement = p45Rot * newMovement;
+                }
+                else if (isBack == 1)
+                {
+                    newMovement = p180Rot * newMovement;
+                    if (isLeft == 1) newMovement = p45Rot * newMovement;
+                    else if (isRight == 1) newMovement = m45Rot * newMovement;
+                }
+            }
+            else if (vertical == 1)
+            {
+                if (isBack == 1) newMovement = p180Rot * newMovement;
+            }
+            else if (horizontal == 1)
+            {
+                if (isLeft == 1) newMovement = m90Rot * newMovement;
+                else if (isRight == 1) newMovement = p90Rot * newMovement;
+            }
+
+            Quaternion rotate = Quaternion.Euler(0, parts.transform.eulerAngles.y, 0);
+            newMovement = rotate * newMovement;
+
+            movement = Vector3.Lerp(jumpVec, newMovement, inertia);
+        }
+        else if (isFlying && isLanded)
+        {
+            isFlying = false;
+            isLanded = false;
+        }
     }
 
     private void Jump()
     {
-        if (McControls.IsKeyDown(Constants.CONTROL_JUMP) && isGrounded)
+        if (McControls.IsKey(Constants.CONTROL_JUMP) && isGrounded)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            isGrounded = false;
         }
     }
 
@@ -501,25 +575,25 @@ public class Player : MonoBehaviour
     {
         if (McControls.IsKeyDown(Constants.CONTROL_USE))
         {
-            if (viewMode != 1)
-            {
-                rightArm.SetActive(false);
-                partsSub.SetActive(true);
-                animSub.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_USE);
-            }
-            else
-            {
-                canvasRightArmIdle.SetActive(false);
-                canvasRightArm.SetActive(true);
-                animRightArm.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_USE);
-            }
-
             // ブロックの設置
             if 
             (
                 targetBlocks[Constants.TARGET_BLOCK_SET].w == 0 && 
                 !IsBlockInPlayer(targetBlocks[Constants.TARGET_BLOCK_SET])
             ){
+                if (viewMode != 1)
+                {
+                    rightArm.SetActive(false);
+                    partsSub.SetActive(true);
+                    animSub.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_USE);
+                }
+                else
+                {
+                    canvasRightArmIdle.SetActive(false);
+                    canvasRightArm.SetActive(true);
+                    animRightArm.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_USE);
+                }
+
                 lastSetFrame = Time.frameCount;
                 frameSetBlocks.Add
                 (
@@ -535,25 +609,25 @@ public class Player : MonoBehaviour
         }
         else if (McControls.IsKey(Constants.CONTROL_USE))
         {
-            if (viewMode != 1)
-            {
-                rightArm.SetActive(false);
-                partsSub.SetActive(true);
-                animSub.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_USE);
-            }
-            else
-            {
-                canvasRightArmIdle.SetActive(false);
-                canvasRightArm.SetActive(true);
-                animRightArm.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_USE);
-            }
-
             // ブロックの設置
             if 
             (
                 targetBlocks[Constants.TARGET_BLOCK_SET].w == 0 && Time.frameCount - lastSetFrame > 10 &&
                 !IsBlockInPlayer(targetBlocks[Constants.TARGET_BLOCK_SET])
             ){
+                if (viewMode != 1)
+                {
+                    rightArm.SetActive(false);
+                    partsSub.SetActive(true);
+                    animSub.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_USE);
+                }
+                else
+                {
+                    canvasRightArmIdle.SetActive(false);
+                    canvasRightArm.SetActive(true);
+                    animRightArm.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_USE);
+                }
+
                 lastSetFrame = Time.frameCount;
                 frameSetBlocks.Add
                 (
@@ -599,7 +673,7 @@ public class Player : MonoBehaviour
         Jump();
 
         // プレイヤーの飛行中移動更新
-        if (!isGrounded) FlyUpdate();
+        FlyUpdate();
 
         Attack(ref targetBlocks);
 
@@ -607,13 +681,6 @@ public class Player : MonoBehaviour
 
         // プレイヤーの移動
         UpdateHitBox();
-
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            Debug.Log("Player position: " + pos);
-            Debug.Log("BoxCollider center: " + bc.center);
-            Debug.Log("BoxCollider size: " + bc.bounds.size);
-        }
 
         // フレーム終了
         FrameFinish();
@@ -624,6 +691,7 @@ public class Player : MonoBehaviour
         // pos += hitBoxAdmin.GetMoveVec(hitBoxId);
         movement.y = rb.velocity.y;
         rb.velocity = movement;
+        
     }
 
     public void FrameStart()
@@ -651,24 +719,26 @@ public class Player : MonoBehaviour
 
     }
 
-    // void OnTriggerEnter(Collider collider)
-    // {
-    //     Debug.Log(collider.gameObject.name);
-    // }
-
-    // void OnTriggerStay(Collider collider)
-    // {
-    //     Debug.Log(collider.gameObject.name);
-    // }
-
-    // void OnTriggerExit(Collider collider)
-    // {
-    //     Debug.Log(collider.gameObject.name);
-    // }
-
     void OnCollisionEnter(Collision collision)
     {
-        // Debug.Log("Collision Enter with " + collision.gameObject.name);
+        foreach (ContactPoint contact in collision.contacts)
+        {
+            if (rb.velocity.y <= 0.001f && rb.velocity.y >= -0.001f)
+            {
+                if (contact.point.y >= pos.y - collisionOffset && contact.point.y <= pos.y + collisionOffset && !isFlying)
+                {
+                    isGrounded = true;
+                }
+                else if 
+                (
+                    contact.point.y >= pos.y - collisionOffset && contact.point.y <= pos.y + collisionOffset && isFlying)
+                {
+                    isLanded = true;
+                }
+            }
+
+            Debug.Log("Rigidbody Velocity: " + rb.velocity.y);
+        }
     }
 
     void OnCollisionStay(Collision collision)
@@ -678,6 +748,6 @@ public class Player : MonoBehaviour
 
     void OnCollisionExit(Collision collision)
     {
-        // Debug.Log("Collision Exit with " + collision.gameObject.name);
+        
     }
 }

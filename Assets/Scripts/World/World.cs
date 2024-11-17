@@ -613,6 +613,8 @@ public class World : MonoBehaviour
         int viewThreadGroupsY = Mathf.CeilToInt((worldOpposite.y - worldOrigin.y) / 8.0f);
         int viewThreadGroupsZ = Mathf.CeilToInt((worldOpposite.z - worldOrigin.z) / 8.0f);
 
+        if (viewThreadGroupsX == 0) return;
+
         // 処理するインデックスの開始地点、終了地点をセット
         worldShader.SetInt("VIEW_ORIGIN_X", worldOrigin.x);
         worldShader.SetInt("VIEW_ORIGIN_Y", worldOrigin.y);
@@ -696,6 +698,8 @@ public class World : MonoBehaviour
         int viewThreadGroupsX = Mathf.CeilToInt((worldOpposite.x - worldOrigin.x) / 8.0f);
         int viewThreadGroupsY = Mathf.CeilToInt((worldOpposite.y - worldOrigin.y) / 8.0f);
         int viewThreadGroupsZ = Mathf.CeilToInt((worldOpposite.z - worldOrigin.z) / 8.0f);
+
+        if (viewThreadGroupsX == 0) return;
 
         // 処理するインデックスの開始地点、終了地点をセット
         worldShader.SetInt("VIEW_ORIGIN_X", worldOrigin.x);

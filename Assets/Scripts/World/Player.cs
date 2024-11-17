@@ -611,7 +611,7 @@ public class Player : MonoBehaviour
                         targetBlocks[Constants.TARGET_BLOCK_SET].x,
                         targetBlocks[Constants.TARGET_BLOCK_SET].y,
                         targetBlocks[Constants.TARGET_BLOCK_SET].z,
-                        (float)Constants.BLOCK_TYPE.LAVA
+                        (float)Constants.BLOCK_TYPE.DIRT
                     )
                 );
             }
@@ -645,7 +645,7 @@ public class Player : MonoBehaviour
                         targetBlocks[Constants.TARGET_BLOCK_SET].x,
                         targetBlocks[Constants.TARGET_BLOCK_SET].y,
                         targetBlocks[Constants.TARGET_BLOCK_SET].z,
-                        (float)Constants.BLOCK_TYPE.LAVA
+                        (float)Constants.BLOCK_TYPE.DIRT
                     )
                 );
             }

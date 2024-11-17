@@ -40,8 +40,12 @@ public class PlayManager : Manager
 
     public override void BaseUpdate()
     {
-        if (Input.GetKeyUp(KeyCode.Escape) && wndPlay.gameObject.GetComponent<PlayWindow>().IsOpening)
-        {
+        if 
+        (
+            Input.GetKeyUp(KeyCode.Escape) && 
+            wndPlay.gameObject.GetComponent<PlayWindow>().IsOpening &&
+            !player.isInventoryOpen
+        ){
             ShowOption();
         }
 

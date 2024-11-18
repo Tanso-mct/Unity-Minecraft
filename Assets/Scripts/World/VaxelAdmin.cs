@@ -6,7 +6,6 @@ public class VaxelAdmin
 {
     private BlockAdmin blockAdmin;
     private ItemAdmin itemAdmin;
-    private EntityAdmin entityAdmin;
 
     public void Init()
     {
@@ -15,9 +14,6 @@ public class VaxelAdmin
 
         itemAdmin = new ItemAdmin();
         itemAdmin.Init();
-
-        entityAdmin = new EntityAdmin();
-        entityAdmin.Init();
     }
 
     public void LoadFromJson()

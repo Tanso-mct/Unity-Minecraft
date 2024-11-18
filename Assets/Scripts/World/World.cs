@@ -19,8 +19,6 @@ public class World : MonoBehaviour
     private ComputeBuffer throughBlocksIDBuff;
 
     // ワールド上のブロックとエンティティとアイテムのオブジェクト
-    Dictionary<Vector3Int, Vaxel> blocks;
-    List<Vaxel> entities;
     List<Vaxel> items;
 
     // ワールドメッシュオブジェクト
@@ -36,7 +34,8 @@ public class World : MonoBehaviour
     [SerializeField] private Player player;
 
     // Vaxelの管理クラス
-    private VaxelAdmin vaxelAdmin;
+    [SerializeField] private BlockAdmin blockAdmin;
+    [SerializeField] private ItemAdmin itemAdmin;
 
     // HitBoxの管理クラス
     [SerializeField] private McHitBoxAdmin hitboxAdmin;
@@ -114,13 +113,11 @@ public class World : MonoBehaviour
         // ワールドすり抜けブロックらの初期化
         throughBlocksIDBuff = new ComputeBuffer(Constants.WORLD_SIZE * Constants.WORLD_HEIGHT * Constants.WORLD_SIZE, sizeof(int));
 
-        blocks = new Dictionary<Vector3Int, Vaxel>();
-        entities = new List<Vaxel>();
         items = new List<Vaxel>();
 
         // Vaxelの管理クラスの初期化
-        vaxelAdmin = new VaxelAdmin();
-        vaxelAdmin.Init();
+        blockAdmin.Init();
+        itemAdmin.Init();
 
         // ソースメッシュオブジェクトの初期化
         sourceMeshVs = new List<Vector3>();

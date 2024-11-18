@@ -4,26 +4,23 @@ using UnityEngine;
 
 public class BlockAdmin
 {
-    // ブロックのリスト
-    Dictionary<Vector3, IBlock> blocks;
+    // ワールド上の何らかのデータを持つブロックを管理
+    private Dictionary<Vector3Int, IBlock> dataContainBlocks;
 
     public void Init()
     {
 
     }
 
-    public void Execute()
+    public void Use(Vector4 block)
     {
 
     }
 
-    public void Register(IBlock gameObject)
+    public void Break(Vector4 block)
     {
 
     }
 
-    public void Unregister(IBlock gameObject)
-    {
 
-    }
 }

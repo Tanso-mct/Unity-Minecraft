@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class ItemAdmin
 {
-    // アイテムのリスト
-    Dictionary<Vector3, LinkedList<IItem>> items;
+    // エンティティ状態のアイテムのリスト
+    private List<GameObject> entityItems;
 
     public void Init()
     {
@@ -17,12 +17,12 @@ public class ItemAdmin
 
     }
 
-    public void Register(GameObject gameObject)
+    public void LoadFromJson()
     {
 
     }
 
-    public void Unregister(GameObject gameObject)
+    public void SaveToJson()
     {
 
     }

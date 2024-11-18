@@ -5,11 +5,6 @@ using UnityEngine;
 abstract public class Vaxel
 {
     abstract public void Init();
-    abstract public void LoadFromJson();
-    abstract public void SaveToJson();
-
-    public void DestroyJson()
-    {
-
-    }
+    abstract public void LoadFromJson(ref WorldData worldData);
+    abstract public void SaveToJson(ref WorldData worldData);
 }

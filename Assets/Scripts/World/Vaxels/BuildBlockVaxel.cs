@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor.iOS;
 using UnityEngine;
 
-public class BuildBlockVaxel
+public class BuildBlockVaxel : Vaxel, IBlock, IItem
 {
 
 }

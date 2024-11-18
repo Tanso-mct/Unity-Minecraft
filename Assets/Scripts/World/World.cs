@@ -770,8 +770,13 @@ public class World : MonoBehaviour
             worldShader.Dispatch(blockUpdate, 1, 1, 1);
 
             targetBlockIDBuff.GetData(targetBlockID);
+            player.frameSetBlocks.w = targetBlockID[0];
 
             Debug.Log("Set TargetBlockID : " + targetBlockID[0]);
+        }
+        else
+        {
+            player.frameSetBlocks.w = Constants.FRAME_BLOCK_IS_NULL;
         }
 
         if (player.isFrameDestroyBlock)
@@ -784,8 +789,13 @@ public class World : MonoBehaviour
             worldShader.Dispatch(blockUpdate, 1, 1, 1);
 
             targetBlockIDBuff.GetData(targetBlockID);
+            player.frameDestroyBlocks.w = targetBlockID[0];
 
             Debug.Log("Destroy TargetBlockID : " + targetBlockID[0]);
+        }
+        else
+        {
+            player.frameDestroyBlocks.w = Constants.FRAME_BLOCK_IS_NULL;
         }
 
         player.ResetFrameBlocks();

@@ -37,6 +37,10 @@ public class Player : MonoBehaviour
     // 当たり判定管理クラス
     [SerializeField] private McHitBoxAdmin hitBoxAdmin;
     private int hitBoxId;
+
+    // Vaxel管理クラス
+    [SerializeField] private BlockAdmin blockAdmin;
+    [SerializeField] private ItemAdmin itemAdmin;
     
     // プレイヤーのリーチ
     [SerializeField] private float reach = 5f;
@@ -125,11 +129,11 @@ public class Player : MonoBehaviour
     [SerializeField] private List<Texture2D> destroyStageTextures;
 
     // フレーム内で設置したブロックのデータ
-    public bool isFrameSetBlock = false;
+    [HideInInspector] public bool isFrameSetBlock = false;
     [HideInInspector] public Vector4 frameSetBlocks;
 
     // フレーム内で破壊したブロックのデータ
-    public bool isFrameDestroyBlock = false;
+    [HideInInspector] public bool isFrameDestroyBlock = false;
     [HideInInspector] public Vector4 frameDestroyBlocks;
 
     // 最後に設置したブロックについて
@@ -140,6 +144,10 @@ public class Player : MonoBehaviour
     private float destroyProgress = 0f;
     private float blockDurability = 10f;
     private Vector4 destroyingBlock;
+
+    // コンテナら
+    [SerializeField] private Inventory inventory;
+    [SerializeField] private HotBar hotBar;
 
     // 何らかのインベントリを開いているかどうか
     public bool isInventoryOpen = false;
@@ -473,8 +481,18 @@ public class Player : MonoBehaviour
                 {
                     isDestroying = false;
                     destroyProgress = 0f;
+
                     isFrameDestroyBlock = true;
-                    frameDestroyBlocks = targetBlocks[Constants.TARGET_BLOCK_SELECT];
+
+                    // ブロックの破壊
+                    blockAdmin.Break
+                    (
+                        targetBlocks[Constants.TARGET_BLOCK_SELECT],
+                        ref frameDestroyBlocks,　inventory
+                    );
+
+                    // frameDestroyBlocks = targetBlocks[Constants.TARGET_BLOCK_SELECT];
+
                     for (int i = 0; i < selectorParts.Count; i++)
                     {
                         selectorParts[i].GetComponent<MeshRenderer>().material.mainTexture = selectorTexture;
@@ -604,13 +622,32 @@ public class Player : MonoBehaviour
 
                 lastSetFrame = Time.frameCount;
                 isFrameSetBlock = true;
-                frameSetBlocks = new Vector4
-                (
-                    targetBlocks[Constants.TARGET_BLOCK_SET].x,
-                    targetBlocks[Constants.TARGET_BLOCK_SET].y,
-                    targetBlocks[Constants.TARGET_BLOCK_SET].z,
-                    (float)Constants.VAXEL_TYPE.DIRT
-                );
+
+                if (blockAdmin.IsUseable((int)targetBlocks[Constants.TARGET_BLOCK_SELECT].w))
+                {
+                    // ブロックの使用
+                    blockAdmin.Use
+                    (
+                        targetBlocks[Constants.TARGET_BLOCK_SELECT], inventory, hotBar.SelectingSlot
+                    );
+                }
+                else
+                {
+                    // ブロックの設置
+                    blockAdmin.Set
+                    (
+                        targetBlocks[Constants.TARGET_BLOCK_SET],
+                        ref frameSetBlocks, inventory, hotBar.SelectingSlot
+                    );
+                }
+                
+                // frameSetBlocks = new Vector4
+                // (
+                //     targetBlocks[Constants.TARGET_BLOCK_SET].x,
+                //     targetBlocks[Constants.TARGET_BLOCK_SET].y,
+                //     targetBlocks[Constants.TARGET_BLOCK_SET].z,
+                //     (float)Constants.VAXEL_TYPE.DIRT
+                // );
             }
         }
         else if (McControls.IsKey(Constants.CONTROL_USE))

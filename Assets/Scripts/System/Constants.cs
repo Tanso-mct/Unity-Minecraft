@@ -95,6 +95,7 @@ public class Constants : MonoBehaviour
     // Vaxel type
     public const int BLOCK_TYPE_CANT_SET = -1;
     public const int BLOCK_TYPE_CANT_BREAK = -1;
+    public const int FRAME_BLOCK_IS_NULL = -2;
     public enum VAXEL_TYPE
     {
         AIR,

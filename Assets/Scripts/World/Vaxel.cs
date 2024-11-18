@@ -7,13 +7,17 @@ abstract public class Vaxel
     protected int id;
 
     protected int setSlot;
+
+    protected int setBlockId;
     protected Container sourceSetContainer;
 
+    protected int breakBlockId;
     protected Container sourceBreakContainer;
 
     public virtual void Init()
     {
-
+        setBlockId = (int)Constants.VAXEL_TYPE.AIR;
+        breakBlockId = (int)Constants.VAXEL_TYPE.AIR;
     }
 
     abstract public void LoadFromJson(ref WorldData worldData);
@@ -28,7 +32,7 @@ abstract public class Vaxel
         return false;
     }
 
-    public virtual void UseBlock(Vector4 block, Container sourceContainer, int setSlot)
+    public virtual void UseBlock(Vector4 block, Container sourceContainer)
     {
 
     }
@@ -38,20 +42,27 @@ abstract public class Vaxel
 
     }
 
-    public virtual void FinishedSet(Vector4 block, ref Vector4 frameSetBlock)
+    public virtual void FinishedSet(Vector4 frameSetBlock)
     {
-
+        Debug.Log("=====================================");
+        Debug.Log("Finished Set Block : " + setBlockId);
+        Debug.Log("Before Block : " + frameSetBlock.w);
+        Debug.Log("=====================================");
     }
 
-    public virtual void FinishedBreak(Vector4 block, ref Vector4 frameDestroyBlock)
+    public virtual void FinishedBreak(Vector4 frameDestroyBlock)
     {
-
+        Debug.Log("=====================================");
+        Debug.Log("Finished Break Block : " + breakBlockId);
+        Debug.Log("Before Block : " + frameDestroyBlock.w);
+        Debug.Log("=====================================");
     }
 
     public virtual void TryBreak(Vector4 block, ref Vector4 frameDestroyBlock, Container sourceContainer)
     {
         sourceBreakContainer = sourceContainer;
         frameDestroyBlock = block;
+        breakBlockId = (int)block.w;
     }
 
     public virtual void TrySet(Vector4 block, ref Vector4 frameSetBlock, Container sourceContainer, int slot)
@@ -63,6 +74,7 @@ abstract public class Vaxel
         setBlock.w = (float)Constants.VAXEL_TYPE.DIRT;;
 
         frameSetBlock = setBlock;
+        setBlockId = (int)setBlock.w;
     }
 
     public void DiscardItem(Vector3 playerPos, Vector3 playerDir)

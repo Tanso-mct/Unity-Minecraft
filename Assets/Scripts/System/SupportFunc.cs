@@ -75,4 +75,13 @@ public class SupportFunc
         else Debug.LogError("Failed to set texture: " + texture.name);
     }
 
+    static public void LoadSprite(ref Sprite sprite, string spritePath)
+    {
+        sprite = Resources.Load<Sprite>(spritePath);
+        if (sprite == null)
+        {
+            Debug.LogError("Failed to load sprite: " + spritePath);
+        }
+    }
+
 }

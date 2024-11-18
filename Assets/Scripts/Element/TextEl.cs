@@ -13,9 +13,9 @@ public class TextEl : Element
     public UnityEvent hoverEvent = null;
     public UnityEvent unHoverEvent = null;
 
-    private bool clicked = false;
     public UnityEvent clickEvent = null;
-    public UnityEvent unClickEvent = null;
+
+    public UnityEvent initEvent = null;
 
     public override void Init()
     {
@@ -32,6 +32,8 @@ public class TextEl : Element
                 Debug.LogError("Failed to add " + textList[i].name + " to diTexts.");
             }
         }
+
+        initEvent.Invoke();
     }
 
     public override void Show()
@@ -68,12 +70,6 @@ public class TextEl : Element
         if (IsClick() && clickEvent != null)
         {
             clickEvent.Invoke();
-            clicked = true;
-        }
-        else if (clicked && Input.GetMouseButtonDown(0) && unClickEvent != null)
-        {
-            unClickEvent.Invoke();
-            clicked = false;
         }
     }
 }

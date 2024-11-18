@@ -771,8 +771,6 @@ public class World : MonoBehaviour
 
             targetBlockIDBuff.GetData(targetBlockID);
             player.frameSetBlocks.w = targetBlockID[0];
-
-            Debug.Log("Set TargetBlockID : " + targetBlockID[0]);
         }
         else
         {
@@ -790,8 +788,6 @@ public class World : MonoBehaviour
 
             targetBlockIDBuff.GetData(targetBlockID);
             player.frameDestroyBlocks.w = targetBlockID[0];
-
-            Debug.Log("Destroy TargetBlockID : " + targetBlockID[0]);
         }
         else
         {
@@ -889,7 +885,7 @@ public class World : MonoBehaviour
         HitBoxUpdate();
 
         // プレイヤーの位置更新
-        player.Transfer();
+        player.UpdateInfos();
         
     }
 

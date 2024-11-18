@@ -107,9 +107,6 @@ public class WorldMesh : MonoBehaviour
         float textureTileX = 16f / textureAtlas.width;
         float textureTileY = 16f / textureAtlas.height;
 
-        Debug.Log("textureTileX: " + textureTileX);
-        Debug.Log("textureTileY: " + textureTileY);
-
         shader.SetFloat("TEXTURE_BLOCK_TILE_U", textureTileX);
         shader.SetFloat("TEXTURE_BLOCK_TILE_V", textureTileY);
 

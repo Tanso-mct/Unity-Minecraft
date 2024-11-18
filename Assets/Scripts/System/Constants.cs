@@ -161,6 +161,9 @@ public class Constants : MonoBehaviour
     public const string TEXTURE_REDSTONE_ORE = "Textures/blocks/redstone_ore";
     public const string TEXTURE_LAPIS_ORE = "Textures/blocks/lapis_ore";
 
+    // Sprite path
+    public const string SPRITE_NULL_ITEM = "Textures/items/null_item";
+
     // World Prefab path
     public const string PREFAB_VAXEL = "World/Vaxel";
     public const string PREFAB_BLOCK = "World/Block";

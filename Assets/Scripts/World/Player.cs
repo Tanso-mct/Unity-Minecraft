@@ -491,8 +491,6 @@ public class Player : MonoBehaviour
                         ref frameDestroyBlocks,　inventory
                     );
 
-                    // frameDestroyBlocks = targetBlocks[Constants.TARGET_BLOCK_SELECT];
-
                     for (int i = 0; i < selectorParts.Count; i++)
                     {
                         selectorParts[i].GetComponent<MeshRenderer>().material.mainTexture = selectorTexture;
@@ -628,7 +626,7 @@ public class Player : MonoBehaviour
                     // ブロックの使用
                     blockAdmin.Use
                     (
-                        targetBlocks[Constants.TARGET_BLOCK_SELECT], inventory, hotBar.SelectingSlot
+                        targetBlocks[Constants.TARGET_BLOCK_SELECT], inventory
                     );
                 }
                 else
@@ -637,17 +635,9 @@ public class Player : MonoBehaviour
                     blockAdmin.Set
                     (
                         targetBlocks[Constants.TARGET_BLOCK_SET],
-                        ref frameSetBlocks, inventory, hotBar.SelectingSlot
+                        ref frameSetBlocks, hotBar, hotBar.SelectingSlot
                     );
                 }
-                
-                // frameSetBlocks = new Vector4
-                // (
-                //     targetBlocks[Constants.TARGET_BLOCK_SET].x,
-                //     targetBlocks[Constants.TARGET_BLOCK_SET].y,
-                //     targetBlocks[Constants.TARGET_BLOCK_SET].z,
-                //     (float)Constants.VAXEL_TYPE.DIRT
-                // );
             }
         }
         else if (McControls.IsKey(Constants.CONTROL_USE))
@@ -673,13 +663,24 @@ public class Player : MonoBehaviour
 
                 lastSetFrame = Time.frameCount;
                 isFrameSetBlock = true;
-                frameSetBlocks = new Vector4
-                (
-                    targetBlocks[Constants.TARGET_BLOCK_SET].x,
-                    targetBlocks[Constants.TARGET_BLOCK_SET].y,
-                    targetBlocks[Constants.TARGET_BLOCK_SET].z,
-                    (float)Constants.VAXEL_TYPE.DIRT
-                );
+
+                if (blockAdmin.IsUseable((int)targetBlocks[Constants.TARGET_BLOCK_SELECT].w))
+                {
+                    // ブロックの使用
+                    blockAdmin.Use
+                    (
+                        targetBlocks[Constants.TARGET_BLOCK_SELECT], inventory
+                    );
+                }
+                else
+                {
+                    // ブロックの設置
+                    blockAdmin.Set
+                    (
+                        targetBlocks[Constants.TARGET_BLOCK_SET],
+                        ref frameSetBlocks, hotBar, hotBar.SelectingSlot
+                    );
+                }
             }
         }
 
@@ -733,8 +734,9 @@ public class Player : MonoBehaviour
         FrameFinish();
     }
 
-    public void Transfer()
+    public void UpdateInfos()
     {
+        // 位置情報の更新
         if (!isInventoryOpen)
         {
             movement.y = rb.velocity.y;
@@ -748,7 +750,11 @@ public class Player : MonoBehaviour
                 rb.velocity = movement;
             }
             else rb.velocity = Vector3.zero;
-        }        
+        }
+
+        // インベントリの更新
+        blockAdmin.FinishedSet(frameSetBlocks);       
+        blockAdmin.FinishedBreak(frameDestroyBlocks); 
     }
 
     public void FrameStart()

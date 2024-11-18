@@ -4,8 +4,8 @@ using UnityEngine;
 
 public interface IItem
 {
-    float GetMiningSpeed(Constants.BLOCK_TYPE blockType);
+    float GetMiningSpeed(Constants.VAXEL_TYPE blockType);
 
-    void Use(Camera cam, Vector4 block, ref List<Vector4> frameSetBlock);
-    void Discard(Vector3 playerPos, Vector3 playerDir);
+    void UseItem(Camera cam, Vector4 target, ref List<Vector4> frameSetBlock);
+    void DiscardItem(Vector3 playerPos, Vector3 playerDir);
 }

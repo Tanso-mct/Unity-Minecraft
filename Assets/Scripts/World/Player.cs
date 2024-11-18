@@ -125,10 +125,12 @@ public class Player : MonoBehaviour
     [SerializeField] private List<Texture2D> destroyStageTextures;
 
     // フレーム内で設置したブロックのデータ
-    [HideInInspector] public List<Vector4> frameSetBlocks;
+    public bool isFrameSetBlock = false;
+    [HideInInspector] public Vector4 frameSetBlocks;
 
     // フレーム内で破壊したブロックのデータ
-    [HideInInspector] public List<Vector4> frameDestroyBlocks;
+    public bool isFrameDestroyBlock = false;
+    [HideInInspector] public Vector4 frameDestroyBlocks;
 
     // 最後に設置したブロックについて
     int lastSetFrame = 0;
@@ -192,10 +194,6 @@ public class Player : MonoBehaviour
         {
             selectorParts[i].GetComponent<MeshRenderer>().material.mainTexture = selectorTexture;
         }
-
-        // フレーム内で設置、破壊したブロックのデータを初期化。Worldクラスで管理する。
-        frameSetBlocks = new List<Vector4>();
-        frameDestroyBlocks = new List<Vector4>();
 
         // プレイヤーの当たり判定を設定
         hitBoxId = hitBoxAdmin.RegisterHitBox(pos, bc.size, Vector3.zero);
@@ -475,7 +473,8 @@ public class Player : MonoBehaviour
                 {
                     isDestroying = false;
                     destroyProgress = 0f;
-                    frameDestroyBlocks.Add(targetBlocks[Constants.TARGET_BLOCK_SELECT]);
+                    isFrameDestroyBlock = true;
+                    frameDestroyBlocks = targetBlocks[Constants.TARGET_BLOCK_SELECT];
                     for (int i = 0; i < selectorParts.Count; i++)
                     {
                         selectorParts[i].GetComponent<MeshRenderer>().material.mainTexture = selectorTexture;
@@ -604,15 +603,13 @@ public class Player : MonoBehaviour
                 }
 
                 lastSetFrame = Time.frameCount;
-                frameSetBlocks.Add
+                isFrameSetBlock = true;
+                frameSetBlocks = new Vector4
                 (
-                    new Vector4
-                    (
-                        targetBlocks[Constants.TARGET_BLOCK_SET].x,
-                        targetBlocks[Constants.TARGET_BLOCK_SET].y,
-                        targetBlocks[Constants.TARGET_BLOCK_SET].z,
-                        (float)Constants.BLOCK_TYPE.DIRT
-                    )
+                    targetBlocks[Constants.TARGET_BLOCK_SET].x,
+                    targetBlocks[Constants.TARGET_BLOCK_SET].y,
+                    targetBlocks[Constants.TARGET_BLOCK_SET].z,
+                    (float)Constants.VAXEL_TYPE.DIRT
                 );
             }
         }
@@ -638,19 +635,23 @@ public class Player : MonoBehaviour
                 }
 
                 lastSetFrame = Time.frameCount;
-                frameSetBlocks.Add
+                isFrameSetBlock = true;
+                frameSetBlocks = new Vector4
                 (
-                    new Vector4
-                    (
-                        targetBlocks[Constants.TARGET_BLOCK_SET].x,
-                        targetBlocks[Constants.TARGET_BLOCK_SET].y,
-                        targetBlocks[Constants.TARGET_BLOCK_SET].z,
-                        (float)Constants.BLOCK_TYPE.DIRT
-                    )
+                    targetBlocks[Constants.TARGET_BLOCK_SET].x,
+                    targetBlocks[Constants.TARGET_BLOCK_SET].y,
+                    targetBlocks[Constants.TARGET_BLOCK_SET].z,
+                    (float)Constants.VAXEL_TYPE.DIRT
                 );
             }
         }
 
+    }
+
+    public void ResetFrameBlocks()
+    {
+        isFrameSetBlock = false;
+        isFrameDestroyBlock = false;
     }
 
     public void OnArmAnimEnd()

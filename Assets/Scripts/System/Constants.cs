@@ -94,7 +94,8 @@ public class Constants : MonoBehaviour
 
     // Vaxel type
     public const int BLOCK_TYPE_CANT_SET = -1;
-    public enum BLOCK_TYPE
+    public const int BLOCK_TYPE_CANT_BREAK = -1;
+    public enum VAXEL_TYPE
     {
         AIR,
         BEDROCK,
@@ -112,6 +113,9 @@ public class Constants : MonoBehaviour
 
     public const int TARGET_BLOCK_SELECT = 0;
     public const int TARGET_BLOCK_SET = 1;
+
+    // Mining Speed
+    public const float MINING_SPEED_HAND = 1.0f;
 
     // Block object type    
     public const string BLOCK_OBJ_FRONT = "Front";

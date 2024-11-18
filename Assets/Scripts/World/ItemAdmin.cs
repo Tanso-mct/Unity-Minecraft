@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ItemAdmin
+public class ItemAdmin : MonoBehaviour
 {
     // エンティティ状態のアイテムのリスト
     private List<GameObject> entityItems;

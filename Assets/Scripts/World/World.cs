@@ -301,10 +301,10 @@ public class World : MonoBehaviour
                     for (int z = 0; z < Constants.WORLD_SIZE; z++)
                     {
                         int index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
-                        if (y == 0) blocksId[index] = (int)Constants.BLOCK_TYPE.BEDROCK; 
-                        else if (y >= 1 && y <= 2) blocksId[index] = (int)Constants.BLOCK_TYPE.DIRT;
-                        else if (y == 3) blocksId[index] = (int)Constants.BLOCK_TYPE.GRASS_TOP;
-                        else blocksId[index] = (int)Constants.BLOCK_TYPE.AIR;
+                        if (y == 0) blocksId[index] = (int)Constants.VAXEL_TYPE.BEDROCK; 
+                        else if (y >= 1 && y <= 2) blocksId[index] = (int)Constants.VAXEL_TYPE.DIRT;
+                        else if (y == 3) blocksId[index] = (int)Constants.VAXEL_TYPE.GRASS_TOP;
+                        else blocksId[index] = (int)Constants.VAXEL_TYPE.AIR;
                     }
                 }
             }
@@ -315,7 +315,7 @@ public class World : MonoBehaviour
                 int y = 5;
                 int z = Constants.WORLD_HALF_SIZE;
                 int index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
-                blocksId[index] = (int)Constants.BLOCK_TYPE.BEDROCK;
+                blocksId[index] = (int)Constants.VAXEL_TYPE.BEDROCK;
             }
 
             // 池を生成
@@ -324,41 +324,41 @@ public class World : MonoBehaviour
                 int y = 4;
                 int z = Constants.WORLD_HALF_SIZE + 4;
                 int index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
-                throughBlocksId[index] = (int)Constants.BLOCK_TYPE.WATER;
+                throughBlocksId[index] = (int)Constants.VAXEL_TYPE.WATER;
 
                 y = 5;
                 index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
-                throughBlocksId[index] = (int)Constants.BLOCK_TYPE.WATER;
+                throughBlocksId[index] = (int)Constants.VAXEL_TYPE.WATER;
 
                 y = 6;
                 index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
-                throughBlocksId[index] = (int)Constants.BLOCK_TYPE.WATER;
+                throughBlocksId[index] = (int)Constants.VAXEL_TYPE.WATER;
 
                 z = Constants.WORLD_HALF_SIZE + 5;
                 y = 4;
                 index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
-                throughBlocksId[index] = (int)Constants.BLOCK_TYPE.WATER;
+                throughBlocksId[index] = (int)Constants.VAXEL_TYPE.WATER;
 
                 y = 5;
                 index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
-                throughBlocksId[index] = (int)Constants.BLOCK_TYPE.WATER;
+                throughBlocksId[index] = (int)Constants.VAXEL_TYPE.WATER;
 
                 y = 6;
                 index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
-                throughBlocksId[index] = (int)Constants.BLOCK_TYPE.WATER;
+                throughBlocksId[index] = (int)Constants.VAXEL_TYPE.WATER;
 
                 z = Constants.WORLD_HALF_SIZE + 6;
                 y = 4;
                 index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
-                throughBlocksId[index] = (int)Constants.BLOCK_TYPE.WATER;
+                throughBlocksId[index] = (int)Constants.VAXEL_TYPE.WATER;
 
                 y = 5;
                 index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
-                throughBlocksId[index] = (int)Constants.BLOCK_TYPE.WATER;
+                throughBlocksId[index] = (int)Constants.VAXEL_TYPE.WATER;
 
                 y = 6;
                 index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
-                throughBlocksId[index] = (int)Constants.BLOCK_TYPE.WATER;
+                throughBlocksId[index] = (int)Constants.VAXEL_TYPE.WATER;
             }
 
             for (int x = Constants.WORLD_HALF_SIZE + 12; x < Constants.WORLD_HALF_SIZE + 20; x++)
@@ -366,7 +366,7 @@ public class World : MonoBehaviour
                 int y = 4;
                 int z = Constants.WORLD_HALF_SIZE + 4;
                 int index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
-                throughBlocksId[index] = (int)Constants.BLOCK_TYPE.WATER;
+                throughBlocksId[index] = (int)Constants.VAXEL_TYPE.WATER;
             }
         }
         else 
@@ -553,7 +553,7 @@ public class World : MonoBehaviour
         Vector4 setBlock = new Vector4(0, 0, 0, Constants.BLOCK_TYPE_CANT_SET);
         for (int i = 0; i < raycastBlocks.Length; i++)
         {
-            if (raycastBlocks[i].w != (int)Constants.BLOCK_TYPE.AIR)
+            if (raycastBlocks[i].w != (int)Constants.VAXEL_TYPE.AIR)
             {
                 selectBlock.x = raycastBlocks[i].x;
                 selectBlock.y = raycastBlocks[i].y;
@@ -760,35 +760,36 @@ public class World : MonoBehaviour
         // シェーダーの定数をセット
         Constants.SetShaderConstants(ref worldShader);
 
-        // ブロックの生成
-        for (int i = 0; i < player.frameSetBlocks.Count; i++)
+        if (player.isFrameSetBlock)
         {
-            worldShader.SetInt("TARGET_BLOCK_X", (int)player.frameSetBlocks[i].x);
-            worldShader.SetInt("TARGET_BLOCK_Y", (int)player.frameSetBlocks[i].y);
-            worldShader.SetInt("TARGET_BLOCK_Z", (int)player.frameSetBlocks[i].z);
-            worldShader.SetInt("GENERATE_BLOCK_ID", (int)player.frameSetBlocks[i].w);
+            // ブロックの生成
+            worldShader.SetInt("TARGET_BLOCK_X", (int)player.frameSetBlocks.x);
+            worldShader.SetInt("TARGET_BLOCK_Y", (int)player.frameSetBlocks.y);
+            worldShader.SetInt("TARGET_BLOCK_Z", (int)player.frameSetBlocks.z);
+            worldShader.SetInt("GENERATE_BLOCK_ID", (int)player.frameSetBlocks.w);
             worldShader.Dispatch(blockUpdate, 1, 1, 1);
 
             targetBlockIDBuff.GetData(targetBlockID);
 
             Debug.Log("Set TargetBlockID : " + targetBlockID[0]);
         }
-        player.frameSetBlocks.Clear();
 
-        // ブロックの削除
-        for (int i = 0; i < player.frameDestroyBlocks.Count; i++)
+        if (player.isFrameDestroyBlock)
         {
-            worldShader.SetInt("TARGET_BLOCK_X", (int)player.frameDestroyBlocks[i].x);
-            worldShader.SetInt("TARGET_BLOCK_Y", (int)player.frameDestroyBlocks[i].y);
-            worldShader.SetInt("TARGET_BLOCK_Z", (int)player.frameDestroyBlocks[i].z);
-            worldShader.SetInt("GENERATE_BLOCK_ID", (int)Constants.BLOCK_TYPE.AIR);
+            // ブロックの削除
+            worldShader.SetInt("TARGET_BLOCK_X", (int)player.frameDestroyBlocks.x);
+            worldShader.SetInt("TARGET_BLOCK_Y", (int)player.frameDestroyBlocks.y);
+            worldShader.SetInt("TARGET_BLOCK_Z", (int)player.frameDestroyBlocks.z);
+            worldShader.SetInt("GENERATE_BLOCK_ID", (int)Constants.VAXEL_TYPE.AIR);
             worldShader.Dispatch(blockUpdate, 1, 1, 1);
 
             targetBlockIDBuff.GetData(targetBlockID);
 
             Debug.Log("Destroy TargetBlockID : " + targetBlockID[0]);
         }
-        player.frameDestroyBlocks.Clear();
+
+        player.ResetFrameBlocks();
+
 
         // バッファの解放
         targetBlockIDBuff.Release();

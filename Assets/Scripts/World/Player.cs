@@ -488,7 +488,7 @@ public class Player : MonoBehaviour
                     blockAdmin.Break
                     (
                         targetBlocks[Constants.TARGET_BLOCK_SELECT],
-                        ref frameDestroyBlocks,　inventory
+                        ref frameDestroyBlocks, hotBar
                     );
 
                     for (int i = 0; i < selectorParts.Count; i++)
@@ -599,11 +599,11 @@ public class Player : MonoBehaviour
 
         if (McControls.IsKeyDown(Constants.CONTROL_USE))
         {
-            // ブロックの設置
             if 
             (
                 targetBlocks[Constants.TARGET_BLOCK_SET].w == 0 && 
-                !IsBlockInPlayer(targetBlocks[Constants.TARGET_BLOCK_SET])
+                !IsBlockInPlayer(targetBlocks[Constants.TARGET_BLOCK_SET]) &&
+                hotBar.GetIsContain(hotBar.SelectingSlot) != 0
             ){
                 if (viewMode != 1)
                 {
@@ -617,10 +617,8 @@ public class Player : MonoBehaviour
                     canvasRightArm.SetActive(true);
                     animRightArm.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_USE);
                 }
-
                 lastSetFrame = Time.frameCount;
                 isFrameSetBlock = true;
-
                 if (blockAdmin.IsUseable((int)targetBlocks[Constants.TARGET_BLOCK_SELECT].w))
                 {
                     // ブロックの使用
@@ -642,11 +640,11 @@ public class Player : MonoBehaviour
         }
         else if (McControls.IsKey(Constants.CONTROL_USE))
         {
-            // ブロックの設置
             if 
             (
                 targetBlocks[Constants.TARGET_BLOCK_SET].w == 0 && Time.frameCount - lastSetFrame > 10 &&
-                !IsBlockInPlayer(targetBlocks[Constants.TARGET_BLOCK_SET])
+                !IsBlockInPlayer(targetBlocks[Constants.TARGET_BLOCK_SET]) &&
+                hotBar.GetIsContain(hotBar.SelectingSlot) != 0
             ){
                 if (viewMode != 1)
                 {
@@ -660,7 +658,7 @@ public class Player : MonoBehaviour
                     canvasRightArm.SetActive(true);
                     animRightArm.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_USE);
                 }
-
+                
                 lastSetFrame = Time.frameCount;
                 isFrameSetBlock = true;
 
@@ -759,7 +757,31 @@ public class Player : MonoBehaviour
 
     public void FrameStart()
     {
+        // プレイヤーの現在座標を取得
         pos = transform.position;
+
+        // プレイヤーのホットバーの選択スロットを更新
+        if (McControls.IsKeyDown(Constants.CONTROL_HS1)) hotBar.SelectSlot(1);
+        else if (McControls.IsKeyDown(Constants.CONTROL_HS2)) hotBar.SelectSlot(2);
+        else if (McControls.IsKeyDown(Constants.CONTROL_HS3)) hotBar.SelectSlot(3);
+        else if (McControls.IsKeyDown(Constants.CONTROL_HS4)) hotBar.SelectSlot(4);
+        else if (McControls.IsKeyDown(Constants.CONTROL_HS5)) hotBar.SelectSlot(5);
+        else if (McControls.IsKeyDown(Constants.CONTROL_HS6)) hotBar.SelectSlot(6);
+        else if (McControls.IsKeyDown(Constants.CONTROL_HS7)) hotBar.SelectSlot(7);
+        else if (McControls.IsKeyDown(Constants.CONTROL_HS8)) hotBar.SelectSlot(8);
+        else if (McControls.IsKeyDown(Constants.CONTROL_HS9)) hotBar.SelectSlot(9);
+
+        float scroll = Input.GetAxis("Mouse ScrollWheel");
+        if (scroll > 0)
+        {
+            if (hotBar.SelectingSlot == 1) hotBar.SelectSlot(9);
+            else hotBar.SelectSlot(hotBar.SelectingSlot - 1);
+        }
+        else if (scroll < 0)
+        {
+            if (hotBar.SelectingSlot == 9) hotBar.SelectSlot(1);
+            else hotBar.SelectSlot(hotBar.SelectingSlot + 1);
+        }
     }
 
     private void FrameFinish()

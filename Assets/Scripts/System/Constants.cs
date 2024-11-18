@@ -96,6 +96,7 @@ public class Constants : MonoBehaviour
     public const int BLOCK_TYPE_CANT_SET = -1;
     public const int BLOCK_TYPE_CANT_BREAK = -1;
     public const int FRAME_BLOCK_IS_NULL = -2;
+
     public enum VAXEL_TYPE
     {
         AIR,
@@ -142,27 +143,27 @@ public class Constants : MonoBehaviour
     // Texture atlas path
     public const string TEXTURE_ATLAS_BLOCK = "Textures/Atlas/blocks";
 
-    // Texture path
-    public const string TEXTURE_BEDROCK = "Textures/blocks/bedrock";
-    public const string TEXTURE_DIRT = "Textures/blocks/dirt";
-    public const string TEXTURE_GRASS_TOP = "Textures/blocks/grass_top";
-    public const string TEXTURE_GRASS_SIDE = "Textures/blocks/grass_side";
-    public const string TEXTURE_GRASS_BOTTOM = "Textures/blocks/dirt";
-    public const string TEXTURE_STONE = "Textures/blocks/stone";
-    public const string TEXTURE_COBBLESTONE = "Textures/blocks/cobblestone";
-    public const string TEXTURE_STONE_ANDESITE = "Textures/blocks/stone_andesite";
-    public const string TEXTURE_STONE_DIORITE = "Textures/blocks/stone_diorite";
-    public const string TEXTURE_STONE_GRANITE = "Textures/blocks/stone_granite";
-    public const string TEXTURE_COAL_ORE = "Textures/blocks/coal_ore";
-    public const string TEXTURE_IRON_ORE = "Textures/blocks/iron_ore";
-    public const string TEXTURE_GOLD_ORE = "Textures/blocks/gold_ore";
-    public const string TEXTURE_DIAMOND_ORE = "Textures/blocks/diamond_ore";
-    public const string TEXTURE_EMERALD_ORE = "Textures/blocks/emerald_ore";
-    public const string TEXTURE_REDSTONE_ORE = "Textures/blocks/redstone_ore";
-    public const string TEXTURE_LAPIS_ORE = "Textures/blocks/lapis_ore";
-
     // Sprite path
-    public const string SPRITE_NULL_ITEM = "Textures/items/null_item";
+    public const string SPRITE_BEDROCK = "Textures/blocks/bedrock";
+    public const string SPRITE_DIRT = "Textures/blocks/dirt";
+    public const string SPRITE_GRASS_TOP = "Textures/blocks/grass_top";
+    public const string SPRITE_GRASS_SIDE = "Textures/blocks/grass_side";
+    public const string SPRITE_GRASS_BOTTOM = "Textures/blocks/dirt";
+    public const string SPRITE_STONE = "Textures/blocks/stone";
+    public const string SPRITE_COBBLESTONE = "Textures/blocks/cobblestone";
+    public const string SPRITE_STONE_ANDESITE = "Textures/blocks/stone_andesite";
+    public const string SPRITE_STONE_DIORITE = "Textures/blocks/stone_diorite";
+    public const string SPRITE_STONE_GRANITE = "Textures/blocks/stone_granite";
+    public const string SPRITE_COAL_ORE = "Textures/blocks/coal_ore";
+    public const string SPRITE_IRON_ORE = "Textures/blocks/iron_ore";
+    public const string SPRITE_GOLD_ORE = "Textures/blocks/gold_ore";
+    public const string SPRITE_DIAMOND_ORE = "Textures/blocks/diamond_ore";
+    public const string SPRITE_EMERALD_ORE = "Textures/blocks/emerald_ore";
+    public const string SPRITE_REDSTONE_ORE = "Textures/blocks/redstone_ore";
+    public const string SPRITE_LAPIS_ORE = "Textures/blocks/lapis_ore";
+
+    public const string SPRITE_NULL = "Textures/null_content";
+
 
     // World Prefab path
     public const string PREFAB_VAXEL = "World/Vaxel";

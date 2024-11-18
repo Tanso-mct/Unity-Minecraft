@@ -5680,6 +5680,11 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: -7784958349934763879, guid: f9169ac76117e074a938e5cbe1a816ce, type: 3}
   m_PrefabInstance: {fileID: 467908842}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &934660342 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8198653312796957887, guid: 69c4b8fba2a1893449c707a3bf6936b6, type: 3}
+  m_PrefabInstance: {fileID: 1681044557}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &938247517
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11289,6 +11294,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slots:
   - {fileID: 408841864}
+  - {fileID: 1770843171}
   - {fileID: 93168380}
   - {fileID: 627634181}
   - {fileID: 1929192528}
@@ -11297,6 +11303,8 @@ MonoBehaviour:
   - {fileID: 1166166028}
   - {fileID: 2060741991}
   height: 1
+  selectFrame: {fileID: 934660342}
+  selectFrameMoveVal: 98
 --- !u!1001 &1495214919
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13431,7 +13439,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8198653312796957887, guid: 69c4b8fba2a1893449c707a3bf6936b6, type: 3}
       propertyPath: m_Name
-      value: Selector
+      value: SelectFrame
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -14128,6 +14136,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3100720949676623103, guid: 69c4b8fba2a1893449c707a3bf6936b6, type: 3}
   m_PrefabInstance: {fileID: 1763145651}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1770843171 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7510033309630627145, guid: 69a9c11f710057a42b4278b724138ccc, type: 3}
+  m_PrefabInstance: {fileID: 52098559}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6c15dd09b0e8f24793eda433a538397, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1782357495 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4263717744638268003, guid: 36ce1c5f97154e44e8520921e11a194a, type: 3}

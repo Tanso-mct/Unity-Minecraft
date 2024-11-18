@@ -84,8 +84,8 @@ MonoBehaviour:
   textEl: {fileID: 7356852771816137470}
   selector: {fileID: 1938390600037936055}
   itemImage: {fileID: 7983070785829658364}
-  itemScale: 0.5
-  blockScale: 0.5
+  itemScale: 5
+  blockScale: 3.5
 --- !u!114 &7356852771816137470
 MonoBehaviour:
   m_ObjectHideFlags: 0

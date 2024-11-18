@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 abstract public class Vaxel
@@ -48,6 +49,9 @@ abstract public class Vaxel
         Debug.Log("Finished Set Block : " + setBlockId);
         Debug.Log("Before Block : " + frameSetBlock.w);
         Debug.Log("=====================================");
+
+        HotBar hotBar = sourceSetContainer as HotBar;
+        hotBar.RemoveContent(1, hotBar.SelectingSlot);
     }
 
     public virtual void FinishedBreak(Vector4 frameDestroyBlock)
@@ -56,6 +60,8 @@ abstract public class Vaxel
         Debug.Log("Finished Break Block : " + breakBlockId);
         Debug.Log("Before Block : " + frameDestroyBlock.w);
         Debug.Log("=====================================");
+
+        sourceBreakContainer.AddContent(breakBlockId);
     }
 
     public virtual void TryBreak(Vector4 block, ref Vector4 frameDestroyBlock, Container sourceContainer)
@@ -70,11 +76,12 @@ abstract public class Vaxel
         setSlot = slot;
         sourceSetContainer = sourceContainer;
 
+        setBlockId = sourceContainer.GetIsContain(slot);
+
         Vector4 setBlock = block;
-        setBlock.w = (float)Constants.VAXEL_TYPE.DIRT;;
+        setBlock.w = setBlockId;
 
         frameSetBlock = setBlock;
-        setBlockId = (int)setBlock.w;
     }
 
     public void DiscardItem(Vector3 playerPos, Vector3 playerDir)

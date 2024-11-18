@@ -22,13 +22,13 @@ public class ContainerSlot : MonoBehaviour
     public void Init()
     {
         Sprite nullItemSprite = null;
-        SupportFunc.LoadSprite(ref nullItemSprite, Constants.SPRITE_NULL_ITEM);
+        SupportFunc.LoadSprite(ref nullItemSprite, Constants.SPRITE_NULL);
 
         itemImage.sprite = nullItemSprite;
 
         textEl.initText.text = "";
 
-        id = (int)Constants.VAXEL_TYPE.AIR;
+        id = 0;
         amount = 0;
     }
 
@@ -47,10 +47,17 @@ public class ContainerSlot : MonoBehaviour
         Debug.Log("Slot Clicked");
     }
 
-    public void GetIsContain(ref int vaxelId, ref int amount)
+    public bool GetIsContain(ref int vaxelId, ref int amount)
     {
         vaxelId = id;
         amount = this.amount;
+
+        return IsStackable(vaxelId);
+    }
+
+    public int GetIsContain()
+    {
+        return id;
     }
 
     private string GetSpritePath()
@@ -58,28 +65,41 @@ public class ContainerSlot : MonoBehaviour
         switch (id)
         {
             case (int)Constants.VAXEL_TYPE.AIR:
-                return Constants.SPRITE_NULL_ITEM;
+                return Constants.SPRITE_NULL;
+
+            case (int)Constants.VAXEL_TYPE.DIRT:
+                return Constants.SPRITE_DIRT;
+
+            case (int)Constants.VAXEL_TYPE.GRASS_TOP:
+                return Constants.SPRITE_GRASS_SIDE;
         }
 
         return "";
     }
 
-    public void SetItem(int vaxelId)
+    private bool IsStackable(int vaxelId)
     {
-        id = vaxelId;
-        string spritePath = GetSpritePath();
+        // switch (vaxelId)
+        // {
+        //     case (int)Constants.VAXEL_TYPE.:
+        //         return true;
+        // }
 
-        Sprite itemSprite = null;
-        SupportFunc.LoadSprite(ref itemSprite, spritePath);
-
-        itemImage.sprite = itemSprite;
-        itemImage.transform.localScale = new Vector3(itemScale, itemScale, itemScale);
-
-        textEl.initText.text = "";
-        amount = 0;
+        return true;
     }
 
-    public void SetBlock(int vaxelId, int amount)
+    private bool IsItem(int vaxelId)
+    {
+        // switch (vaxelId)
+        // {
+        //     case (int)Constants.VAXEL_TYPE.:
+        //         return true;
+        // }
+
+        return false;
+    }
+
+    public void SetContents(int vaxelId, int amount)
     {
         id = vaxelId;
         string spritePath = GetSpritePath();
@@ -88,9 +108,25 @@ public class ContainerSlot : MonoBehaviour
         SupportFunc.LoadSprite(ref blockSprite, spritePath);
 
         itemImage.sprite = blockSprite;
-        itemImage.transform.localScale = new Vector3(blockScale, blockScale, blockScale);
 
-        textEl.initText.text = amount.ToString();
+        if (IsItem(vaxelId))
+        {
+            itemImage.transform.localScale = new Vector3(itemScale, itemScale, itemScale);
+        }
+        else
+        {
+            itemImage.transform.localScale = new Vector3(blockScale, blockScale, blockScale);
+        }
+
+        if (amount != 0)
+        {
+            textEl.initText.text = amount.ToString();
+        }
+        else
+        {
+            textEl.initText.text = "";
+        }
+
         this.amount = amount;
     }
 }

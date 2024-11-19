@@ -63,6 +63,20 @@ public class SupportFunc
         }
     }
 
+    static public void InstantiateCopy(ref GameObject target, ref GameObject source, ref GameObject parent, Vector3 coords)
+    {
+        target = GameObject.Instantiate(source, coords, Quaternion.identity);
+
+        if (target != null)
+        {
+            target.transform.SetParent(parent.transform);
+        }
+        else
+        {
+            Debug.LogError("Failed to instantiate copy: " + source.name);
+        }
+    }
+
     static public void LoadTexture(ref Texture texture, string texturePath)
     {
         texture = Resources.Load<Texture>(texturePath);

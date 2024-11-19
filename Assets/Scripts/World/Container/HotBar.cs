@@ -12,6 +12,65 @@ public class HotBar : Container
 
     [SerializeField] private Container inventory;
 
+    [SerializeField] private GameObject holdingBlock;
+    [SerializeField] private GameObject holdingItemParent;
+
+    [SerializeField] private GameObject holdingBlockIdle;
+    [SerializeField] private GameObject holdingItemParentIdle;
+
+    [SerializeField] private Texture holdingBlockTexture;
+
+    public override void Init()
+    {
+        for (int i = 0; i < slots.Count; i++)
+        {
+            slots[i].Init(i+1);
+        }
+
+        holdingBlock.SetActive(false);
+        holdingBlockIdle.SetActive(false);
+
+        holdingItemParent.SetActive(false);
+        holdingItemParentIdle.SetActive(false);
+    }
+
+    private void CreateHolding(int vaxelId)
+    {
+        if (vaxelId == 0) return;
+
+        holdingBlock.SetActive(false);
+        holdingBlockIdle.SetActive(false);
+
+        holdingItemParent.SetActive(false);
+        holdingItemParentIdle.SetActive(false);
+
+        switch (vaxelId)
+        {
+            case (int)Constants.VAXEL_TYPE.DIRT:
+                holdingBlock.SetActive(true);
+                holdingBlockIdle.SetActive(true);
+                SupportFunc.LoadTexture(ref holdingBlockTexture, Constants.SPRITE_DIRT);
+
+                holdingBlock.GetComponent<MeshRenderer>().material.mainTexture = holdingBlockTexture;
+                holdingBlockIdle.GetComponent<MeshRenderer>().material.mainTexture = holdingBlockTexture;
+                return;
+
+            case (int)Constants.VAXEL_TYPE.GRASS_TOP:
+                holdingBlock.SetActive(true);
+                holdingBlockIdle.SetActive(true);
+                SupportFunc.LoadTexture(ref holdingBlockTexture, Constants.SPRITE_GRASS_TOP);
+
+                holdingBlock.GetComponent<MeshRenderer>().material.mainTexture = holdingBlockTexture;
+                holdingBlockIdle.GetComponent<MeshRenderer>().material.mainTexture = holdingBlockTexture;
+                return;
+        }
+    }
+
+    public void UpdateHolding()
+    {
+        CreateHolding(GetIsContain(selectingSlot));
+    }
+
     public void SelectSlot(int slot)
     {
         if (!(slot >= 1 && slot <= 9)) return;
@@ -24,6 +83,8 @@ public class HotBar : Container
         );
 
         selectingSlot = slot;
+
+        CreateHolding(GetIsContain(slot));
     }
 
     public override bool AddContent(int vaxelId)

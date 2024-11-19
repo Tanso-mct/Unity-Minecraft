@@ -24,12 +24,14 @@ public class Player : MonoBehaviour
     // Partsの右腕
     [SerializeField] private GameObject rightArm;
 
-    // 
-
     // PartsのHeadにある右腕オブジェクト
     [SerializeField] private GameObject canvasRightArm;
     [SerializeField] private GameObject canvasRightArmIdle;
-    
+
+
+    // PartsのHeadにあるHoldingItemオブジェクト
+    [SerializeField] private GameObject holdingObj;
+    [SerializeField] private GameObject holdingObjIle;
 
     // プレイヤーのカメラ
     [SerializeField] public Camera cam;
@@ -121,6 +123,7 @@ public class Player : MonoBehaviour
     private Animator animParts;
     private Animator animSub;
     private Animator animRightArm;
+    private Animator animHolding;
 
     // ブロックのセレクター
     [SerializeField] private GameObject selector;
@@ -168,10 +171,15 @@ public class Player : MonoBehaviour
         // カーソルをロック
         McControls.CursorLock(true);
 
+        // コンテナの初期化
+        inventory.Init();
+        hotBar.Init();
+
         // アニメーターの初期化
         animParts = parts.GetComponent<Animator>();
         animSub = partsSub.GetComponent<Animator>();
         animRightArm = canvasRightArm.GetComponent<Animator>();
+        animHolding = holdingObj.GetComponent<Animator>();
 
         // プレイヤーの1人称視点での初期化
         if (viewMode == 1)
@@ -183,6 +191,13 @@ public class Player : MonoBehaviour
             partsSub.SetActive(false);
 
             canvasRightArmIdle.SetActive(true);
+
+            hotBar.GetIsContain(hotBar.SelectingSlot);
+            if (hotBar.GetIsContain(hotBar.SelectingSlot) != 0)
+            {
+                holdingObjIle.SetActive(true);
+                hotBar.UpdateHolding();
+            }
         }
         else
         {
@@ -191,6 +206,9 @@ public class Player : MonoBehaviour
 
             canvasRightArmIdle.SetActive(false);
             canvasRightArm.SetActive(false);
+
+            holdingObj.SetActive(false);
+            holdingObjIle.SetActive(false);
         }
 
         // テクスチャを設定
@@ -205,10 +223,6 @@ public class Player : MonoBehaviour
 
         // プレイヤーの当たり判定を設定
         hitBoxId = hitBoxAdmin.RegisterHitBox(pos, bc.size, Vector3.zero);
-
-        // コンテナの初期化
-        inventory.Init();
-        hotBar.Init();
     }
 
     public void Create()
@@ -435,25 +449,36 @@ public class Player : MonoBehaviour
         hitBoxAdmin.UpdatePos(hitBoxId, pos);
     }
 
-    private void Attack(ref List<Vector4> targetBlocks)
+    private void HandAnim()
     {
-        if (isInventoryOpen) return;
-
-        if (McControls.IsKey(Constants.CONTROL_ATTACK))
+        if (viewMode != 1)
         {
-            if (viewMode != 1)
-            {
-                rightArm.SetActive(false);
-                partsSub.SetActive(true);
-                animSub.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_USE);
-            }
-            else
+            rightArm.SetActive(false);
+            partsSub.SetActive(true);
+            animSub.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_USE);
+        }
+        else
+        {
+            if (hotBar.GetIsContain(hotBar.SelectingSlot) == 0)
             {
                 canvasRightArmIdle.SetActive(false);
                 canvasRightArm.SetActive(true);
                 animRightArm.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_USE);
             }
+            else
+            {
+                holdingObjIle.SetActive(false);
+                holdingObj.SetActive(true);
+                animHolding.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_USE);
+            }
         }
+    }
+
+    private void Attack(ref List<Vector4> targetBlocks)
+    {
+        if (isInventoryOpen) return;
+
+        if (McControls.IsKey(Constants.CONTROL_ATTACK)) HandAnim();
 
         if (McControls.IsKey(Constants.CONTROL_ATTACK) && !isDestroying)
         {
@@ -615,18 +640,8 @@ public class Player : MonoBehaviour
                 !IsBlockInPlayer(targetBlocks[Constants.TARGET_BLOCK_SET]) &&
                 hotBar.GetIsContain(hotBar.SelectingSlot) != 0
             ){
-                if (viewMode != 1)
-                {
-                    rightArm.SetActive(false);
-                    partsSub.SetActive(true);
-                    animSub.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_USE);
-                }
-                else
-                {
-                    canvasRightArmIdle.SetActive(false);
-                    canvasRightArm.SetActive(true);
-                    animRightArm.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_USE);
-                }
+                HandAnim();
+
                 lastSetFrame = Time.frameCount;
                 isFrameSetBlock = true;
                 if (blockAdmin.IsUseable((int)targetBlocks[Constants.TARGET_BLOCK_SELECT].w))
@@ -656,18 +671,7 @@ public class Player : MonoBehaviour
                 !IsBlockInPlayer(targetBlocks[Constants.TARGET_BLOCK_SET]) &&
                 hotBar.GetIsContain(hotBar.SelectingSlot) != 0
             ){
-                if (viewMode != 1)
-                {
-                    rightArm.SetActive(false);
-                    partsSub.SetActive(true);
-                    animSub.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_USE);
-                }
-                else
-                {
-                    canvasRightArmIdle.SetActive(false);
-                    canvasRightArm.SetActive(true);
-                    animRightArm.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_USE);
-                }
+                HandAnim();
                 
                 lastSetFrame = Time.frameCount;
                 isFrameSetBlock = true;
@@ -712,6 +716,12 @@ public class Player : MonoBehaviour
             canvasRightArmIdle.SetActive(true);
             canvasRightArm.SetActive(false);
         }
+    }
+
+    public void OnHoldingAnimEnd()
+    {
+        holdingObj.SetActive(false);
+        holdingObjIle.SetActive(true);
     }
 
     public void Execute(List<Vector4> targetBlocks)

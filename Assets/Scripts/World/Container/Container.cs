@@ -13,7 +13,7 @@ public class Container : MonoBehaviour
 
     protected int stackMax = 64;
 
-    public void Init()
+    public virtual void Init()
     {
         for (int i = 0; i < slots.Count; i++)
         {
@@ -33,7 +33,7 @@ public class Container : MonoBehaviour
         for (int i = 0; i < slots.Count; i++)
         {
             bool isStackable = slots[i].GetIsContain(ref nowVaxelId, ref nowAmount);
-            if (nowVaxelId == 0) // 空いているスロット
+            if (nowVaxelId == 0)
             {
                 slots[i].SetContents(vaxelId, 1);
                 return true;
@@ -45,7 +45,6 @@ public class Container : MonoBehaviour
             }
         }
 
-        // 空いているスロットがないため、何もしない
         return false;
     }
 

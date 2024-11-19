@@ -164,6 +164,33 @@ public class Constants : MonoBehaviour
 
     public const string SPRITE_NULL = "Textures/null_content";
 
+    // Item source path
+    public const string ITEM_SOURCE_WOOD_PICKAXE = "Items/wood_pickaxe";
+    public const string ITEM_SOURCE_STONE_PICKAXE = "Items/stone_pickaxe";
+    public const string ITEM_SOURCE_IRON_PICKAXE = "Items/iron_pickaxe";
+    public const string ITEM_SOURCE_GOLD_PICKAXE = "Items/gold_pickaxe";
+    public const string ITEM_SOURCE_DIAMOND_PICKAXE = "Items/diamond_pickaxe";
+
+    public const string ITEM_SOURCE_WOOD_SHOVEL = "Items/wood_shovel";
+    public const string ITEM_SOURCE_STONE_SHOVEL = "Items/stone_shovel";
+    public const string ITEM_SOURCE_IRON_SHOVEL = "Items/iron_shovel";
+    public const string ITEM_SOURCE_GOLD_SHOVEL = "Items/gold_shovel";
+    public const string ITEM_SOURCE_DIAMOND_SHOVEL = "Items/diamond_shovel";
+
+    public const string ITEM_SOURCE_WOOD_AXE = "Items/wood_axe";
+    public const string ITEM_SOURCE_STONE_AXE = "Items/stone_axe";
+    public const string ITEM_SOURCE_IRON_AXE = "Items/iron_axe";
+    public const string ITEM_SOURCE_GOLD_AXE = "Items/gold_axe";
+    public const string ITEM_SOURCE_DIAMOND_AXE = "Items/diamond_axe";
+
+    public const string ITEM_SOURCE_WOOD_SWORD = "Items/wood_sword";
+    public const string ITEM_SOURCE_STONE_SWORD = "Items/stone_sword";
+    public const string ITEM_SOURCE_IRON_SWORD = "Items/iron_sword";
+    public const string ITEM_SOURCE_GOLD_SWORD = "Items/gold_sword";
+    public const string ITEM_SOURCE_DIAMOND_SWORD = "Items/diamond_sword";
+
+    public const string ITEM_SOURCE_IRON_CHESTPLATE = "Items/iron_chestplate";
+
 
     // World Prefab path
     public const string PREFAB_VAXEL = "World/Vaxel";

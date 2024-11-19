@@ -439,18 +439,7 @@ public class Player : MonoBehaviour
     {
         if (isInventoryOpen) return;
 
-        if (McControls.IsKey(Constants.CONTROL_ATTACK) && !isDestroying)
-        {
-            // ブロックの破壊
-            if (targetBlocks[Constants.TARGET_BLOCK_SELECT].w != 0)
-            {
-                isDestroying = true;
-                destroyProgress = 0f; // 破壊段階を初期化
-                blockDurability = 100f; // ブロックの耐久値を取得
-                destroyingBlock = targetBlocks[Constants.TARGET_BLOCK_SELECT];
-            }
-        }
-        else if (McControls.IsKey(Constants.CONTROL_ATTACK))
+        if (McControls.IsKey(Constants.CONTROL_ATTACK))
         {
             if (viewMode != 1)
             {
@@ -464,7 +453,24 @@ public class Player : MonoBehaviour
                 canvasRightArm.SetActive(true);
                 animRightArm.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_USE);
             }
+        }
 
+        if (McControls.IsKey(Constants.CONTROL_ATTACK) && !isDestroying)
+        {
+            // ブロックの破壊
+            if 
+            (
+                targetBlocks[Constants.TARGET_BLOCK_SELECT].w != 0 && 
+                targetBlocks[Constants.TARGET_BLOCK_SELECT].w != Constants.BLOCK_TYPE_CANT_SET
+            ){
+                isDestroying = true;
+                destroyProgress = 0f; // 破壊段階を初期化
+                blockDurability = 100f; // ブロックの耐久値を取得
+                destroyingBlock = targetBlocks[Constants.TARGET_BLOCK_SELECT];
+            }
+        }
+        else if (McControls.IsKey(Constants.CONTROL_ATTACK))
+        {
             if (isDestroying && targetBlocks[Constants.TARGET_BLOCK_SELECT].Equals(destroyingBlock))
             {
                 destroyProgress += 20f;

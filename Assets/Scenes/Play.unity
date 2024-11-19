@@ -1805,7 +1805,7 @@ GameObject:
   - component: {fileID: 208598569}
   - component: {fileID: 208598570}
   m_Layer: 0
-  m_Name: canvas_right_arm_idle
+  m_Name: CanvasRightArmIdle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2208,7 +2208,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 525165432180171524, guid: b14123b473fcf6f42abd6a0409bb87dd, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2899794978791884184, guid: b14123b473fcf6f42abd6a0409bb87dd, type: 3}
       propertyPath: clickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -6094,7 +6094,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2874654145891566348, guid: 36ce1c5f97154e44e8520921e11a194a, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3293732430125946937, guid: 36ce1c5f97154e44e8520921e11a194a, type: 3}
       propertyPath: mouseEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -10249,7 +10249,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5803863036640857214, guid: b4d8c3926ed43f14bbce3765380694e7, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8125534960836745371, guid: b4d8c3926ed43f14bbce3765380694e7, type: 3}
       propertyPath: clickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -10380,7 +10380,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6589730185206064163, guid: 848e458299b17bc4fb296632b770513e, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9133842038446794968, guid: 848e458299b17bc4fb296632b770513e, type: 3}
       propertyPath: m_SortingOrder
@@ -12047,7 +12047,7 @@ MonoBehaviour:
   canvasRightArm: {fileID: 1971372244}
   canvasRightArmIdle: {fileID: 208598568}
   holdingObj: {fileID: 1846072419}
-  holdingObjIle: {fileID: 1508040324}
+  holdingObjIdle: {fileID: 1508040324}
   cam: {fileID: 922196900}
   hitBoxAdmin: {fileID: 1277467230}
   blockAdmin: {fileID: 239868569}
@@ -12531,7 +12531,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 543347088845641068, guid: eea1d6cba0e9e15428b1c5ba4770f000, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 648508676712974819, guid: eea1d6cba0e9e15428b1c5ba4770f000, type: 3}
       propertyPath: clickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
@@ -14125,7 +14125,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1674013414352975066, guid: 0a622f39be7a4784c8a4da878c8b1e87, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2602846014619942351, guid: 0a622f39be7a4784c8a4da878c8b1e87, type: 3}
       propertyPath: clickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -15379,7 +15379,7 @@ GameObject:
   - component: {fileID: 1971372246}
   - component: {fileID: 1971372247}
   m_Layer: 0
-  m_Name: canvas_right_arm
+  m_Name: CanvasRightArm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

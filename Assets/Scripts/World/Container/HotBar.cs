@@ -34,10 +34,8 @@ public class HotBar : Container
         holdingItemParentIdle.SetActive(false);
     }
 
-    private void CreateHolding(int vaxelId)
+    private bool CreateHolding(int vaxelId)
     {
-        if (vaxelId == 0) return;
-
         holdingBlock.SetActive(false);
         holdingBlockIdle.SetActive(false);
 
@@ -53,7 +51,7 @@ public class HotBar : Container
 
                 holdingBlock.GetComponent<MeshRenderer>().material.mainTexture = holdingBlockTexture;
                 holdingBlockIdle.GetComponent<MeshRenderer>().material.mainTexture = holdingBlockTexture;
-                return;
+                return true;
 
             case (int)Constants.VAXEL_TYPE.GRASS_TOP:
                 holdingBlock.SetActive(true);
@@ -62,18 +60,15 @@ public class HotBar : Container
 
                 holdingBlock.GetComponent<MeshRenderer>().material.mainTexture = holdingBlockTexture;
                 holdingBlockIdle.GetComponent<MeshRenderer>().material.mainTexture = holdingBlockTexture;
-                return;
+                return true;
         }
+
+        return false;
     }
 
-    public void UpdateHolding()
+    public bool SelectSlot(int slot)
     {
-        CreateHolding(GetIsContain(selectingSlot));
-    }
-
-    public void SelectSlot(int slot)
-    {
-        if (!(slot >= 1 && slot <= 9)) return;
+        if (!(slot >= 1 && slot <= 9)) return false;
 
         selectFrame.transform.position = new Vector3
         (
@@ -85,6 +80,8 @@ public class HotBar : Container
         selectingSlot = slot;
 
         CreateHolding(GetIsContain(slot));
+
+        return GetIsContain(slot) != 0;
     }
 
     public override bool AddContent(int vaxelId)

@@ -217,6 +217,8 @@ public class Constants : MonoBehaviour
     public const int ANIM_PLAYER_RUN = 3;
     public const int ANIM_PLAYER_USE = 4;
 
+    public const string ANIM_STATE_USE_CANVAS = "use_canvas";
+
     // Unity Tags
     public const string TAG_PLAYER = "Player";
     public const string TAG_BLOCK_TOP = "Block_Top";

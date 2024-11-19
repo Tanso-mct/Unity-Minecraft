@@ -45,10 +45,10 @@ abstract public class Vaxel
 
     public virtual void FinishedSet(Vector4 frameSetBlock)
     {
-        Debug.Log("=====================================");
-        Debug.Log("Finished Set Block : " + setBlockId);
-        Debug.Log("Before Block : " + frameSetBlock.w);
-        Debug.Log("=====================================");
+        // Debug.Log("=====================================");
+        // Debug.Log("Finished Set Block : " + setBlockId);
+        // Debug.Log("Before Block : " + frameSetBlock.w);
+        // Debug.Log("=====================================");
 
         HotBar hotBar = sourceSetContainer as HotBar;
         hotBar.RemoveContent(1, hotBar.SelectingSlot);
@@ -56,10 +56,10 @@ abstract public class Vaxel
 
     public virtual void FinishedBreak(Vector4 frameDestroyBlock)
     {
-        Debug.Log("=====================================");
-        Debug.Log("Finished Break Block : " + breakBlockId);
-        Debug.Log("Before Block : " + frameDestroyBlock.w);
-        Debug.Log("=====================================");
+        // Debug.Log("=====================================");
+        // Debug.Log("Finished Break Block : " + breakBlockId);
+        // Debug.Log("Before Block : " + frameDestroyBlock.w);
+        // Debug.Log("=====================================");
 
         sourceBreakContainer.AddContent(breakBlockId);
     }

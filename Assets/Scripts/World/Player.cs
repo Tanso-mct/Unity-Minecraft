@@ -31,7 +31,7 @@ public class Player : MonoBehaviour
 
     // PartsのHeadにあるHoldingItemオブジェクト
     [SerializeField] private GameObject holdingObj;
-    [SerializeField] private GameObject holdingObjIle;
+    [SerializeField] private GameObject holdingObjIdle;
 
     // プレイヤーのカメラ
     [SerializeField] public Camera cam;
@@ -189,15 +189,6 @@ public class Player : MonoBehaviour
                 partsList[i].SetActive(false);
             }
             partsSub.SetActive(false);
-
-            canvasRightArmIdle.SetActive(true);
-
-            hotBar.GetIsContain(hotBar.SelectingSlot);
-            if (hotBar.GetIsContain(hotBar.SelectingSlot) != 0)
-            {
-                holdingObjIle.SetActive(true);
-                hotBar.UpdateHolding();
-            }
         }
         else
         {
@@ -208,7 +199,7 @@ public class Player : MonoBehaviour
             canvasRightArm.SetActive(false);
 
             holdingObj.SetActive(false);
-            holdingObjIle.SetActive(false);
+            holdingObjIdle.SetActive(false);
         }
 
         // テクスチャを設定
@@ -467,7 +458,7 @@ public class Player : MonoBehaviour
             }
             else
             {
-                holdingObjIle.SetActive(false);
+                holdingObjIdle.SetActive(false);
                 holdingObj.SetActive(true);
                 animHolding.SetInteger(Constants.ANIM_TYPE, Constants.ANIM_PLAYER_USE);
             }
@@ -704,6 +695,20 @@ public class Player : MonoBehaviour
         isFrameDestroyBlock = false;
     }
 
+    private void UpdateHotBarSlot()
+    {
+        if (hotBar.SelectSlot(hotBar.SelectingSlot)) // 何らかのアイテムを持っている
+        {
+            canvasRightArmIdle.SetActive(false);
+            holdingObjIdle.SetActive(true);
+        }
+        else
+        {
+            canvasRightArmIdle.SetActive(true);
+            holdingObjIdle.SetActive(false);
+        }
+    }
+
     public void OnArmAnimEnd()
     {
         if (viewMode != 1)
@@ -713,15 +718,19 @@ public class Player : MonoBehaviour
         }
         else
         {
-            canvasRightArmIdle.SetActive(true);
             canvasRightArm.SetActive(false);
+            canvasRightArmIdle.SetActive(true);
         }
+
+        UpdateHotBarSlot();
     }
 
     public void OnHoldingAnimEnd()
     {
         holdingObj.SetActive(false);
-        holdingObjIle.SetActive(true);
+        holdingObjIdle.SetActive(true);
+
+        UpdateHotBarSlot();
     }
 
     public void Execute(List<Vector4> targetBlocks)
@@ -771,8 +780,8 @@ public class Player : MonoBehaviour
         }
 
         // インベントリの更新
-        blockAdmin.FinishedSet(frameSetBlocks);       
-        blockAdmin.FinishedBreak(frameDestroyBlocks); 
+        blockAdmin.FinishedSet(frameSetBlocks);
+        blockAdmin.FinishedBreak(frameDestroyBlocks);
     }
 
     public void FrameStart()

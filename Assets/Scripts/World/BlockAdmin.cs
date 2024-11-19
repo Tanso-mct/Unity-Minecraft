@@ -79,20 +79,23 @@ public class BlockAdmin : MonoBehaviour
         breakVaxel.TryBreak(block, ref frameDestroyBlock, sourceContainer);
     }
 
-    public void FinishedSet(Vector4 frameSetBlock)
+    public bool FinishedSet(Vector4 frameSetBlock)
     {
-        if (setVaxel == null) return;
+        if (setVaxel == null) return false;
 
         setVaxel.FinishedSet(frameSetBlock);
         setVaxel = null;
+
+        return true;
     }
 
-    public void FinishedBreak(Vector4 frameDestroyBlock)
+    public bool FinishedBreak(Vector4 frameDestroyBlock)
     {
-        if (breakVaxel == null) return;
+        if (breakVaxel == null) return false;
 
         breakVaxel.FinishedBreak(frameDestroyBlock);
         breakVaxel = null;
+        return true;
     }
 
 

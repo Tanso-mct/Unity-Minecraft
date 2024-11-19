@@ -3602,7 +3602,9 @@ MonoBehaviour:
   - {fileID: 1078817534}
   - {fileID: 1179066389}
   - {fileID: 1339520954}
+  width: 9
   height: 4
+  hotBar: {fileID: 1484331307}
 --- !u!1001 &506648277
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11302,9 +11304,11 @@ MonoBehaviour:
   - {fileID: 1495214921}
   - {fileID: 1166166028}
   - {fileID: 2060741991}
+  width: 9
   height: 1
   selectFrame: {fileID: 934660342}
   selectFrameMoveVal: 98
+  inventory: {fileID: 502580431}
 --- !u!1001 &1495214919
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -6,18 +6,19 @@ using UnityEngine.UI;
 
 public class Container : MonoBehaviour
 {
-    private List<Vaxel> items = new List<Vaxel>();
-    [SerializeField] private List<ContainerSlot> slots;
+    [SerializeField] public List<ContainerSlot> slots;
 
+    public int width = 9;
+    [SerializeField] public int height = 4;
 
-    private int width = 9;
-    [SerializeField] private int height = 4;
-
-    private int stackMax = 64;
+    protected int stackMax = 64;
 
     public void Init()
     {
-        items = new List<Vaxel>();
+        for (int i = 0; i < slots.Count; i++)
+        {
+            slots[i].Init(i+1);
+        }
     }
 
     public int GetIsContain(int slot)
@@ -25,7 +26,7 @@ public class Container : MonoBehaviour
         return slots[slot-1].GetIsContain();
     }
 
-    public bool AddContent(int vaxelId)
+    public virtual bool AddContent(int vaxelId)
     {
         int nowVaxelId = 0;
         int nowAmount = 0;
@@ -48,7 +49,7 @@ public class Container : MonoBehaviour
         return false;
     }
 
-    public Vector2 RemoveContent(int amount, int slot) // return x: vaxelId, y: amount
+    public virtual Vector2 RemoveContent(int amount, int slot) // return x: vaxelId, y: amount
     {
         int nowVaxelId = 0;
         int nowAmount = 0;

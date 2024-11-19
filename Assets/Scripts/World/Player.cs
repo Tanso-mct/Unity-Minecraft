@@ -205,6 +205,10 @@ public class Player : MonoBehaviour
 
         // プレイヤーの当たり判定を設定
         hitBoxId = hitBoxAdmin.RegisterHitBox(pos, bc.size, Vector3.zero);
+
+        // コンテナの初期化
+        inventory.Init();
+        hotBar.Init();
     }
 
     public void Create()
@@ -463,7 +467,7 @@ public class Player : MonoBehaviour
 
             if (isDestroying && targetBlocks[Constants.TARGET_BLOCK_SELECT].Equals(destroyingBlock))
             {
-                destroyProgress += 1f;
+                destroyProgress += 20f;
 
                 // 破壊段階に応じてテクスチャを変更
                 int destroyStage = (int)((destroyProgress / blockDurability) * destroyStageTextures.Count);
@@ -488,7 +492,7 @@ public class Player : MonoBehaviour
                     blockAdmin.Break
                     (
                         targetBlocks[Constants.TARGET_BLOCK_SELECT],
-                        ref frameDestroyBlocks, hotBar
+                        ref frameDestroyBlocks, inventory
                     );
 
                     for (int i = 0; i < selectorParts.Count; i++)
@@ -760,27 +764,35 @@ public class Player : MonoBehaviour
         // プレイヤーの現在座標を取得
         pos = transform.position;
 
-        // プレイヤーのホットバーの選択スロットを更新
-        if (McControls.IsKeyDown(Constants.CONTROL_HS1)) hotBar.SelectSlot(1);
-        else if (McControls.IsKeyDown(Constants.CONTROL_HS2)) hotBar.SelectSlot(2);
-        else if (McControls.IsKeyDown(Constants.CONTROL_HS3)) hotBar.SelectSlot(3);
-        else if (McControls.IsKeyDown(Constants.CONTROL_HS4)) hotBar.SelectSlot(4);
-        else if (McControls.IsKeyDown(Constants.CONTROL_HS5)) hotBar.SelectSlot(5);
-        else if (McControls.IsKeyDown(Constants.CONTROL_HS6)) hotBar.SelectSlot(6);
-        else if (McControls.IsKeyDown(Constants.CONTROL_HS7)) hotBar.SelectSlot(7);
-        else if (McControls.IsKeyDown(Constants.CONTROL_HS8)) hotBar.SelectSlot(8);
-        else if (McControls.IsKeyDown(Constants.CONTROL_HS9)) hotBar.SelectSlot(9);
+        if (!isInventoryOpen) // プレイヤーのホットバーの選択スロットを更新
+        {
+            if (McControls.IsKeyDown(Constants.CONTROL_HS1)) hotBar.SelectSlot(1);
+            else if (McControls.IsKeyDown(Constants.CONTROL_HS2)) hotBar.SelectSlot(2);
+            else if (McControls.IsKeyDown(Constants.CONTROL_HS3)) hotBar.SelectSlot(3);
+            else if (McControls.IsKeyDown(Constants.CONTROL_HS4)) hotBar.SelectSlot(4);
+            else if (McControls.IsKeyDown(Constants.CONTROL_HS5)) hotBar.SelectSlot(5);
+            else if (McControls.IsKeyDown(Constants.CONTROL_HS6)) hotBar.SelectSlot(6);
+            else if (McControls.IsKeyDown(Constants.CONTROL_HS7)) hotBar.SelectSlot(7);
+            else if (McControls.IsKeyDown(Constants.CONTROL_HS8)) hotBar.SelectSlot(8);
+            else if (McControls.IsKeyDown(Constants.CONTROL_HS9)) hotBar.SelectSlot(9);
 
-        float scroll = Input.GetAxis("Mouse ScrollWheel");
-        if (scroll > 0)
-        {
-            if (hotBar.SelectingSlot == 1) hotBar.SelectSlot(9);
-            else hotBar.SelectSlot(hotBar.SelectingSlot - 1);
-        }
-        else if (scroll < 0)
-        {
-            if (hotBar.SelectingSlot == 9) hotBar.SelectSlot(1);
-            else hotBar.SelectSlot(hotBar.SelectingSlot + 1);
+            float scroll = Input.GetAxis("Mouse ScrollWheel");
+            if (scroll > 0)
+            {
+                if (hotBar.SelectingSlot == 1) hotBar.SelectSlot(9);
+                else hotBar.SelectSlot(hotBar.SelectingSlot - 1);
+            }
+            else if (scroll < 0)
+            {
+                if (hotBar.SelectingSlot == 9) hotBar.SelectSlot(1);
+                else hotBar.SelectSlot(hotBar.SelectingSlot + 1);
+            }
+
+            if (McControls.IsKeyDown(Constants.CONTROL_DROP_ITEM))
+            {
+                // ホットバーのアイテムをドロップ
+                hotBar.RemoveContent(1, hotBar.SelectingSlot);
+            }
         }
     }
 

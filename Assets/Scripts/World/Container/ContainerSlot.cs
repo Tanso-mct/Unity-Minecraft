@@ -19,7 +19,9 @@ public class ContainerSlot : MonoBehaviour
     private int id;
     private int amount = 0;
 
-    public void Init()
+    private int slotId;
+
+    public void Init(int slotId)
     {
         Sprite nullItemSprite = null;
         SupportFunc.LoadSprite(ref nullItemSprite, Constants.SPRITE_NULL);
@@ -30,11 +32,22 @@ public class ContainerSlot : MonoBehaviour
 
         id = 0;
         amount = 0;
+
+        this.slotId = slotId;
     }
 
     public void OnHover()
     {
         selector.gameObject.SetActive(true);
+
+        if (McControls.IsKeyDown(Constants.CONTROL_DROP_ITEM) && !Input.GetKey(KeyCode.LeftShift))
+        {
+            container.RemoveContent(1, slotId);
+        }
+        else if (McControls.IsKeyDown(Constants.CONTROL_DROP_ITEM) && Input.GetKey(KeyCode.LeftShift))
+        {
+            container.RemoveContent(64, slotId);
+        }
     }
 
     public void UnHover()

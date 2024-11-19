@@ -15,8 +15,6 @@ public class TextEl : Element
 
     public UnityEvent clickEvent = null;
 
-    public UnityEvent initEvent = null;
-
     public override void Init()
     {
         // 継承元クラスの初期化処理を実行
@@ -32,8 +30,6 @@ public class TextEl : Element
                 Debug.LogError("Failed to add " + textList[i].name + " to diTexts.");
             }
         }
-
-        initEvent.Invoke();
     }
 
     public override void Show()

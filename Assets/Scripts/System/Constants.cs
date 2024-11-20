@@ -195,6 +195,7 @@ public class Constants : MonoBehaviour
     // World Prefab path
     public const string PREFAB_VAXEL = "World/Vaxel";
     public const string PREFAB_BLOCK = "World/Block";
+    public const string PREFAB_ENTITY_BLOCK = "World/EntityBlock";
 
     // World size
     public const int WORLD_SIZE = 1025;

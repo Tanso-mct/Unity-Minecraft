@@ -511,11 +511,7 @@ public class Player : MonoBehaviour
                     isFrameDestroyBlock = true;
 
                     // ÉuÉçÉbÉNÇÃîjâÛ
-                    blockAdmin.Break
-                    (
-                        targetBlocks[Constants.TARGET_BLOCK_SELECT],
-                        ref frameDestroyBlocks, inventory
-                    );
+                    blockAdmin.Break(targetBlocks[Constants.TARGET_BLOCK_SELECT], ref frameDestroyBlocks);
 
                     for (int i = 0; i < selectorParts.Count; i++)
                     {

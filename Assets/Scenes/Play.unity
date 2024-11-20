@@ -1984,6 +1984,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 153145cdfa96ef444b87920d63a5b78d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  entityItemParent: {fileID: 679081783}
 --- !u!224 &246403423 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4842690713194769208, guid: 002d9cb2c318f6f44b1a684e7dcbac91, type: 3}

@@ -13,12 +13,17 @@ abstract public class Vaxel
     protected Container sourceSetContainer;
 
     protected int breakBlockId;
-    protected Container sourceBreakContainer;
 
-    public virtual void Init()
+    protected GameObject entityItemParent;
+
+    private float entityItemOffY = 0.7f;
+
+    public virtual void Init(GameObject entityItemParent)
     {
         setBlockId = (int)Constants.VAXEL_TYPE.AIR;
         breakBlockId = (int)Constants.VAXEL_TYPE.AIR;
+
+        this.entityItemParent = entityItemParent;
     }
 
     abstract public void LoadFromJson(ref WorldData worldData);
@@ -43,6 +48,24 @@ abstract public class Vaxel
 
     }
 
+    protected Texture LoadTextureFromId(int vaxelId)
+    {
+        Texture rtTexture = null;
+
+        switch (vaxelId)
+        {
+            case (int)Constants.VAXEL_TYPE.DIRT:
+                SupportFunc.LoadTexture(ref rtTexture, Constants.SPRITE_DIRT);
+                break;
+
+            case (int)Constants.VAXEL_TYPE.GRASS_TOP:
+                SupportFunc.LoadTexture(ref rtTexture, Constants.SPRITE_GRASS_TOP);
+                break;
+        }
+
+        return rtTexture;
+    }
+
     public virtual void FinishedSet(Vector4 frameSetBlock)
     {
         // Debug.Log("=====================================");
@@ -61,12 +84,26 @@ abstract public class Vaxel
         // Debug.Log("Before Block : " + frameDestroyBlock.w);
         // Debug.Log("=====================================");
 
-        sourceBreakContainer.AddContent(breakBlockId);
+        GameObject entityItem = null;
+        GameObject entityBlockPrefab = null;
+        SupportFunc.InstantiatePrefab
+        (
+            ref entityItem, ref entityBlockPrefab, Constants.PREFAB_ENTITY_BLOCK, ref entityItemParent, 
+            SupportFunc.PosFloatConvert(new Vector3(frameDestroyBlock.x, frameDestroyBlock.y + entityItemOffY, frameDestroyBlock.z))
+        );
+
+        EntityItem thisItem = entityItem.GetComponent<EntityItem>();
+        thisItem.ThrowIt(new Vector3(Random.Range(0, 2), Random.Range(0, 2), Random.Range(0, 2)));
+
+        entityItem.GetComponent<MeshRenderer>().material.mainTexture = LoadTextureFromId(breakBlockId);
+
+
+
+        // sourceBreakContainer.AddContent(breakBlockId);
     }
 
-    public virtual void TryBreak(Vector4 block, ref Vector4 frameDestroyBlock, Container sourceContainer)
+    public virtual void TryBreak(Vector4 block, ref Vector4 frameDestroyBlock)
     {
-        sourceBreakContainer = sourceContainer;
         frameDestroyBlock = block;
         breakBlockId = (int)block.w;
     }

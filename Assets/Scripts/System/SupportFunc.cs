@@ -26,6 +26,17 @@ public class SupportFunc
         return rtCoords;
     }
 
+    static public Vector3 PosFloatConvert(Vector3 coords)
+    {
+        Vector3 rtCoords = new Vector3();
+
+        rtCoords.x = coords.x - Constants.WORLD_HALF_SIZE;
+        rtCoords.y = coords.y;
+        rtCoords.z = coords.z - Constants.WORLD_HALF_SIZE;
+
+        return rtCoords;
+    }
+
     static public List<GameObject> GetChildren(GameObject parent)
     {
         List<GameObject> children = new List<GameObject>();

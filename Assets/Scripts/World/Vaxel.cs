@@ -49,24 +49,6 @@ abstract public class Vaxel
 
     }
 
-    protected Texture LoadTextureFromId(int vaxelId)
-    {
-        Texture rtTexture = null;
-
-        switch (vaxelId)
-        {
-            case (int)Constants.VAXEL_TYPE.DIRT:
-                SupportFunc.LoadTexture(ref rtTexture, Constants.SPRITE_DIRT);
-                break;
-
-            case (int)Constants.VAXEL_TYPE.GRASS_TOP:
-                SupportFunc.LoadTexture(ref rtTexture, Constants.SPRITE_GRASS_TOP);
-                break;
-        }
-
-        return rtTexture;
-    }
-
     public virtual void FinishedSet(Vector4 frameSetBlock)
     {
         // Debug.Log("=====================================");
@@ -94,7 +76,7 @@ abstract public class Vaxel
         );
 
         EntityItem thisItem = entityItem.GetComponent<EntityItem>();
-        thisItem.ThrowIt(new Vector3(Random.Range(0, 2), Random.Range(0, 2), Random.Range(0, 2)), breakBlockId, LoadTextureFromId(breakBlockId));
+        thisItem.ThrowIt(new Vector3(Random.Range(0, 2), Random.Range(0, 2), Random.Range(0, 2)), breakBlockId, SupportFunc.LoadTextureFromId(breakBlockId));
     }
 
     public virtual void TryBreak(Vector4 block, ref Vector4 frameDestroyBlock)

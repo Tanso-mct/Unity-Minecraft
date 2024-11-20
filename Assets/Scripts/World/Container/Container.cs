@@ -13,6 +13,125 @@ public class Container : MonoBehaviour
 
     protected int stackMax = 64;
 
+    [SerializeField] protected ContainerSlot hoverSlot;
+
+    protected bool isStartHoverSlotMoving = false;
+    protected bool isHoverSlotMoving = false;
+
+    protected Vector2 startHoverSlotPos;
+    protected Vector2 startMousePos;
+
+    protected int startSlotId;
+    protected int nowHoverSlotId;
+
+    public void SetNowHoverSlot(int slotId)
+    {
+        nowHoverSlotId = slotId;
+    }
+
+    public virtual void SlotQuickMove()
+    {
+
+    }
+
+    public void StartHoverSlotMove(int slotId)
+    {
+        if (!isStartHoverSlotMoving && !Input.GetKey(KeyCode.LeftShift))
+        {
+            isStartHoverSlotMoving = true;
+            startSlotId = slotId;
+        }
+        else if (!isStartHoverSlotMoving && Input.GetKey(KeyCode.LeftShift))
+        {
+            startSlotId = slotId;
+            SlotQuickMove();
+        }
+    }
+
+    protected virtual void SetSlotContent(int slotId, int vaxelId, int amount)
+    {
+        slots[slotId-1].SetContents(vaxelId, amount);
+    }
+
+    public void Update()
+    {
+        if (Input.GetMouseButtonDown(0) && isHoverSlotMoving)
+        {
+            int vaxelId = 0;
+            int amount = 0;
+            hoverSlot.GetIsContain(ref vaxelId, ref amount);
+
+            if (nowHoverSlotId != 0)
+            {
+                int hoverVaxelId = 0;
+                int hoverAmount = 0;
+                bool isStackable = slots[nowHoverSlotId-1].GetIsContain(ref hoverVaxelId, ref hoverAmount);
+
+                if (hoverVaxelId == 0)
+                {
+                    SetSlotContent(nowHoverSlotId, vaxelId, amount);
+                }
+                else if (hoverVaxelId == vaxelId)
+                {
+                    if (isStackable && hoverAmount + amount <= stackMax)
+                    {
+                        SetSlotContent(nowHoverSlotId, vaxelId, hoverAmount + amount);
+                    }
+                    else if (isStackable && hoverAmount + amount > stackMax)
+                    {
+                        SetSlotContent(nowHoverSlotId, vaxelId, stackMax);
+                        SetSlotContent(startSlotId, vaxelId, hoverAmount + amount - stackMax);
+                    }
+                }
+                else if (hoverVaxelId != vaxelId)
+                {
+                    SetSlotContent(nowHoverSlotId, vaxelId, amount);
+                    SetSlotContent(startSlotId, hoverVaxelId, hoverAmount);
+                }
+                else
+                {
+                    SetSlotContent(startSlotId, vaxelId, amount);
+                }
+            }
+            else
+            {
+                SetSlotContent(startSlotId, vaxelId, amount);
+            }
+
+            hoverSlot.gameObject.SetActive(false);
+
+            isStartHoverSlotMoving = false;
+            isHoverSlotMoving = false;
+        }
+        else if (isHoverSlotMoving)
+        {
+            Vector2 inputPos = Input.mousePosition;
+            Vector2 diff = inputPos - startMousePos;
+            Vector2 newPos = startHoverSlotPos + diff;
+
+            hoverSlot.transform.position = newPos;
+        }
+
+        if (isStartHoverSlotMoving && !isHoverSlotMoving)
+        {
+            isHoverSlotMoving = true;
+
+            hoverSlot.gameObject.SetActive(true);
+            hoverSlot.transform.position = slots[startSlotId-1].transform.position;
+
+            int vaxelId = 0;
+            int amount = 0;
+            slots[startSlotId-1].GetIsContain(ref vaxelId, ref amount);
+
+            hoverSlot.SetContents(vaxelId, amount);
+
+            startHoverSlotPos = slots[startSlotId-1].transform.position;
+            startMousePos = Input.mousePosition;
+
+            SetSlotContent(startSlotId, 0, 0);
+        }
+    }
+
     public virtual void Init()
     {
         for (int i = 0; i < slots.Count; i++)

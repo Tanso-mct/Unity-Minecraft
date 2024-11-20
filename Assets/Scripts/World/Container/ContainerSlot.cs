@@ -21,6 +21,9 @@ public class ContainerSlot : MonoBehaviour
 
     private int slotId;
 
+    [SerializeField] private bool isSelectable = true;
+    [SerializeField] public bool isQuickMoveable = true;
+
     public void Init(int slotId)
     {
         Sprite nullItemSprite = null;
@@ -48,16 +51,21 @@ public class ContainerSlot : MonoBehaviour
         {
             container.RemoveContent(64, slotId);
         }
+
+        if (isSelectable) container.SetNowHoverSlot(slotId);
+        else container.SetNowHoverSlot(0);
     }
 
     public void UnHover()
     {
         selector.gameObject.SetActive(false);
+
+        container.SetNowHoverSlot(0);
     }
 
     public void OnClick()
     {
-        Debug.Log("Slot Clicked");
+        container.StartHoverSlotMove(slotId);
     }
 
     public bool GetIsContain(ref int vaxelId, ref int amount)

@@ -109,4 +109,22 @@ public class SupportFunc
         }
     }
 
+    static public Texture LoadTextureFromId(int vaxelId)
+    {
+        Texture rtTexture = null;
+
+        switch (vaxelId)
+        {
+            case (int)Constants.VAXEL_TYPE.DIRT:
+                SupportFunc.LoadTexture(ref rtTexture, Constants.SPRITE_DIRT);
+                break;
+
+            case (int)Constants.VAXEL_TYPE.GRASS_TOP:
+                SupportFunc.LoadTexture(ref rtTexture, Constants.SPRITE_GRASS_TOP);
+                break;
+        }
+
+        return rtTexture;
+    }
+
 }

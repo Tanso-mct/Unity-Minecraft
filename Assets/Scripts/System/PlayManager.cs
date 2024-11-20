@@ -91,8 +91,6 @@ public class PlayManager : Manager
 
     public void ShowPlayerInventory()
     {
-        Debug.Log("ShowPlayerInventory");
-
         McControls.CursorLock(false);
         player.isInventoryOpen = true;
         ShowWindow(wndPlayerInventory.name);
@@ -100,8 +98,6 @@ public class PlayManager : Manager
 
     public void ClosePlayerInventory()
     {
-        Debug.Log("ClosePlayerInventory");
-
         McControls.CursorLock(true);
         player.isInventoryOpen = false;
         CloseWindow(wndPlayerInventory.name);
@@ -109,35 +105,30 @@ public class PlayManager : Manager
 
     public void ShowVideoSetting()
     {
-        Debug.Log("ShowVideoSetting");
         CloseWindow(wndOption.name);
         ShowWindow(wndVideoSetting.name);
     }
 
     public void CloseVideoSetting()
     {
-        Debug.Log("CloseVideoSetting");
         CloseWindow(wndVideoSetting.name);
         ShowWindow(wndOption.name);
     }
 
     public void ShowSoundSetting()
     {
-        Debug.Log("ShowSoundSetting");
         CloseWindow(wndOption.name);
         ShowWindow(wndSoundSetting.name);
     }
 
     public void CloseSoundSetting()
     {
-        Debug.Log("CloseSoundSetting");
         CloseWindow(wndSoundSetting.name);
         ShowWindow(wndOption.name);
     }
 
     public void ShowControlSetting()
     {
-        Debug.Log("ShowControlSetting");
         CloseWindow(wndOption.name);
 
         ShowWindow(wndControlSetting.name);
@@ -146,7 +137,6 @@ public class PlayManager : Manager
 
     public void CloseControlSetting()
     {
-        Debug.Log("CloseControlSetting");
         CloseWindow(wndControlSetting.name);
         CloseWindow(wndControlSettingScroll.name);
 

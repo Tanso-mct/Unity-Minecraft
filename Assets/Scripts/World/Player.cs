@@ -841,6 +841,10 @@ public class Player : MonoBehaviour
                 hotBar.RemoveContent(1, hotBar.SelectingSlot);
             }
         }
+        else
+        {
+            UpdateHotBarSlot();
+        }
     }
 
     private void FrameFinish()

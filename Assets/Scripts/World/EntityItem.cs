@@ -25,14 +25,13 @@ public class EntityItem : MonoBehaviour
         isThrow = true;
         throwDirection = direction;
 
-        // // PhysicMaterial??????
-        // PhysicMaterial material = new PhysicMaterial();
-        // material.dynamicFriction = 1.0f; // ???€?C?W??
-        // material.staticFriction = 1.0f;  // ???€?C?W??
-        // material.frictionCombine = PhysicMaterialCombine.Maximum;
+        // PhysicMaterial??????
+        PhysicMaterial material = new PhysicMaterial();
+        material.dynamicFriction = 1.0f;
+        material.staticFriction = 1.0f;
+        material.frictionCombine = PhysicMaterialCombine.Maximum;
 
-        // // ?R???C?_?[??PhysicMaterial???K?p
-        // bc.material = material;
+        bc.material = material;
 
         rb.AddForce(throwDirection, ForceMode.Impulse);
     }

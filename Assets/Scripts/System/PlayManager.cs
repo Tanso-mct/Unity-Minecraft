@@ -52,7 +52,7 @@ public class PlayManager : Manager
 
         if (McControls.IsKeyDown(Constants.CONTROL_INVENTORY) && !player.isInventoryOpen)
         {
-            ShowPlayerInventory();
+            ShowCreativeContainer();
         }
         else if (McControls.IsKeyDown(Constants.CONTROL_INVENTORY) && player.isInventoryOpen)
         {

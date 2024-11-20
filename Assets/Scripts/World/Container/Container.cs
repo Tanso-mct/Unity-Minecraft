@@ -32,6 +32,8 @@ public class Container : MonoBehaviour
     private int passedFrame = 0;
     private int moveFinishedFrame = 0;
 
+    [SerializeField] private bool isInfiniteBlock = false;
+
     public void SetNowHoverSlot(int slotId)
     {
         nowHoverSlotId = slotId;
@@ -44,9 +46,6 @@ public class Container : MonoBehaviour
 
     public void StartHoverSlotMove(int slotId)
     {
-        Debug.Log("Is Start Hover Slot Moving: " + isStartHoverSlotMoving);
-        Debug.Log("Game Object: " + gameObject.name);
-
         if (moveFinishedFrame + 2 < passedFrame)
         {
             if (!isStartHoverSlotMoving && !Input.GetKey(KeyCode.LeftShift))
@@ -77,7 +76,11 @@ public class Container : MonoBehaviour
             int amount = 0;
             hoverSlot.GetIsContain(ref vaxelId, ref amount);
 
-            if (nowHoverSlotId != 0)
+            if (nowHoverSlotId == -1) // Delete
+            {
+                SetSlotContent(startSlotId, 0, 0);
+            }
+            else if (nowHoverSlotId != 0)
             {
                 int hoverVaxelId = 0;
                 int hoverAmount = 0;
@@ -96,22 +99,22 @@ public class Container : MonoBehaviour
                     else if (isStackable && hoverAmount + amount > stackMax)
                     {
                         SetSlotContent(nowHoverSlotId, vaxelId, stackMax);
-                        SetSlotContent(startSlotId, vaxelId, hoverAmount + amount - stackMax);
+                        if (!isInfiniteBlock) SetSlotContent(startSlotId, vaxelId, hoverAmount + amount - stackMax);
                     }
                 }
                 else if (hoverVaxelId != vaxelId)
                 {
                     SetSlotContent(nowHoverSlotId, vaxelId, amount);
-                    SetSlotContent(startSlotId, hoverVaxelId, hoverAmount);
+                    if (!isInfiniteBlock) SetSlotContent(startSlotId, hoverVaxelId, hoverAmount);
                 }
                 else
                 {
-                    SetSlotContent(startSlotId, vaxelId, amount);
+                    if (!isInfiniteBlock) SetSlotContent(startSlotId, vaxelId, amount);
                 }
             }
             else
             {
-                SetSlotContent(startSlotId, vaxelId, amount);
+                if (!isInfiniteBlock) SetSlotContent(startSlotId, vaxelId, amount);
             }
 
             hoverSlot.gameObject.SetActive(false);
@@ -146,7 +149,7 @@ public class Container : MonoBehaviour
             startHoverSlotPos = slots[startSlotId-1].transform.position;
             startMousePos = Input.mousePosition;
 
-            SetSlotContent(startSlotId, 0, 0);
+            if (!isInfiniteBlock) SetSlotContent(startSlotId, 0, 0);
         }
     }
 

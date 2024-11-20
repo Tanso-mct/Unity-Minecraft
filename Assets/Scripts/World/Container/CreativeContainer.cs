@@ -13,14 +13,18 @@ public class CreativeContainer : Container
         {
             slots[i].Init(i+1);
         }
+
+        for (int i = 9; i < slots.Count; i++)
+        {
+            slots[i].SetContents((int)Constants.VAXEL_TYPE.STONE, 1);
+        }
     }
 
     protected override void SetSlotContent(int slotId, int vaxelId, int amount)
     {
-        slots[slotId-1].SetContents(vaxelId, amount);
-
         if (slotId-1 < hotBar.slots.Count)
         {
+            slots[slotId-1].SetContents(vaxelId, amount);
             hotBar.slots[slotId-1].SetContents(vaxelId, amount);
             inventory.slots[slotId-1].SetContents(vaxelId, amount);
         }
@@ -34,33 +38,7 @@ public class CreativeContainer : Container
 
         if (startSlotId >= 1 && startSlotId <= 9)
         {
-            int thisSlotVaxelId = 0;
-            int thisSlotAmount = 0;
-            bool thisSlotIsStackable = false;
-            for (int i = 9; i < slots.Count; i++)
-            {
-                if (!slots[i].isQuickMoveable) continue;
-
-                thisSlotIsStackable = slots[i].GetIsContain(ref thisSlotVaxelId, ref thisSlotAmount);
-                if (thisSlotVaxelId == 0)
-                {
-                    SetSlotContent(i+1, startSlotVaxelId, startSlotAmount);
-                    SetSlotContent(startSlotId, 0, 0);
-                    return;
-                }
-                else if (thisSlotIsStackable && thisSlotVaxelId == startSlotVaxelId && thisSlotAmount + startSlotAmount <= stackMax)
-                {
-                    SetSlotContent(i+1, startSlotVaxelId, thisSlotAmount + startSlotAmount);
-                    SetSlotContent(startSlotId, 0, 0);
-                    return;
-                }
-                else if (thisSlotIsStackable && thisSlotVaxelId == startSlotVaxelId && thisSlotAmount + startSlotAmount > stackMax)
-                {
-                    SetSlotContent(i+1, startSlotVaxelId, stackMax);
-                    SetSlotContent(startSlotId, startSlotVaxelId, thisSlotAmount + startSlotAmount - stackMax);
-                    return;
-                }
-            }
+            SetSlotContent(startSlotId, 0, 0);
         }
         else
         {
@@ -74,20 +52,12 @@ public class CreativeContainer : Container
                 thisSlotIsStackable = slots[i].GetIsContain(ref thisSlotVaxelId, ref thisSlotAmount);
                 if (thisSlotVaxelId == 0)
                 {
-                    SetSlotContent(i+1, startSlotVaxelId, startSlotAmount);
-                    SetSlotContent(startSlotId, 0, 0);
+                    SetSlotContent(i+1, startSlotVaxelId, stackMax);
                     return;
                 }
-                else if (thisSlotIsStackable && thisSlotVaxelId == startSlotVaxelId && thisSlotAmount + startSlotAmount <= stackMax)
-                {
-                    SetSlotContent(i+1, startSlotVaxelId, thisSlotAmount + startSlotAmount);
-                    SetSlotContent(startSlotId, 0, 0);
-                    return;
-                }
-                else if (thisSlotIsStackable && thisSlotVaxelId == startSlotVaxelId && thisSlotAmount + startSlotAmount > stackMax)
+                else if (thisSlotIsStackable && thisSlotVaxelId == startSlotVaxelId && thisSlotAmount != stackMax)
                 {
                     SetSlotContent(i+1, startSlotVaxelId, stackMax);
-                    SetSlotContent(startSlotId, startSlotVaxelId, thisSlotAmount + startSlotAmount - stackMax);
                     return;
                 }
             }

@@ -13,7 +13,7 @@ public class EntityItem : MonoBehaviour
     private int id = 0;
     public int ID { get { return id; } }
 
-    private float destructionTime = 500f; // •b
+    private float destructionTime = 30f; // •b
     private float rotateSpeed = 1f;
 
     public GameObject meshParent;

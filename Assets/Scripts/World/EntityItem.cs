@@ -7,14 +7,16 @@ public class EntityItem : MonoBehaviour
 {
     public bool isThrow = false;
     private Vector3 throwDirection;
-    [SerializeField] private Rigidbody rb;
-    [SerializeField] private BoxCollider bc;
+    private Rigidbody rb;
+    private BoxCollider bc;
 
     private int id = 0;
     public int ID { get { return id; } }
 
-    [SerializeField] private float destructionTime = 500f; // •b
-    [SerializeField] private float rotateSpeed = 3f;
+    private float destructionTime = 500f; // •b
+    private float rotateSpeed = 1f;
+
+    public GameObject meshParent;
 
     void Update()
     {
@@ -30,8 +32,43 @@ public class EntityItem : MonoBehaviour
         transform.rotation = Quaternion.Euler(rot);
     }
 
-    public void ThrowIt(Vector3 direction, int sourceId)
+    public void ThrowIt(Vector3 direction, int sourceId, Texture texture)
     {
+        rb = GetComponent<Rigidbody>();
+        bc = GetComponent<BoxCollider>();
+
+        List<GameObject> children = SupportFunc.GetChildren(meshParent);
+        for (int i = 0; i < children.Count; i++)
+        {
+            children[i].GetComponent<MeshRenderer>().material.mainTexture = texture;
+        }
+
+        isThrow = true;
+        throwDirection = direction;
+        id = sourceId;
+
+        PhysicMaterial material = new PhysicMaterial();
+        material.dynamicFriction = 1.0f;
+        material.staticFriction = 1.0f;
+        material.frictionCombine = PhysicMaterialCombine.Maximum;
+
+        bc.material = material;
+
+        rb.AddForce(throwDirection, ForceMode.Impulse);
+        StartCoroutine(DestroyAfterTime(destructionTime));
+    }
+
+    public void ThrowIt(Vector3 direction, int sourceId, List<Texture> texture)
+    {
+        rb = GetComponent<Rigidbody>();
+        bc = GetComponent<BoxCollider>();
+
+        List<GameObject> children = SupportFunc.GetChildren(gameObject);
+        for (int i = 0; i < children.Count; i++)
+        {
+            children[i].GetComponent<MeshRenderer>().material.mainTexture = texture[i];
+        }
+
         isThrow = true;
         throwDirection = direction;
         id = sourceId;

@@ -94,13 +94,7 @@ abstract public class Vaxel
         );
 
         EntityItem thisItem = entityItem.GetComponent<EntityItem>();
-        thisItem.ThrowIt(new Vector3(Random.Range(0, 2), Random.Range(0, 2), Random.Range(0, 2)), breakBlockId);
-
-        entityItem.GetComponent<MeshRenderer>().material.mainTexture = LoadTextureFromId(breakBlockId);
-
-
-
-        // sourceBreakContainer.AddContent(breakBlockId);
+        thisItem.ThrowIt(new Vector3(Random.Range(0, 2), Random.Range(0, 2), Random.Range(0, 2)), breakBlockId, LoadTextureFromId(breakBlockId));
     }
 
     public virtual void TryBreak(Vector4 block, ref Vector4 frameDestroyBlock)

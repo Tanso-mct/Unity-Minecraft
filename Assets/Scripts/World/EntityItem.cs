@@ -32,6 +32,26 @@ public class EntityItem : MonoBehaviour
         transform.rotation = Quaternion.Euler(rot);
     }
 
+    public void ThrowIt(Vector3 direction, int sourceId)
+    {
+        rb = GetComponent<Rigidbody>();
+        bc = GetComponent<BoxCollider>();
+
+        isThrow = true;
+        throwDirection = direction;
+        id = sourceId;
+
+        PhysicMaterial material = new PhysicMaterial();
+        material.dynamicFriction = 1.0f;
+        material.staticFriction = 1.0f;
+        material.frictionCombine = PhysicMaterialCombine.Maximum;
+
+        bc.material = material;
+
+        rb.AddForce(throwDirection, ForceMode.Impulse);
+        StartCoroutine(DestroyAfterTime(destructionTime));
+    }
+
     public void ThrowIt(Vector3 direction, int sourceId, Texture texture)
     {
         rb = GetComponent<Rigidbody>();

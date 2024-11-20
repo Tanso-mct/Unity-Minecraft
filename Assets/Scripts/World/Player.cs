@@ -151,6 +151,7 @@ public class Player : MonoBehaviour
     // コンテナら
     [SerializeField] private Inventory inventory;
     [SerializeField] private HotBar hotBar;
+    [SerializeField] private CreativeContainer creativeItemContainer;
 
     // 何らかのインベントリを開いているかどうか
     public bool isInventoryOpen = false;
@@ -179,6 +180,7 @@ public class Player : MonoBehaviour
         // コンテナの初期化
         inventory.Init();
         hotBar.Init();
+        creativeItemContainer.Init();
 
         // アニメーターの初期化
         animParts = parts.GetComponent<Animator>();
@@ -637,23 +639,13 @@ public class Player : MonoBehaviour
 
                 lastSetFrame = Time.frameCount;
                 isFrameSetBlock = true;
-                if (blockAdmin.IsUseable((int)targetBlocks[Constants.TARGET_BLOCK_SELECT].w))
-                {
-                    // ブロックの使用
-                    blockAdmin.Use
-                    (
-                        targetBlocks[Constants.TARGET_BLOCK_SELECT], inventory
-                    );
-                }
-                else
-                {
-                    // ブロックの設置
-                    blockAdmin.Set
-                    (
-                        targetBlocks[Constants.TARGET_BLOCK_SET],
-                        ref frameSetBlocks, hotBar, hotBar.SelectingSlot
-                    );
-                }
+                
+                // ブロックの設置
+                blockAdmin.Set
+                (
+                    targetBlocks[Constants.TARGET_BLOCK_SET],
+                    ref frameSetBlocks, hotBar, hotBar.SelectingSlot
+                );
             }
         }
         else if (McControls.IsKey(Constants.CONTROL_USE))
@@ -669,23 +661,12 @@ public class Player : MonoBehaviour
                 lastSetFrame = Time.frameCount;
                 isFrameSetBlock = true;
 
-                if (blockAdmin.IsUseable((int)targetBlocks[Constants.TARGET_BLOCK_SELECT].w))
-                {
-                    // ブロックの使用
-                    blockAdmin.Use
-                    (
-                        targetBlocks[Constants.TARGET_BLOCK_SELECT], inventory
-                    );
-                }
-                else
-                {
-                    // ブロックの設置
-                    blockAdmin.Set
-                    (
-                        targetBlocks[Constants.TARGET_BLOCK_SET],
-                        ref frameSetBlocks, hotBar, hotBar.SelectingSlot
-                    );
-                }
+                // ブロックの設置
+                blockAdmin.Set
+                (
+                    targetBlocks[Constants.TARGET_BLOCK_SET],
+                    ref frameSetBlocks, hotBar, hotBar.SelectingSlot
+                );
             }
         }
 
@@ -839,7 +820,7 @@ public class Player : MonoBehaviour
             if (McControls.IsKeyDown(Constants.CONTROL_DROP_ITEM))
             {
                 // ホットバーのアイテムをドロップ
-                hotBar.RemoveContent(1, hotBar.SelectingSlot);
+                hotBar.DropItem(hotBar.SelectingSlot);
             }
         }
         else

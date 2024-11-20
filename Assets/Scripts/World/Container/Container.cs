@@ -24,6 +24,11 @@ public class Container : MonoBehaviour
     protected int startSlotId;
     protected int nowHoverSlotId;
 
+    [SerializeField] private GameObject entityItemParent;
+    private float entityItemOffY = 0.7f;
+
+    [SerializeField] private GameObject playerObj;
+
     public void SetNowHoverSlot(int slotId)
     {
         nowHoverSlotId = slotId;
@@ -36,6 +41,10 @@ public class Container : MonoBehaviour
 
     public void StartHoverSlotMove(int slotId)
     {
+        // if (GetIsContain(slotId) == 0) return;
+
+        Debug.Log("Is Start Hover Slot Moving: " + isStartHoverSlotMoving);
+
         if (!isStartHoverSlotMoving && !Input.GetKey(KeyCode.LeftShift))
         {
             isStartHoverSlotMoving = true;
@@ -140,9 +149,9 @@ public class Container : MonoBehaviour
         }
     }
 
-    public int GetIsContain(int slot)
+    public int GetIsContain(int slotId)
     {
-        return slots[slot-1].GetIsContain();
+        return slots[slotId-1].GetIsContain();
     }
 
     public virtual bool AddContent(int vaxelId)
@@ -192,5 +201,25 @@ public class Container : MonoBehaviour
         {
             return new Vector2(0, 0);
         }
+    }
+    
+    public void DropItem(int slotId)
+    {
+        RemoveContent(1, slotId);
+
+        GameObject entityItem = null;
+        GameObject entityBlockPrefab = null;
+        SupportFunc.InstantiatePrefab
+        (
+            ref entityItem, ref entityBlockPrefab, Constants.PREFAB_ENTITY_BLOCK, ref entityItemParent, 
+            SupportFunc.PosFloatConvert(new Vector3(playerObj.transform.position.x, playerObj.transform.position.y + entityItemOffY, playerObj.transform.position.z))
+        );
+
+        EntityItem thisItem = entityItem.GetComponent<EntityItem>();
+        thisItem.ThrowIt
+        (
+            new Vector3(Random.Range(0, 2), Random.Range(0, 2), Random.Range(0, 2)), 
+            GetIsContain(slotId), SupportFunc.LoadMultiTextureFromId(GetIsContain(slotId))
+        );
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-abstract public class Vaxel
+public class Vaxel
 {
     protected int id;
     public int ID { get { return id; } }
@@ -15,9 +15,8 @@ abstract public class Vaxel
 
     protected int breakBlockId;
 
-    protected GameObject entityItemParent;
-
-    private float entityItemOffY = 0.7f;
+    public GameObject entityItemParent;
+    public float entityItemOffY = 0.7f;
 
     public virtual void Init(GameObject entityItemParent)
     {
@@ -25,28 +24,6 @@ abstract public class Vaxel
         breakBlockId = (int)Constants.VAXEL_TYPE.AIR;
 
         this.entityItemParent = entityItemParent;
-    }
-
-    abstract public void LoadFromJson(ref WorldData worldData);
-    abstract public void SaveToJson(ref WorldData worldData);
-
-    abstract public float GetDurability();
-
-    abstract public float GetMiningSpeed(Constants.VAXEL_TYPE blockType);
-
-    public virtual bool IsUseable()
-    {
-        return false;
-    }
-
-    public virtual void UseBlock(Vector4 block, Container sourceContainer)
-    {
-
-    }
-
-    public virtual void UseItem(Camera cam, Vector4 target, ref Vector4 frameSetBlock)
-    {
-
     }
 
     public virtual void FinishedSet(Vector4 frameSetBlock)

@@ -2,10 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Inventory : Container
+public class CreativeContainer : Container
 {
     [SerializeField] private Container hotBar;
-    [SerializeField] private Container creativeContainer;
 
     public override void Init()
     {
@@ -100,21 +99,13 @@ public class Inventory : Container
             if (nowVaxelId == 0) // ãÛÇ¢ÇƒÇ¢ÇÈÉXÉçÉbÉg
             {
                 slots[i].SetContents(vaxelId, 1);
-                if (i < hotBar.slots.Count)
-                {
-                    hotBar.slots[i].SetContents(vaxelId, 1);
-                    creativeContainer.slots[i].SetContents(vaxelId, 1);
-                }
+                if (i < hotBar.slots.Count) hotBar.slots[i].SetContents(vaxelId, 1);
                 return true;
             }
             else if (isStackable && nowVaxelId == vaxelId && nowAmount < stackMax) 
             {
                 slots[i].SetContents(vaxelId, nowAmount + 1);
-                if (i < hotBar.slots.Count)
-                {
-                    hotBar.slots[i].SetContents(vaxelId, nowAmount + 1);
-                    creativeContainer.slots[i].SetContents(vaxelId, nowAmount + 1);
-                }
+                if (i < hotBar.slots.Count) hotBar.slots[i].SetContents(vaxelId, nowAmount + 1);
                 return true;
             }
         }
@@ -132,31 +123,19 @@ public class Inventory : Container
         if (isStackable && nowVaxelId != 0 && nowAmount > amount)
         {
             slots[slot-1].SetContents(nowVaxelId, nowAmount - amount);
-            if (slot <= hotBar.slots.Count)
-            {
-                hotBar.slots[slot-1].SetContents(nowVaxelId, nowAmount - amount);
-                creativeContainer.slots[slot-1].SetContents(nowVaxelId, nowAmount - amount);
-            }
+            if (slot <= hotBar.slots.Count) hotBar.slots[slot-1].SetContents(nowVaxelId, nowAmount - amount);
             return new Vector2(nowVaxelId, amount);
         }
         else if (isStackable && nowVaxelId != 0 && nowAmount <= amount)
         {
             slots[slot-1].SetContents(0, 0);
-            if (slot <= hotBar.slots.Count)
-            {
-                hotBar.slots[slot-1].SetContents(0, 0);
-                creativeContainer.slots[slot-1].SetContents(0, 0);
-            }
+            if (slot <= hotBar.slots.Count) hotBar.slots[slot-1].SetContents(0, 0);
             return new Vector2(nowVaxelId, nowAmount);
         }
         else if (!isStackable && nowVaxelId != 0)
         {
             slots[slot-1].SetContents(0, 0);
-            if (slot <= hotBar.slots.Count)
-            {
-                hotBar.slots[slot-1].SetContents(0, 0);
-                creativeContainer.slots[slot-1].SetContents(0, 0);
-            }
+            if (slot <= hotBar.slots.Count) hotBar.slots[slot-1].SetContents(0, 0);
             return new Vector2(nowVaxelId, 1);
         }
         else

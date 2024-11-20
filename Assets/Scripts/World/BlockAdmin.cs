@@ -11,7 +11,7 @@ public class BlockAdmin : MonoBehaviour
     private Vaxel useVaxel;
     private Vaxel breakVaxel;
 
-    [SerializeField] private GameObject entityItemParent;
+    [SerializeField] private GameObject entityItemParent = null;
 
     public void Init()
     {
@@ -50,7 +50,7 @@ public class BlockAdmin : MonoBehaviour
             case (int)Constants.VAXEL_TYPE.LOG_BIRCH_TOP:
             case (int)Constants.VAXEL_TYPE.LOG_BIRCH:
             case (int)Constants.VAXEL_TYPE.LOG_BIRCH_BOTTOM:
-                rtVaxel = new BuildBlockVaxel();
+                rtVaxel = new Vaxel();
                 rtVaxel.Init(entityItemParent);
                 break;
         }
@@ -70,29 +70,10 @@ public class BlockAdmin : MonoBehaviour
         return GetVaxelInstance(blockId);
     }
 
-    public bool IsUseable(int blockId)
-    {
-        // switch (blockId)
-        // {
-        //     case (int)Constants.VAXEL_TYPE.:
-        //         return true;
-
-            
-        // }
-
-        return false;
-    }
-
     public void Set(Vector4 block, ref Vector4 frameSetBlock, Container sourceContainer, int setSlot)
     {
         setVaxel = GetVaxel(sourceContainer, setSlot);
         setVaxel.TrySet(block, ref frameSetBlock, sourceContainer, setSlot);
-    }
-
-    public void Use(Vector4 block, Container sourceContainer)
-    {
-        useVaxel = GetVaxel(block);
-        useVaxel.UseBlock(block, sourceContainer);
     }
 
     public void Break(Vector4 block, ref Vector4 frameDestroyBlock)

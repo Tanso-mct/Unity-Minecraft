@@ -110,9 +110,6 @@ public class WorldMesh : MonoBehaviour
         shader.SetFloat("TEXTURE_BLOCK_TILE_U", textureTileX);
         shader.SetFloat("TEXTURE_BLOCK_TILE_V", textureTileY);
 
-        Debug.Log("TEXTURE_BLOCK_TILE_U: " + textureTileX);
-        Debug.Log("TEXTURE_BLOCK_TILE_V: " + textureTileY);
-
         shader.SetInt("SOURCE_MESH_BLOCK_FACE_COUNT", squares.Count);
         shader.SetInt("SOURCE_MESH_BLOCK_VS_INDEX", vertices.Count);
         shader.SetInt("SOURCE_MESH_BLOCK_TRIS_INDEX", triangles.Count);

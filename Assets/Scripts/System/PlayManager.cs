@@ -15,6 +15,7 @@ public class PlayManager : Manager
     [SerializeField] private Player player;
 
     [SerializeField] private GameObject wndPlayerInventory;
+    [SerializeField] private GameObject wndCreativeContainer;
 
     [SerializeField] private float controlScrollBottom;
 
@@ -91,6 +92,8 @@ public class PlayManager : Manager
 
     public void ShowPlayerInventory()
     {
+        CloseWindow(wndCreativeContainer.name);
+
         McControls.CursorLock(false);
         player.isInventoryOpen = true;
         ShowWindow(wndPlayerInventory.name);
@@ -100,8 +103,20 @@ public class PlayManager : Manager
     {
         McControls.CursorLock(true);
         player.isInventoryOpen = false;
+
         CloseWindow(wndPlayerInventory.name);
+        CloseWindow(wndCreativeContainer.name);
     }
+
+    public void ShowCreativeContainer()
+    {
+        CloseWindow(wndPlayerInventory.name);
+
+        McControls.CursorLock(false);
+        player.isInventoryOpen = true;
+        ShowWindow(wndCreativeContainer.name);
+    }
+
 
     public void ShowVideoSetting()
     {

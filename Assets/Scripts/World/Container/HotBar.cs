@@ -11,12 +11,11 @@ public class HotBar : Container
     [SerializeField] private float selectFrameMoveVal = 98.0f;
 
     [SerializeField] private Container inventory;
+    [SerializeField] private CreativeContainer creativeContainer;
 
     [SerializeField] private GameObject holdingBlock;
-    [SerializeField] private GameObject holdingItemParent;
 
     [SerializeField] private GameObject holdingBlockIdle;
-    [SerializeField] private GameObject holdingItemParentIdle;
 
     [SerializeField] private Texture holdingBlockTexture;
 
@@ -29,9 +28,6 @@ public class HotBar : Container
 
         holdingBlock.SetActive(false);
         holdingBlockIdle.SetActive(false);
-
-        holdingItemParent.SetActive(false);
-        holdingItemParentIdle.SetActive(false);
     }
 
     private bool CreateHolding(int vaxelId)
@@ -39,38 +35,27 @@ public class HotBar : Container
         holdingBlock.SetActive(false);
         holdingBlockIdle.SetActive(false);
 
-        holdingItemParent.SetActive(false);
-        holdingItemParentIdle.SetActive(false);
-
         if (vaxelId == 0) return false;
 
-        if (SupportFunc.IsItem(vaxelId))
+        holdingBlock.SetActive(true);
+        holdingBlockIdle.SetActive(true);
+
+        List<Texture> texture = SupportFunc.LoadMultiTextureFromId(vaxelId);
+
+        List<GameObject> holdingChildren = SupportFunc.GetChildren(holdingBlock);
+        for (int i = 0; i < holdingChildren.Count; i++)
         {
-
-        }
-        else
-        {
-            holdingBlock.SetActive(true);
-            holdingBlockIdle.SetActive(true);
-
-            List<Texture> texture = SupportFunc.LoadMultiTextureFromId(vaxelId);
-
-            List<GameObject> holdingChildren = SupportFunc.GetChildren(holdingBlock);
-            for (int i = 0; i < holdingChildren.Count; i++)
-            {
-                holdingChildren[i].GetComponent<MeshRenderer>().material.mainTexture = texture[i];
-            }
-
-            List<GameObject> holdingIdleChildren = SupportFunc.GetChildren(holdingBlockIdle);
-            for (int i = 0; i < holdingIdleChildren.Count; i++)
-            {
-                holdingIdleChildren[i].GetComponent<MeshRenderer>().material.mainTexture = texture[i];
-            }
-
-            return true;
+            holdingChildren[i].GetComponent<MeshRenderer>().material.mainTexture = texture[i];
         }
 
-        return false;
+        List<GameObject> holdingIdleChildren = SupportFunc.GetChildren(holdingBlockIdle);
+        for (int i = 0; i < holdingIdleChildren.Count; i++)
+        {
+            holdingIdleChildren[i].GetComponent<MeshRenderer>().material.mainTexture = texture[i];
+        }
+
+        return true;
+
     }
 
     public bool SelectSlot(int slot)
@@ -102,12 +87,14 @@ public class HotBar : Container
             {
                 slots[i].SetContents(vaxelId, 1);
                 inventory.slots[i].SetContents(vaxelId, 1);
+                creativeContainer.slots[i].SetContents(vaxelId, 1);
                 return true;
             }
             else if (isStackable && nowVaxelId == vaxelId && nowAmount < stackMax) 
             {
                 slots[i].SetContents(vaxelId, nowAmount + 1);
                 inventory.slots[i].SetContents(vaxelId, nowAmount + 1);
+                creativeContainer.slots[i].SetContents(vaxelId, nowAmount + 1);
                 return true;
             }
         }
@@ -126,18 +113,21 @@ public class HotBar : Container
         {
             slots[slot-1].SetContents(nowVaxelId, nowAmount - amount);
             inventory.slots[slot-1].SetContents(nowVaxelId, nowAmount - amount);
+            creativeContainer.slots[slot-1].SetContents(nowVaxelId, nowAmount - amount);
             return new Vector2(nowVaxelId, amount);
         }
         else if (isStackable && nowVaxelId != 0 && nowAmount <= amount)
         {
             slots[slot-1].SetContents(0, 0);
             inventory.slots[slot-1].SetContents(0, 0);
+            creativeContainer.slots[slot-1].SetContents(0, 0);
             return new Vector2(nowVaxelId, nowAmount);
         }
         else if (!isStackable && nowVaxelId != 0)
         {
             slots[slot-1].SetContents(0, 0);
             inventory.slots[slot-1].SetContents(0, 0);
+            creativeContainer.slots[slot-1].SetContents(0, 0);
             return new Vector2(nowVaxelId, 1);
         }
         else

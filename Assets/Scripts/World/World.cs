@@ -255,28 +255,6 @@ public class World : MonoBehaviour
         pos.x++;
     }
 
-    // シード値を更新する関数
-    uint UpdateSeed(uint seed)
-    {
-        return (seed * 1664525u + 1013904223u);
-    }
-
-    // ランダムな値を生成する関数
-    float RandomRange(Vector2Int minI, Vector2Int maxI, ref uint seed, ref float[] heightMap)
-    {
-        float min = heightMap[minI.x + minI.y * Constants.WORLD_SIZE];
-        float max = heightMap[maxI.x + maxI.y * Constants.WORLD_SIZE];
-
-        // シード値を更新
-        seed = seed * 1664525u + 1013904223u;
-
-        // シード値を元に擬似乱数を生成
-        float random = (float)((seed & 0x7fffffff) / 2147483648.0);
-
-        // minからmaxの範囲にスケーリング
-        return min + (max - min) * random;
-    }
-
     // Paramに保存されているワールド情報を使用してワールドの生成
     public void Create(string worldType)
     {
@@ -319,209 +297,46 @@ public class World : MonoBehaviour
         worldShader.SetInt("VIEW_ORIGIN_Y", worldOrigin.y);
         worldShader.SetInt("VIEW_ORIGIN_Z", worldOrigin.z);
 
-        int playerY = 0;
-
         int[] blocksId = new int[Constants.WORLD_SIZE * Constants.WORLD_HEIGHT * Constants.WORLD_SIZE];
         int[] throughBlocksId = new int[Constants.WORLD_SIZE * Constants.WORLD_HEIGHT * Constants.WORLD_SIZE];
-        if (thisInfo.worldType == "Flat")
+
+        // フラットワールドの生成
+        for (int x = 0; x < Constants.WORLD_SIZE; x++)
         {
-            // フラットワールドの生成
-            for (int x = 0; x < Constants.WORLD_SIZE; x++)
-            {
-                for (int y = 0; y < Constants.WORLD_HEIGHT; y++)
-                {
-                    for (int z = 0; z < Constants.WORLD_SIZE; z++)
-                    {
-                        int index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
-                        if (y == 0) blocksId[index] = (int)Constants.VAXEL_TYPE.BEDROCK; 
-                        else if (y >= 1 && y <= 2) blocksId[index] = (int)Constants.VAXEL_TYPE.DIRT;
-                        else if (y == 3) blocksId[index] = (int)Constants.VAXEL_TYPE.GRASS_TOP;
-                        else blocksId[index] = (int)Constants.VAXEL_TYPE.AIR;
-                    }
-                }
-            }
-
-            // すべてのブロックを生成
-            Vector3Int blockCoords = new Vector3Int(1 + Constants.WORLD_HALF_SIZE, 5, Constants.WORLD_HALF_SIZE);
-
-            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.STONE, ref blocksId);
-            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.COBBLESTONE, ref blocksId);
-            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.STONE_ANDESITE, ref blocksId);
-            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.STONE_DIORITE, ref blocksId);
-            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.STONE_GRANITE, ref blocksId);
-            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.COAL_ORE, ref blocksId);
-            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.IRON_ORE, ref blocksId);
-            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.GOLD_ORE, ref blocksId);
-            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.DIAMOND_ORE, ref blocksId);
-            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.EMERALD_ORE, ref blocksId);
-            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.LAPIS_ORE, ref blocksId);
-            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.LEAVES, ref blocksId);
-            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.LOG_OAK_TOP, ref blocksId);
-            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.PLANKS_OAK, ref blocksId);
-            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.PLANKS_BIRCH, ref blocksId);
-            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.LOG_BIRCH_TOP, ref blocksId);
-
-        }
-        else 
-        {
-            // ダイアモンドスクエアアルゴリズムによるワールドの生成
-
-            // シード値を生成
-            uint seed = (uint)Random.Range(0, int.MaxValue);
-            Debug.Log("Seed : " + seed);
-
-            // 最高高度値を示す値
-            int highest = 100;
-
-            // int worldGenerate = worldShader.FindKernel("WorldGenerate");
-
-            // // シェーダーの定数をセット
-            // Constants.SetShaderConstants(ref worldShader);
-
-            // // バッファー生成
-            // ComputeBuffer heightMapBuff = new ComputeBuffer(Constants.WORLD_SIZE * Constants.WORLD_SIZE, sizeof(float));
-            // ComputeBuffer seedsBuff = new ComputeBuffer(Constants.WORLD_SIZE * Constants.WORLD_SIZE, sizeof(uint));
-
-            // 計算幅
-            int calcWidth = Constants.WORLD_HALF_SIZE;
-
-            // // バッファー初期化
-            // float[] heightMap = new float[Constants.WORLD_SIZE * Constants.WORLD_SIZE];
-            // heightMap[calcWidth + calcWidth * Constants.WORLD_SIZE] = highest;
-            // heightMapBuff.SetData(heightMap);
-
-            // uint[] seeds = new uint[Constants.WORLD_SIZE * Constants.WORLD_SIZE];
-            // for (int i = 0; i < Constants.WORLD_SIZE * Constants.WORLD_SIZE; i++) seeds[i] = seed;
-            // seedsBuff.SetData(seeds);
-
-            // // バッファーをシェーダーにセット
-            // worldShader.SetBuffer(worldGenerate, "heightMap", heightMapBuff);
-            // worldShader.SetBuffer(worldGenerate, "seeds", seedsBuff);
-
-            float[] heightMap = new float[Constants.WORLD_SIZE * Constants.WORLD_SIZE];
-            heightMap[calcWidth + calcWidth * Constants.WORLD_SIZE] = highest;
-
-            int loopI = 0;
-            int calcPoint = 1;
-
-            int debugExecuteTime = 0;
-
-            while (calcWidth != 1)
-            {
-                // worldShader.SetInt("CALC_WIDTH", calcWidth);
-
-                // int threadGroup = Mathf.CeilToInt(calcPoint / 16.0f);
-                // worldShader.Dispatch(worldGenerate, threadGroup, threadGroup, 1);
-                for (int x = 1; x <= calcPoint; x++)
-                {
-                    for (int y = 1; y <= calcPoint; y++)
-                    {
-                        int idX = x * calcWidth;
-                        int idY = y * calcWidth;
-
-                        Vector2Int top = new Vector2Int(idX, idY - calcWidth / 2);
-                        Vector2Int topCompare = new Vector2Int(idX, idY - calcWidth);
-
-                        Vector2Int bottom = new Vector2Int(idX, idY + calcWidth / 2);
-                        Vector2Int bottomCompare = new Vector2Int(idX, idY + calcWidth);
-
-                        Vector2Int left = new Vector2Int(idX - calcWidth / 2, idY);
-                        Vector2Int leftCompare = new Vector2Int(idX - calcWidth, idY);
-
-                        Vector2Int right = new Vector2Int(idX + calcWidth / 2, idY);
-                        Vector2Int rightCompare = new Vector2Int(idX + calcWidth, idY);
-
-                        if (idX == Constants.WORLD_HALF_SIZE && idY == Constants.WORLD_HALF_SIZE) // 中心
-                        {
-                            heightMap[top.x + top.y * Constants.WORLD_SIZE] = RandomRange(topCompare, new Vector2Int(idX, idY), ref seed, ref heightMap);
-                            heightMap[bottom.x + bottom.y * Constants.WORLD_SIZE] = RandomRange(bottomCompare, new Vector2Int(idX, idY), ref seed, ref heightMap);
-                            heightMap[left.x + left.y * Constants.WORLD_SIZE] = RandomRange(leftCompare, new Vector2Int(idX, idY), ref seed, ref heightMap);
-                            heightMap[right.x + right.y * Constants.WORLD_SIZE] = RandomRange(rightCompare, new Vector2Int(idX, idY), ref seed, ref heightMap);
-                        }
-                        else if (idX == Constants.WORLD_HALF_SIZE && idY < Constants.WORLD_HALF_SIZE) // 中心からその列の上
-                        {
-                            heightMap[top.x + top.y * Constants.WORLD_SIZE] = RandomRange(topCompare, new Vector2Int(idX, idY), ref seed, ref heightMap);
-                            heightMap[left.x + left.y * Constants.WORLD_SIZE] = RandomRange(leftCompare, new Vector2Int(idX, idY), ref seed, ref heightMap);
-                            heightMap[right.x + right.y * Constants.WORLD_SIZE] = RandomRange(rightCompare, new Vector2Int(idX, idY), ref seed, ref heightMap);
-                        }
-                        else if (idX == Constants.WORLD_HALF_SIZE && idY > Constants.WORLD_HALF_SIZE) // 中心からその列の下
-                        {
-                            heightMap[bottom.x + bottom.y * Constants.WORLD_SIZE] = RandomRange(bottomCompare, new Vector2Int(idX, idY), ref seed, ref heightMap);
-                            heightMap[left.x + left.y * Constants.WORLD_SIZE] = RandomRange(leftCompare, new Vector2Int(idX, idY), ref seed, ref heightMap);
-                            heightMap[right.x + right.y * Constants.WORLD_SIZE] = RandomRange(rightCompare, new Vector2Int(idX, idY), ref seed, ref heightMap);
-                        }
-                        else if (idY == Constants.WORLD_HALF_SIZE && idX < Constants.WORLD_HALF_SIZE) // 中心からその行の左
-                        {
-                            heightMap[top.x + top.y * Constants.WORLD_SIZE] = RandomRange(topCompare, new Vector2Int(idX, idY), ref seed, ref heightMap);
-                            heightMap[bottom.x + bottom.y * Constants.WORLD_SIZE] = RandomRange(bottomCompare, new Vector2Int(idX, idY), ref seed, ref heightMap);
-                            heightMap[left.x + left.y * Constants.WORLD_SIZE] = RandomRange(leftCompare, new Vector2Int(idX, idY), ref seed, ref heightMap);
-                        }
-                        else if (idY == Constants.WORLD_HALF_SIZE && idX > Constants.WORLD_HALF_SIZE) // 中心からその行の右
-                        {
-                            heightMap[top.x + top.y * Constants.WORLD_SIZE] = RandomRange(topCompare, new Vector2Int(idX, idY), ref seed, ref heightMap);
-                            heightMap[bottom.x + bottom.y * Constants.WORLD_SIZE] = RandomRange(bottomCompare, new Vector2Int(idX, idY), ref seed, ref heightMap);
-                            heightMap[right.x + right.y * Constants.WORLD_SIZE] = RandomRange(rightCompare, new Vector2Int(idX, idY), ref seed, ref heightMap);
-                        }
-                        else if (idX < Constants.WORLD_HALF_SIZE && idY < Constants.WORLD_HALF_SIZE) // 左上
-                        {
-                            heightMap[top.x + top.y * Constants.WORLD_SIZE] = RandomRange(topCompare, new Vector2Int(idX, idY), ref seed, ref heightMap);
-                            heightMap[left.x + left.y * Constants.WORLD_SIZE] = RandomRange(leftCompare, new Vector2Int(idX, idY), ref seed, ref heightMap);
-                        }
-                        else if (idX > Constants.WORLD_HALF_SIZE && idY < Constants.WORLD_HALF_SIZE) // 右上
-                        {
-                            heightMap[top.x + top.y * Constants.WORLD_SIZE] = RandomRange(topCompare, new Vector2Int(idX, idY), ref seed, ref heightMap);
-                            heightMap[right.x + right.y * Constants.WORLD_SIZE] = RandomRange(rightCompare, new Vector2Int(idX, idY), ref seed, ref heightMap);
-                        }
-                        else if (idX < Constants.WORLD_HALF_SIZE && idY > Constants.WORLD_HALF_SIZE) // 左下
-                        {
-                            heightMap[bottom.x + bottom.y * Constants.WORLD_SIZE] = RandomRange(bottomCompare, new Vector2Int(idX, idY), ref seed, ref heightMap);
-                            heightMap[left.x + left.y * Constants.WORLD_SIZE] = RandomRange(leftCompare, new Vector2Int(idX, idY), ref seed, ref heightMap);
-                        }
-                        else if (idX > Constants.WORLD_HALF_SIZE && idY > Constants.WORLD_HALF_SIZE)
-                        {
-                            heightMap[bottom.x + bottom.y * Constants.WORLD_SIZE] = RandomRange(bottomCompare, new Vector2Int(idX, idY), ref seed, ref heightMap);
-                            heightMap[right.x + right.y * Constants.WORLD_SIZE] = RandomRange(rightCompare, new Vector2Int(idX, idY), ref seed, ref heightMap);
-                        }
-                    }
-                }
-
-                loopI++;
-                calcPoint += (int)Mathf.Pow(2, loopI);
-                calcWidth /= 2;
-            }
-
-            // バッファーを取得
-            // heightMapBuff.GetData(heightMap);
-
-            // 結果を確認
-            int halfHalfSize = Constants.WORLD_HALF_SIZE / 2;
-
-            Debug.Log("Center : " + heightMap[Constants.WORLD_HALF_SIZE + Constants.WORLD_HALF_SIZE * Constants.WORLD_SIZE]);
-            Debug.Log("Top : " + heightMap[Constants.WORLD_HALF_SIZE + (Constants.WORLD_HALF_SIZE - halfHalfSize) * Constants.WORLD_SIZE]);
-            Debug.Log("Bottom : " + heightMap[Constants.WORLD_HALF_SIZE + (Constants.WORLD_HALF_SIZE + halfHalfSize) * Constants.WORLD_SIZE]);
-            Debug.Log("Left : " + heightMap[Constants.WORLD_HALF_SIZE - halfHalfSize + Constants.WORLD_HALF_SIZE * Constants.WORLD_SIZE]);
-            Debug.Log("Right : " + heightMap[Constants.WORLD_HALF_SIZE + halfHalfSize + Constants.WORLD_HALF_SIZE * Constants.WORLD_SIZE]);
-
-
-            for (int x = 0; x < Constants.WORLD_SIZE; x++)
+            for (int y = 0; y < Constants.WORLD_HEIGHT; y++)
             {
                 for (int z = 0; z < Constants.WORLD_SIZE; z++)
                 {
-                    for (int y = 0; y < (int)heightMap[x + z * Constants.WORLD_SIZE]; y++)
-                    {
-                        int index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
-                        blocksId[index] = (int)Constants.VAXEL_TYPE.DIRT;
-
-                        if (playerY < y) playerY = y;
-                    }
+                    int index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
+                    if (y == 0) blocksId[index] = (int)Constants.VAXEL_TYPE.BEDROCK; 
+                    else if (y >= 1 && y <= 2) blocksId[index] = (int)Constants.VAXEL_TYPE.DIRT;
+                    else if (y == 3) blocksId[index] = (int)Constants.VAXEL_TYPE.GRASS_TOP;
+                    else blocksId[index] = (int)Constants.VAXEL_TYPE.AIR;
                 }
             }
-
-            // バッファーを解放
-            // heightMapBuff.Release();
-            // seedsBuff.Release();
         }
 
+        // すべてのブロックを生成
+        Vector3Int blockCoords = new Vector3Int(1 + Constants.WORLD_HALF_SIZE, 5, Constants.WORLD_HALF_SIZE);
+
+        CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.STONE, ref blocksId);
+        CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.COBBLESTONE, ref blocksId);
+        CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.STONE_ANDESITE, ref blocksId);
+        CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.STONE_DIORITE, ref blocksId);
+        CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.STONE_GRANITE, ref blocksId);
+        CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.COAL_ORE, ref blocksId);
+        CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.IRON_ORE, ref blocksId);
+        CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.GOLD_ORE, ref blocksId);
+        CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.DIAMOND_ORE, ref blocksId);
+        CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.EMERALD_ORE, ref blocksId);
+        CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.LAPIS_ORE, ref blocksId);
+        CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.LEAVES, ref blocksId);
+        CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.LOG_OAK_TOP, ref blocksId);
+        CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.PLANKS_OAK, ref blocksId);
+        CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.PLANKS_BIRCH, ref blocksId);
+        CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.LOG_BIRCH_TOP, ref blocksId);
+
+        
         blocksIDBuff.SetData(blocksId);
         throughBlocksIDBuff.SetData(throughBlocksId);
 
@@ -616,7 +431,7 @@ public class World : MonoBehaviour
         }
 
         // プレイヤーの生成及び配置
-        player.Create(new Vector3(0, playerY + 2, 0));
+        player.Create(player.Pos);
     }
 
     // Paramに保存されているワールド情報から指定のJsonファイルを使用して読み込む

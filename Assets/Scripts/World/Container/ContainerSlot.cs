@@ -13,7 +13,6 @@ public class ContainerSlot : MonoBehaviour
     [SerializeField] private Image selector;
     [SerializeField] private Image itemImage;
 
-    [SerializeField] private float itemScale = 0.5f;
     [SerializeField] private float blockScale = 0.5f;
 
     private int id;
@@ -87,15 +86,7 @@ public class ContainerSlot : MonoBehaviour
         Sprite blockSprite = SupportFunc.LoadSpriteFromId(id);;
 
         itemImage.sprite = blockSprite;
-
-        if (SupportFunc.IsItem(vaxelId))
-        {
-            itemImage.transform.localScale = new Vector3(itemScale, itemScale, itemScale);
-        }
-        else
-        {
-            itemImage.transform.localScale = new Vector3(blockScale, blockScale, blockScale);
-        }
+        itemImage.transform.localScale = new Vector3(blockScale, blockScale, blockScale);
 
         if (amount >= 2)
         {

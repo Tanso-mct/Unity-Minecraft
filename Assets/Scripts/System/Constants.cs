@@ -209,7 +209,6 @@ public class Constants : MonoBehaviour
 
 
     // World Info
-    public const string WORLD_MODE_CREATIVE = "Creative";
     public const string WORLD_MODE_SURVIVAL = "Survival";
     public const string WORLD_TYPE_NORMAL = "Normal";
     public const string WORLD_TYPE_FLAT = "Flat";

@@ -341,7 +341,103 @@ public class World : MonoBehaviour
         else 
         {
             // ダイアモンドスクエアアルゴリズムによるワールドの生成
-            
+
+            // シード値を生成
+            uint seed = (uint)Random.Range(0, int.MaxValue);
+            Debug.Log("Seed : " + seed);
+
+            // 最高高度値を示す値
+            int highest = 100;
+
+            int worldGenerate = worldShader.FindKernel("WorldGenerate");
+
+            // シェーダーの定数をセット
+            Constants.SetShaderConstants(ref worldShader);
+
+            // バッファー生成
+            ComputeBuffer heightMapBuff = new ComputeBuffer(Constants.WORLD_SIZE * Constants.WORLD_SIZE * 2, sizeof(float));
+            ComputeBuffer seedsBuff = new ComputeBuffer(Constants.WORLD_SIZE * Constants.WORLD_SIZE, sizeof(uint));
+
+            // 計算幅
+            int calcWidth = (Constants.WORLD_SIZE - 1) / 2;
+
+            // バッファー初期化
+            float[] heightMap = new float[Constants.WORLD_SIZE * Constants.WORLD_SIZE * 2];
+            heightMap[calcWidth + calcWidth * Constants.WORLD_SIZE * 2] = highest;
+            heightMapBuff.SetData(heightMap);
+
+            uint[] seeds = new uint[Constants.WORLD_SIZE * Constants.WORLD_SIZE];
+            for (int i = 0; i < Constants.WORLD_SIZE * Constants.WORLD_SIZE; i++) seeds[i] = seed;
+            seedsBuff.SetData(seeds);
+
+            // バッファーをシェーダーにセット
+            worldShader.SetBuffer(worldGenerate, "heightMap", heightMapBuff);
+            worldShader.SetBuffer(worldGenerate, "seeds", seedsBuff);
+
+            int loopI = 0;
+            int calcPoint = 1;
+            int clacPointSum = 0;
+
+            while (calcWidth != 1)
+            {
+                clacPointSum = calcPoint * calcPoint;
+                worldShader.SetInt("CALC_WIDTH", calcWidth);
+
+                worldShader.Dispatch(worldGenerate, clacPointSum, 1, 1);
+
+                loopI++;
+                calcPoint += (int)Mathf.Pow(2, loopI);
+                calcWidth /= 2;
+            }
+
+            // バッファーを取得
+            heightMapBuff.GetData(heightMap);
+
+            // 結果を確認
+            int halfHalfSize = Constants.WORLD_HALF_SIZE / 2;
+
+            Debug.Log("Center : " + heightMap[Constants.WORLD_HALF_SIZE + Constants.WORLD_HALF_SIZE * Constants.WORLD_SIZE * 2]);
+            Debug.Log("Top : " + heightMap[Constants.WORLD_HALF_SIZE + (Constants.WORLD_HALF_SIZE - halfHalfSize) * Constants.WORLD_SIZE * 2]);
+            Debug.Log("Bottom : " + heightMap[Constants.WORLD_HALF_SIZE + (Constants.WORLD_HALF_SIZE + halfHalfSize) * Constants.WORLD_SIZE * 2]);
+            Debug.Log("Left : " + heightMap[Constants.WORLD_HALF_SIZE - halfHalfSize + Constants.WORLD_HALF_SIZE * Constants.WORLD_SIZE * 2]);
+            Debug.Log("Right : " + heightMap[Constants.WORLD_HALF_SIZE + halfHalfSize + Constants.WORLD_HALF_SIZE * Constants.WORLD_SIZE * 2]);
+
+
+             // フラットワールドの生成
+            for (int x = 0; x < Constants.WORLD_SIZE; x++)
+            {
+                for (int y = 0; y < Constants.WORLD_HEIGHT; y++)
+                {
+                    for (int z = 0; z < Constants.WORLD_SIZE; z++)
+                    {
+                        int index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
+                        if (y == 0) blocksId[index] = (int)Constants.VAXEL_TYPE.BEDROCK; 
+                        else if (y >= 1 && y <= 2) blocksId[index] = (int)Constants.VAXEL_TYPE.DIRT;
+                        else if (y == 3) blocksId[index] = (int)Constants.VAXEL_TYPE.GRASS_TOP;
+                        else blocksId[index] = (int)Constants.VAXEL_TYPE.AIR;
+                    }
+                }
+            }
+
+            // すべてのブロックを生成
+            Vector3Int blockCoords = new Vector3Int(1 + Constants.WORLD_HALF_SIZE, 5, Constants.WORLD_HALF_SIZE);
+
+            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.STONE, ref blocksId);
+            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.COBBLESTONE, ref blocksId);
+            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.STONE_ANDESITE, ref blocksId);
+            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.STONE_DIORITE, ref blocksId);
+            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.STONE_GRANITE, ref blocksId);
+            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.COAL_ORE, ref blocksId);
+            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.IRON_ORE, ref blocksId);
+            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.GOLD_ORE, ref blocksId);
+            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.DIAMOND_ORE, ref blocksId);
+            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.EMERALD_ORE, ref blocksId);
+            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.LAPIS_ORE, ref blocksId);
+            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.LEAVES, ref blocksId);
+            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.LOG_OAK_TOP, ref blocksId);
+            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.PLANKS_OAK, ref blocksId);
+            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.PLANKS_BIRCH, ref blocksId);
+            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.LOG_BIRCH_TOP, ref blocksId);
         }
 
         blocksIDBuff.SetData(blocksId);
@@ -438,7 +534,7 @@ public class World : MonoBehaviour
         }
 
         // プレイヤーの生成及び配置
-        player.Create();
+        player.Create(new Vector3(0, 20, 0));
     }
 
     // Paramに保存されているワールド情報から指定のJsonファイルを使用して読み込む

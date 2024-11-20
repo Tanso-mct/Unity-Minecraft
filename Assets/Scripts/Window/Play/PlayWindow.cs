@@ -26,7 +26,7 @@ public class PlayWindow : GameWindow
         ElementsInit(ref diTextEl);
 
         // Debug時のみWorldInfoを生成
-        World.CreateWorldInfo("Test", Constants.WORLD_MODE_CREATIVE, Constants.WORLD_TYPE_FLAT);
+        World.CreateWorldInfo("Test", Constants.WORLD_MODE_SURVIVAL, Constants.WORLD_TYPE_NORMAL);
         World.SetWorldInfo(0);
 
         // Paramの値からワールドを生成

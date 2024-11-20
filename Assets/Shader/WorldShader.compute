@@ -1,3 +1,4 @@
+#pragma kernel WorldGenerate
 #pragma kernel MeshGenerate
 #pragma kernel ThroughMeshGenerate
 #pragma kernel BlockUpdate
@@ -328,6 +329,109 @@ float3 GetHitboxOpposite(int hitboxType, float3 blockCoords)
     }
 
     return float3(0, 0, 0);
+}
+
+int CALC_WIDTH;
+
+RWStructuredBuffer<uint> seeds;
+RWStructuredBuffer<float> heightMap;
+
+// シード値を更新する関数
+uint UpdateSeed(uint seed)
+{
+    return (seed * 1664525u + 1013904223u);
+}
+
+// ランダムな値を生成する関数
+float RandomRange(int2 minI, int2 maxI, inout uint seed)
+{
+    float min = heightMap[minI.x + minI.y * WORLD_SIZE * 2];
+    float max = heightMap[maxI.x + maxI.y * WORLD_SIZE * 2];
+
+    // シード値を更新
+    seed = UpdateSeed(seed);
+
+    // シード値を元に擬似乱数を生成
+    float random = (seed & 0x7fffffff) / 2147483648.0;
+
+    // minからmaxの範囲にスケーリング
+    return lerp(min, max, random);
+}
+
+[numthreads(256,1,1)]
+void WorldGenerate(uint3 id : SV_DispatchThreadID)
+{
+    int index = id.x;
+
+    int x = index * CALC_WIDTH;
+    int y = index * CALC_WIDTH;
+
+    if (x + CALC_WIDTH < WORLD_SIZE && y + CALC_WIDTH < WORLD_SIZE)
+    {
+        int2 top = int2(x, y - CALC_WIDTH / 2);
+        int2 topCompare = int2(x, y - CALC_WIDTH);
+
+        int2 bottom = int2(x, y + CALC_WIDTH / 2);
+        int2 bottomCompare = int2(x, y + CALC_WIDTH);
+
+        int2 left = int2(x - CALC_WIDTH / 2, y);
+        int2 leftCompare = int2(x - CALC_WIDTH, y);
+
+        int2 right = int2(x + CALC_WIDTH / 2, y);
+        int2 rightCompare = int2(x + CALC_WIDTH, y);
+
+        if (x == WORLD_HALF_SIZE && y == WORLD_HALF_SIZE) // 中心
+        {
+            heightMap[top.x + top.y * WORLD_SIZE * 2] = RandomRange(topCompare, int2(x, y), seeds[index]);
+            heightMap[bottom.x + bottom.y * WORLD_SIZE * 2] = RandomRange(bottomCompare, int2(x, y), seeds[index]);
+            heightMap[left.x + left.y * WORLD_SIZE * 2] = RandomRange(leftCompare, int2(x, y), seeds[index]);
+            heightMap[right.x + right.y * WORLD_SIZE * 2] = RandomRange(rightCompare, int2(x, y), seeds[index]);
+        }
+        else if (x == WORLD_HALF_SIZE && y < WORLD_HALF_SIZE) // 中心からその列の上
+        {
+            heightMap[top.x + top.y * WORLD_SIZE * 2] = RandomRange(topCompare, int2(x, y), seeds[index]);
+            heightMap[left.x + left.y * WORLD_SIZE * 2] = RandomRange(leftCompare, int2(x, y), seeds[index]);
+            heightMap[right.x + right.y * WORLD_SIZE * 2] = RandomRange(rightCompare, int2(x, y), seeds[index]);
+        }
+        else if (x == WORLD_HALF_SIZE && y > WORLD_HALF_SIZE) // 中心からその列の下
+        {
+            heightMap[bottom.x + bottom.y * WORLD_SIZE * 2] = RandomRange(bottomCompare, int2(x, y), seeds[index]);
+            heightMap[left.x + left.y * WORLD_SIZE * 2] = RandomRange(leftCompare, int2(x, y), seeds[index]);
+            heightMap[right.x + right.y * WORLD_SIZE * 2] = RandomRange(rightCompare, int2(x, y), seeds[index]);
+        }
+        else if (y == WORLD_HALF_SIZE && x < WORLD_HALF_SIZE) // 中心からその行の左
+        {
+            heightMap[top.x + top.y * WORLD_SIZE * 2] = RandomRange(topCompare, int2(x, y), seeds[index]);
+            heightMap[bottom.x + bottom.y * WORLD_SIZE * 2] = RandomRange(bottomCompare, int2(x, y), seeds[index]);
+            heightMap[left.x + left.y * WORLD_SIZE * 2] = RandomRange(leftCompare, int2(x, y), seeds[index]);
+        }
+        else if (y == WORLD_HALF_SIZE && x > WORLD_HALF_SIZE) // 中心からその行の右
+        {
+            heightMap[top.x + top.y * WORLD_SIZE * 2] = RandomRange(topCompare, int2(x, y), seeds[index]);
+            heightMap[bottom.x + bottom.y * WORLD_SIZE * 2] = RandomRange(bottomCompare, int2(x, y), seeds[index]);
+            heightMap[right.x + right.y * WORLD_SIZE * 2] = RandomRange(rightCompare, int2(x, y), seeds[index]);
+        }
+        else if (x < WORLD_HALF_SIZE && y < WORLD_HALF_SIZE) // 左上
+        {
+            heightMap[top.x + top.y * WORLD_SIZE * 2] = RandomRange(topCompare, int2(x, y), seeds[index]);
+            heightMap[left.x + left.y * WORLD_SIZE * 2] = RandomRange(leftCompare, int2(x, y), seeds[index]);
+        }
+        else if (x > WORLD_HALF_SIZE && y < WORLD_HALF_SIZE) // 右上
+        {
+            heightMap[top.x + top.y * WORLD_SIZE * 2] = RandomRange(topCompare, int2(x, y), seeds[index]);
+            heightMap[right.x + right.y * WORLD_SIZE * 2] = RandomRange(rightCompare, int2(x, y), seeds[index]);
+        }
+        else if (x < WORLD_HALF_SIZE && y > WORLD_HALF_SIZE) // 左下
+        {
+            heightMap[bottom.x + bottom.y * WORLD_SIZE * 2] = RandomRange(bottomCompare, int2(x, y), seeds[index]);
+            heightMap[left.x + left.y * WORLD_SIZE * 2] = RandomRange(leftCompare, int2(x, y), seeds[index]);
+        }
+        else if (x > WORLD_HALF_SIZE && y > WORLD_HALF_SIZE)
+        {
+            heightMap[bottom.x + bottom.y * WORLD_SIZE * 2] = RandomRange(bottomCompare, int2(x, y), seeds[index]);
+            heightMap[right.x + right.y * WORLD_SIZE * 2] = RandomRange(rightCompare, int2(x, y), seeds[index]);
+        }
+    }
 }
 
 [numthreads(8,8,8)]

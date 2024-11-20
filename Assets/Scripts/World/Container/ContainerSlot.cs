@@ -97,7 +97,7 @@ public class ContainerSlot : MonoBehaviour
             itemImage.transform.localScale = new Vector3(blockScale, blockScale, blockScale);
         }
 
-        if (amount != 0)
+        if (amount >= 2)
         {
             textEl.initText.text = amount.ToString();
         }

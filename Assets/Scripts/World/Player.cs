@@ -221,9 +221,10 @@ public class Player : MonoBehaviour
         hitBoxId = hitBoxAdmin.RegisterHitBox(pos, bc.size, Vector3.zero);
     }
 
-    public void Create()
+    public void Create(Vector3 pos)
     {
-
+        transform.position = pos;
+        this.pos = pos;
     }
 
     public void Load()

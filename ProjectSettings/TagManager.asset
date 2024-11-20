@@ -8,6 +8,7 @@ TagManager:
   - BlockSide
   - BlockTop
   - BlockBottom
+  - Entity
   layers:
   - Default
   - TransparentFX

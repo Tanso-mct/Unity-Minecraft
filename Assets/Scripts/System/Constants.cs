@@ -223,6 +223,8 @@ public class Constants : MonoBehaviour
     // Unity Tags
     public const string TAG_PLAYER = "Player";
     public const string TAG_BLOCK_TOP = "Block_Top";
+    public const string TAG_ENTITY = "Entity";
+
 
     // ソースメッシュの頂点数、UV数、頂点インデックス数のうち最大のもの
     public static int SOURCE_MESH_VS_MAX = 0;

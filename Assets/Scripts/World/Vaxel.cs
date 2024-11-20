@@ -6,6 +6,7 @@ using UnityEngine;
 abstract public class Vaxel
 {
     protected int id;
+    public int ID { get { return id; } }
 
     protected int setSlot;
 
@@ -93,7 +94,7 @@ abstract public class Vaxel
         );
 
         EntityItem thisItem = entityItem.GetComponent<EntityItem>();
-        thisItem.ThrowIt(new Vector3(Random.Range(0, 2), Random.Range(0, 2), Random.Range(0, 2)));
+        thisItem.ThrowIt(new Vector3(Random.Range(0, 2), Random.Range(0, 2), Random.Range(0, 2)), breakBlockId);
 
         entityItem.GetComponent<MeshRenderer>().material.mainTexture = LoadTextureFromId(breakBlockId);
 

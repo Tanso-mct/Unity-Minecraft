@@ -690,6 +690,18 @@ public class Player : MonoBehaviour
 
     }
 
+    public void PickUpItem(GameObject entityObj)
+    {
+        EntityItem entityItem = entityObj.GetComponent<EntityItem>();
+        if (entityItem != null)
+        {
+            // インベントリにアイテムを追加
+            inventory.AddContent(entityItem.ID);
+            UpdateHotBarSlot();
+            Destroy(entityObj);
+        }
+    }
+
     public void ResetFrameBlocks()
     {
         isFrameSetBlock = false;

@@ -4,18 +4,13 @@ using UnityEngine;
 
 public class PlayerTrigger : MonoBehaviour
 {
+    [SerializeField] private Player player;
+
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Trigger Enter with " + other.gameObject.name);
+        if (other.gameObject.tag == Constants.TAG_ENTITY)
+        {
+            player.PickUpItem(other.gameObject);
+        }
     }   
-
-    void OnTriggerStay(Collider other)
-    {
-        // Debug.Log("Trigger Stay with " + other.gameObject.name);
-    }
-
-    void OnTriggerExit(Collider other)
-    {
-        // ƒgƒŠƒK[‚©‚ço‚½‚Æ‚«‚Ìˆ—
-    }
 }

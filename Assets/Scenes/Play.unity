@@ -11996,7 +11996,7 @@ GameObject:
   - component: {fileID: 1586971688}
   - component: {fileID: 1586971690}
   - component: {fileID: 1586971691}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -13983,7 +13983,7 @@ GameObject:
   - component: {fileID: 1745704621}
   - component: {fileID: 1745704624}
   - component: {fileID: 1745704623}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}

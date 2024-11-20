@@ -25,7 +25,6 @@ public class EntityItem : MonoBehaviour
         isThrow = true;
         throwDirection = direction;
 
-        // PhysicMaterial??????
         PhysicMaterial material = new PhysicMaterial();
         material.dynamicFriction = 1.0f;
         material.staticFriction = 1.0f;

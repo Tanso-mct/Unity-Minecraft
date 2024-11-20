@@ -154,6 +154,8 @@ public class Player : MonoBehaviour
 
     // 何らかのインベントリを開いているかどうか
     public bool isInventoryOpen = false;
+
+    [SerializeField] private GameObject triggerHitBoxObj;
     
 
     public void Init()
@@ -161,6 +163,9 @@ public class Player : MonoBehaviour
         // プレイヤーの初期位置と回転角度
         pos = transform.position;
         rot = parts.transform.rotation.eulerAngles;
+
+        triggerHitBoxObj.SetActive(true);
+        triggerHitBoxObj.transform.position = pos;
 
         // プレイヤーのBoxColliderを取得
         bc = GetComponent<BoxCollider>();
@@ -774,6 +779,9 @@ public class Player : MonoBehaviour
             }
             else rb.velocity = Vector3.zero;
         }
+
+        // EntityItemとの当たり判定トリガーの位置を更新
+        triggerHitBoxObj.transform.position = transform.position;
 
         // インベントリの更新
         blockAdmin.FinishedSet(frameSetBlocks);

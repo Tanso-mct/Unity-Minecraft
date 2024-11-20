@@ -42,25 +42,32 @@ public class HotBar : Container
         holdingItemParent.SetActive(false);
         holdingItemParentIdle.SetActive(false);
 
-        switch (vaxelId)
+        if (vaxelId == 0) return false;
+
+        if (SupportFunc.IsItem(vaxelId))
         {
-            case (int)Constants.VAXEL_TYPE.DIRT:
-                holdingBlock.SetActive(true);
-                holdingBlockIdle.SetActive(true);
-                SupportFunc.LoadTexture(ref holdingBlockTexture, Constants.SPRITE_DIRT);
 
-                holdingBlock.GetComponent<MeshRenderer>().material.mainTexture = holdingBlockTexture;
-                holdingBlockIdle.GetComponent<MeshRenderer>().material.mainTexture = holdingBlockTexture;
-                return true;
+        }
+        else
+        {
+            holdingBlock.SetActive(true);
+            holdingBlockIdle.SetActive(true);
 
-            case (int)Constants.VAXEL_TYPE.GRASS_TOP:
-                holdingBlock.SetActive(true);
-                holdingBlockIdle.SetActive(true);
-                SupportFunc.LoadTexture(ref holdingBlockTexture, Constants.SPRITE_GRASS_TOP);
+            List<Texture> texture = SupportFunc.LoadMultiTextureFromId(vaxelId);
 
-                holdingBlock.GetComponent<MeshRenderer>().material.mainTexture = holdingBlockTexture;
-                holdingBlockIdle.GetComponent<MeshRenderer>().material.mainTexture = holdingBlockTexture;
-                return true;
+            List<GameObject> holdingChildren = SupportFunc.GetChildren(holdingBlock);
+            for (int i = 0; i < holdingChildren.Count; i++)
+            {
+                holdingChildren[i].GetComponent<MeshRenderer>().material.mainTexture = texture[i];
+            }
+
+            List<GameObject> holdingIdleChildren = SupportFunc.GetChildren(holdingBlockIdle);
+            for (int i = 0; i < holdingIdleChildren.Count; i++)
+            {
+                holdingIdleChildren[i].GetComponent<MeshRenderer>().material.mainTexture = texture[i];
+            }
+
+            return true;
         }
 
         return false;

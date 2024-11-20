@@ -134,20 +134,61 @@ bool IsThroughBlock(int blockId)
     }
 }
 
-int GetFaceCount(int blockId)
+// 0 : NORMAL, 1 : GRASS, 2 : WATER, 3 : LAVA
+int GetBlockType(int blockId)
 {
     switch (blockId)
     {
         case 1: // BEDROCK
         case 2: // DIRT
-        case 6: // WATER
-        case 7: // LAVA
         case 8: // OBSIDIAN
-            return SOURCE_MESH_BLOCK_FACE_COUNT;
+        case 9: // STONE
+        case 10: // COBBLESTONE
+        case 11: // STONE_ANDESITE
+        case 12: // STONE_DIORITE
+        case 13: // STONE_GRANITE
+        case 14: // COAL_ORE
+        case 15: // IRON_ORE
+        case 16: // GOLD_ORE
+        case 17: // DIAMOND_ORE
+        case 18: // EMERALD_ORE
+        case 19: // LAPIS_ORE
+        case 20: // LEAVES
+        case 24: // PLANKS_OAK
+        case 25: // PLANKS_BIRCH
+            return 0;
 
         case 3: // GRASS_TOP
         case 4: // GRASS_SIDE
         case 5: // GRASS_BOTTOM
+        case 21: // LOG_OAK_TOP
+        case 22: // LOG_OAK_SIDE
+        case 23: // LOG_OAK_Bottom
+        case 26: // LOG_BIRCH_TOP
+        case 27: // LOG_BIRCH_SIDE
+        case 28: // LOG_BIRCH_Bottom
+            return 1;
+
+        case 6: // WATER
+            return 2;
+
+        case 7: // LAVA
+            return 3;
+    }
+
+    return 0;
+}
+
+int GetFaceCount(int blockId)
+{
+    switch (GetBlockType(blockId))
+    {
+        case 0: // NORMAL
+        case 2: // WATER
+        case 3: // LAVA
+            return SOURCE_MESH_BLOCK_FACE_COUNT;
+
+        case 1: // GRASS
             return SOURCE_MESH_GRASS_FACE_COUNT;
     }
 
@@ -156,18 +197,14 @@ int GetFaceCount(int blockId)
 
 int GetVsIndex(int blockId)
 {
-    switch (blockId)
+    switch (GetBlockType(blockId))
     {
-        case 1: // BEDROCK
-        case 2: // DIRT
-        case 6: // WATER
-        case 7: // LAVA
-        case 8: // OBSIDIAN
+        case 0: // NORMAL
+        case 2: // WATER
+        case 3: // LAVA
             return SOURCE_MESH_BLOCK_VS_INDEX;
 
-        case 3: // GRASS_TOP
-        case 4: // GRASS_SIDE
-        case 5: // GRASS_BOTTOM
+        case 1: // GRASS
             return SOURCE_MESH_GRASS_VS_INDEX;
     }
 
@@ -176,18 +213,14 @@ int GetVsIndex(int blockId)
 
 int GetTrisIndex(int blockId)
 {
-    switch (blockId)
+    switch (GetBlockType(blockId))
     {
-        case 1: // BEDROCK
-        case 2: // DIRT
-        case 6: // WATER
-        case 7: // LAVA
-        case 8: // OBSIDIAN
+        case 0: // NORMAL
+        case 2: // WATER
+        case 3: // LAVA
             return SOURCE_MESH_BLOCK_TRIS_INDEX;
 
-        case 3: // GRASS_TOP
-        case 4: // GRASS_SIDE
-        case 5: // GRASS_BOTTOM
+        case 1: // GRASS
             return SOURCE_MESH_GRASS_TRIS_INDEX;
     }
 
@@ -211,13 +244,11 @@ int GetFaces(int faceType, int frontFaces, int backFaces, int leftFaces, int rig
 
 int GetAmountOfFaces(int blockId, int faceType)
 {
-    switch (blockId)
+    switch (GetBlockType(blockId))
     {
-        case 1: // BEDROCK
-        case 2: // DIRT
-        case 6: // WATER
-        case 7: // LAVA
-        case 8: // OBSIDIAN
+        case 0: // NORMAL
+        case 2: // WATER
+        case 3: // LAVA
             return GetFaces
             (
                 faceType, 
@@ -229,9 +260,7 @@ int GetAmountOfFaces(int blockId, int faceType)
                 SOURCE_MESH_BLOCK_BOTTOM_FACES
             );
 
-        case 3: // GRASS_TOP
-        case 4: // GRASS_SIDE
-        case 5: // GRASS_BOTTOM
+        case 1: // GRASS
             return GetFaces
             (
                 faceType, 
@@ -249,39 +278,30 @@ int GetAmountOfFaces(int blockId, int faceType)
 
 int GetHitboxPriority(int blockId)
 {
-    switch (blockId)
+    switch (GetBlockType(blockId))
     {
-        // Normal Block
-        case 1: // BEDROCK
-        case 2: // DIRT
-        case 3: // GRASS_TOP
-        case 4: // GRASS_SIDE
-        case 5: // GRASS_BOTTOM
-        case 8: // OBSIDIAN
+        case 0: // NORMAL
             return 1;
 
-        case 7: // LAVA
+        case 2: // WATER
             return 2;
 
-        case 6: // WATER
+        case 3: // LAVA
             return 3;
     }
 
     return 0;
 }
 
+// 1 : NORMAL
 int GetHitboxType(int blockId)
 {
-    switch (blockId)
+    switch (GetBlockType(blockId))
     {
-        case 1: // BEDROCK
-        case 2: // DIRT
-        case 3: // GRASS_TOP
-        case 4: // GRASS_SIDE
-        case 5: // GRASS_BOTTOM
-        case 6: // WATER
-        case 7: // LAVA
-        case 8: // OBSIDIAN
+        case 0: // NORMAL
+        case 1: // GRASS
+        case 2: // WATER
+        case 3: // LAVA
             return 1;
     }
 
@@ -292,7 +312,7 @@ float3 GetHitboxOrigin(int hitboxType, float3 blockCoords)
 {
     switch (hitboxType)
     {
-        case 1:
+        case 1: // NORMAL
             return float3(blockCoords.x - 0.5f, blockCoords.y - 0.5f, blockCoords.z - 0.5f);
     }
 
@@ -303,7 +323,7 @@ float3 GetHitboxOpposite(int hitboxType, float3 blockCoords)
 {
     switch (hitboxType)
     {
-        case 1:
+        case 1: // NORMAL
             return float3(blockCoords.x + 0.5f, blockCoords.y + 0.5f, blockCoords.z + 0.5f);
     }
 

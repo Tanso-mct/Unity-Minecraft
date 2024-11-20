@@ -109,22 +109,204 @@ public class SupportFunc
         }
     }
 
+    static public string GetSpritePathFromId(int vaxelId)
+    {
+        string rtStr = "";
+        switch (vaxelId)
+        {
+            case (int)Constants.VAXEL_TYPE.AIR:
+                rtStr = Constants.SPRITE_NULL;
+                break;
+
+            case (int)Constants.VAXEL_TYPE.DIRT:
+                rtStr = Constants.SPRITE_DIRT;
+                break;
+
+            case (int)Constants.VAXEL_TYPE.GRASS_TOP:
+                rtStr = Constants.SPRITE_GRASS_TOP;
+                break;
+
+            case (int)Constants.VAXEL_TYPE.GRASS_SIDE:
+                rtStr = Constants.SPRITE_GRASS_SIDE;
+                break;
+
+            case (int)Constants.VAXEL_TYPE.GRASS_BOTTOM:
+                rtStr = Constants.SPRITE_DIRT;
+                break;
+
+            case (int)Constants.VAXEL_TYPE.STONE:
+                rtStr = Constants.SPRITE_STONE;
+                break;
+
+            case (int)Constants.VAXEL_TYPE.COBBLESTONE:
+                rtStr = Constants.SPRITE_COBBLESTONE;
+                break;
+
+            case (int)Constants.VAXEL_TYPE.STONE_ANDESITE:
+                rtStr = Constants.SPRITE_STONE_ANDESITE;
+                break;
+
+            case (int)Constants.VAXEL_TYPE.STONE_DIORITE:
+                rtStr = Constants.SPRITE_STONE_DIORITE;
+                break;
+
+            case (int)Constants.VAXEL_TYPE.STONE_GRANITE:
+                rtStr = Constants.SPRITE_STONE_GRANITE;
+                break;
+
+            case (int)Constants.VAXEL_TYPE.COAL_ORE:
+                rtStr = Constants.SPRITE_COAL_ORE;
+                break;
+
+            case (int)Constants.VAXEL_TYPE.IRON_ORE:
+                rtStr = Constants.SPRITE_IRON_ORE;
+                break;
+
+            case (int)Constants.VAXEL_TYPE.GOLD_ORE:
+                rtStr = Constants.SPRITE_GOLD_ORE;
+                break;
+
+            case (int)Constants.VAXEL_TYPE.DIAMOND_ORE:
+                rtStr = Constants.SPRITE_DIAMOND_ORE;
+                break;
+
+            case (int)Constants.VAXEL_TYPE.EMERALD_ORE:
+                rtStr = Constants.SPRITE_EMERALD_ORE;
+                break;
+
+            case (int)Constants.VAXEL_TYPE.LAPIS_ORE:
+                rtStr = Constants.SPRITE_LAPIS_ORE;
+                break;
+
+            case (int)Constants.VAXEL_TYPE.LEAVES:
+                rtStr = Constants.SPRITE_LEAVES;
+                break;
+
+            case (int)Constants.VAXEL_TYPE.LOG_OAK_TOP:
+            case (int)Constants.VAXEL_TYPE.LOG_OAK_BOTTOM:
+                rtStr = Constants.SPRITE_LOG_OAK_TOP;
+                break;
+
+            case (int)Constants.VAXEL_TYPE.LOG_OAK:
+                rtStr = Constants.SPRITE_LOG_OAK;
+                break;
+
+            case (int)Constants.VAXEL_TYPE.PLANKS_OAK:
+                rtStr = Constants.SPRITE_PLANKS_OAK;
+                break;
+
+            case (int)Constants.VAXEL_TYPE.PLANKS_BIRCH:
+                rtStr = Constants.SPRITE_PLANKS_BIRCH;
+                break;
+
+            case (int)Constants.VAXEL_TYPE.LOG_BIRCH_TOP:
+            case (int)Constants.VAXEL_TYPE.LOG_BIRCH_BOTTOM:
+                rtStr = Constants.SPRITE_LOG_BIRCH_TOP;
+                break;
+
+            case (int)Constants.VAXEL_TYPE.LOG_BIRCH:
+                rtStr = Constants.SPRITE_LOG_BIRCH;
+                break;
+        }
+
+        return rtStr;
+    }
+
+    static public bool IsStackable(int vaxelId)
+    {
+        return true;
+    }
+
+    static public bool IsItem(int vaxelId)
+    {
+        // switch (vaxelId)
+        // {
+        //     case (int)Constants.VAXEL_TYPE.WOOD_PICKAXE:
+        //     case (int)Constants.VAXEL_TYPE.STONE_PICKAXE:
+        //     case (int)Constants.VAXEL_TYPE.IRON_PICKAXE:
+        //     case (int)Constants.VAXEL_TYPE.GOLD_PICKAXE:
+        //     case (int)Constants.VAXEL_TYPE.DIAMOND_PICKAXE:
+        //     case (int)Constants.VAXEL_TYPE.WOOD_SHOVEL:
+        //     case (int)Constants.VAXEL_TYPE.STONE_SHOVEL:
+        //     case (int)Constants.VAXEL_TYPE.IRON_SHOVEL:
+        //     case (int)Constants.VAXEL_TYPE.GOLD_SHOVEL:
+        //     case (int)Constants.VAXEL_TYPE.DIAMOND_SHOVEL:
+        //     case (int)Constants.VAXEL_TYPE.WOOD_AXE:
+        //     case (int)Constants.VAXEL_TYPE.STONE_AXE:
+        //     case (int)Constants.VAXEL_TYPE.IRON_AXE:
+        //     case (int)Constants.VAXEL_TYPE.GOLD_AXE:
+        //     case (int)Constants.VAXEL_TYPE.DIAMOND_AXE:
+        //     case (int)Constants.VAXEL_TYPE.WOOD_SWORD:
+        //     case (int)Constants.VAXEL_TYPE.STONE_SWORD:
+        //     case (int)Constants.VAXEL_TYPE.IRON_SWORD:
+        //     case (int)Constants.VAXEL_TYPE.GOLD_SWORD:
+        //     case (int)Constants.VAXEL_TYPE.DIAMOND_SWORD:
+        //         return true;
+        // }
+
+        return false;
+    }
+
+    static public Sprite LoadSpriteFromId(int vaxelId)
+    {
+        Sprite rtSprite = null;
+
+        string spritePath = GetSpritePathFromId(vaxelId);
+        LoadSprite(ref rtSprite, spritePath);
+
+        return rtSprite;
+    }
+
     static public Texture LoadTextureFromId(int vaxelId)
     {
         Texture rtTexture = null;
 
-        switch (vaxelId)
-        {
-            case (int)Constants.VAXEL_TYPE.DIRT:
-                SupportFunc.LoadTexture(ref rtTexture, Constants.SPRITE_DIRT);
-                break;
-
-            case (int)Constants.VAXEL_TYPE.GRASS_TOP:
-                SupportFunc.LoadTexture(ref rtTexture, Constants.SPRITE_GRASS_TOP);
-                break;
-        }
+        string texturePath = GetSpritePathFromId(vaxelId);
+        LoadTexture(ref rtTexture, texturePath);
 
         return rtTexture;
+    }
+
+    static public List<Texture> LoadMultiTextureFromId(int vaxelId)
+    {
+        List<Texture> rtTextures = new List<Texture>();
+
+        switch (vaxelId)
+        {
+            case (int)Constants.VAXEL_TYPE.GRASS_TOP:
+                rtTextures.Add(LoadTextureFromId((int)Constants.VAXEL_TYPE.GRASS_SIDE));
+                rtTextures.Add(LoadTextureFromId((int)Constants.VAXEL_TYPE.GRASS_SIDE));
+                rtTextures.Add(LoadTextureFromId((int)Constants.VAXEL_TYPE.GRASS_SIDE));
+                rtTextures.Add(LoadTextureFromId((int)Constants.VAXEL_TYPE.GRASS_SIDE));
+                rtTextures.Add(LoadTextureFromId((int)Constants.VAXEL_TYPE.GRASS_TOP));
+                rtTextures.Add(LoadTextureFromId((int)Constants.VAXEL_TYPE.GRASS_BOTTOM));
+                return rtTextures;
+
+            case (int)Constants.VAXEL_TYPE.LOG_OAK_TOP:
+                rtTextures.Add(LoadTextureFromId((int)Constants.VAXEL_TYPE.LOG_OAK));
+                rtTextures.Add(LoadTextureFromId((int)Constants.VAXEL_TYPE.LOG_OAK));
+                rtTextures.Add(LoadTextureFromId((int)Constants.VAXEL_TYPE.LOG_OAK));
+                rtTextures.Add(LoadTextureFromId((int)Constants.VAXEL_TYPE.LOG_OAK));
+                rtTextures.Add(LoadTextureFromId((int)Constants.VAXEL_TYPE.LOG_OAK_TOP));
+                rtTextures.Add(LoadTextureFromId((int)Constants.VAXEL_TYPE.LOG_OAK_BOTTOM));
+                return rtTextures;
+
+            case (int)Constants.VAXEL_TYPE.LOG_BIRCH_TOP:
+                rtTextures.Add(LoadTextureFromId((int)Constants.VAXEL_TYPE.LOG_BIRCH));
+                rtTextures.Add(LoadTextureFromId((int)Constants.VAXEL_TYPE.LOG_BIRCH));
+                rtTextures.Add(LoadTextureFromId((int)Constants.VAXEL_TYPE.LOG_BIRCH));
+                rtTextures.Add(LoadTextureFromId((int)Constants.VAXEL_TYPE.LOG_BIRCH));
+                rtTextures.Add(LoadTextureFromId((int)Constants.VAXEL_TYPE.LOG_BIRCH_TOP));
+                rtTextures.Add(LoadTextureFromId((int)Constants.VAXEL_TYPE.LOG_BIRCH_BOTTOM));
+                return rtTextures;
+        }
+
+        for (int i = 0; i < 6; i++)
+        {
+            rtTextures.Add(LoadTextureFromId(vaxelId));
+        }
+
+        return rtTextures;
     }
 
 }

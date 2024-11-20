@@ -73,7 +73,7 @@ public class ContainerSlot : MonoBehaviour
         vaxelId = id;
         amount = this.amount;
 
-        return IsStackable(vaxelId);
+        return SupportFunc.IsStackable(vaxelId);
     }
 
     public int GetIsContain()
@@ -81,56 +81,14 @@ public class ContainerSlot : MonoBehaviour
         return id;
     }
 
-    private string GetSpritePath()
-    {
-        switch (id)
-        {
-            case (int)Constants.VAXEL_TYPE.AIR:
-                return Constants.SPRITE_NULL;
-
-            case (int)Constants.VAXEL_TYPE.DIRT:
-                return Constants.SPRITE_DIRT;
-
-            case (int)Constants.VAXEL_TYPE.GRASS_TOP:
-                return Constants.SPRITE_GRASS_SIDE;
-        }
-
-        return "";
-    }
-
-    private bool IsStackable(int vaxelId)
-    {
-        // switch (vaxelId)
-        // {
-        //     case (int)Constants.VAXEL_TYPE.:
-        //         return true;
-        // }
-
-        return true;
-    }
-
-    private bool IsItem(int vaxelId)
-    {
-        // switch (vaxelId)
-        // {
-        //     case (int)Constants.VAXEL_TYPE.:
-        //         return true;
-        // }
-
-        return false;
-    }
-
     public void SetContents(int vaxelId, int amount)
     {
         id = vaxelId;
-        string spritePath = GetSpritePath();
-
-        Sprite blockSprite = null;
-        SupportFunc.LoadSprite(ref blockSprite, spritePath);
+        Sprite blockSprite = SupportFunc.LoadSpriteFromId(id);;
 
         itemImage.sprite = blockSprite;
 
-        if (IsItem(vaxelId))
+        if (SupportFunc.IsItem(vaxelId))
         {
             itemImage.transform.localScale = new Vector3(itemScale, itemScale, itemScale);
         }

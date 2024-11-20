@@ -30,6 +30,26 @@ public class BlockAdmin : MonoBehaviour
             case (int)Constants.VAXEL_TYPE.DIRT:
             case (int)Constants.VAXEL_TYPE.GRASS_TOP:
             case (int)Constants.VAXEL_TYPE.OBSIDIAN:
+            case (int)Constants.VAXEL_TYPE.STONE:
+            case (int)Constants.VAXEL_TYPE.COBBLESTONE:
+            case (int)Constants.VAXEL_TYPE.STONE_ANDESITE:
+            case (int)Constants.VAXEL_TYPE.STONE_DIORITE:
+            case (int)Constants.VAXEL_TYPE.STONE_GRANITE:
+            case (int)Constants.VAXEL_TYPE.COAL_ORE:
+            case (int)Constants.VAXEL_TYPE.IRON_ORE:
+            case (int)Constants.VAXEL_TYPE.GOLD_ORE:
+            case (int)Constants.VAXEL_TYPE.DIAMOND_ORE:
+            case (int)Constants.VAXEL_TYPE.EMERALD_ORE:
+            case (int)Constants.VAXEL_TYPE.LAPIS_ORE:
+            case (int)Constants.VAXEL_TYPE.LEAVES:
+            case (int)Constants.VAXEL_TYPE.LOG_OAK_TOP:
+            case (int)Constants.VAXEL_TYPE.LOG_OAK:
+            case (int)Constants.VAXEL_TYPE.LOG_OAK_BOTTOM:
+            case (int)Constants.VAXEL_TYPE.PLANKS_OAK:
+            case (int)Constants.VAXEL_TYPE.PLANKS_BIRCH:
+            case (int)Constants.VAXEL_TYPE.LOG_BIRCH_TOP:
+            case (int)Constants.VAXEL_TYPE.LOG_BIRCH:
+            case (int)Constants.VAXEL_TYPE.LOG_BIRCH_BOTTOM:
                 rtVaxel = new BuildBlockVaxel();
                 rtVaxel.Init(entityItemParent);
                 break;
@@ -46,7 +66,7 @@ public class BlockAdmin : MonoBehaviour
 
     private Vaxel GetVaxel(Container container, int slot)
     {
-        int blockId = (int)Constants.VAXEL_TYPE.DIRT;
+        int blockId = container.GetIsContain(slot);
         return GetVaxelInstance(blockId);
     }
 

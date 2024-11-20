@@ -83,7 +83,7 @@ public class EntityItem : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         bc = GetComponent<BoxCollider>();
 
-        List<GameObject> children = SupportFunc.GetChildren(gameObject);
+        List<GameObject> children = SupportFunc.GetChildren(meshParent);
         for (int i = 0; i < children.Count; i++)
         {
             children[i].GetComponent<MeshRenderer>().material.mainTexture = texture[i];

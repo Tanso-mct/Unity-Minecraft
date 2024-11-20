@@ -105,12 +105,11 @@ public class Constants : MonoBehaviour
         GRASS_TOP, GRASS_SIDE, GRASS_BOTTOM,
         WATER, LAVA, OBSIDIAN,
         STONE, COBBLESTONE, STONE_ANDESITE, STONE_DIORITE, STONE_GRANITE,
-        COAL_ORE,
-        IRON_ORE,
-        GOLD_ORE,
-        DIAMOND_ORE,
-        EMERALD_ORE,
-        LAPIS_ORE
+        COAL_ORE, IRON_ORE, GOLD_ORE, DIAMOND_ORE, EMERALD_ORE, LAPIS_ORE,
+        LEAVES, 
+        LOG_OAK_TOP, LOG_OAK, LOG_OAK_BOTTOM, 
+        PLANKS_OAK, PLANKS_BIRCH,
+        LOG_BIRCH_TOP, LOG_BIRCH, LOG_BIRCH_BOTTOM,
     }
 
     public const int TARGET_BLOCK_SELECT = 0;
@@ -149,6 +148,7 @@ public class Constants : MonoBehaviour
     public const string SPRITE_GRASS_TOP = "Textures/blocks/grass_top";
     public const string SPRITE_GRASS_SIDE = "Textures/blocks/grass_side";
     public const string SPRITE_GRASS_BOTTOM = "Textures/blocks/dirt";
+
     public const string SPRITE_STONE = "Textures/blocks/stone";
     public const string SPRITE_COBBLESTONE = "Textures/blocks/cobblestone";
     public const string SPRITE_STONE_ANDESITE = "Textures/blocks/stone_andesite";
@@ -159,8 +159,15 @@ public class Constants : MonoBehaviour
     public const string SPRITE_GOLD_ORE = "Textures/blocks/gold_ore";
     public const string SPRITE_DIAMOND_ORE = "Textures/blocks/diamond_ore";
     public const string SPRITE_EMERALD_ORE = "Textures/blocks/emerald_ore";
-    public const string SPRITE_REDSTONE_ORE = "Textures/blocks/redstone_ore";
     public const string SPRITE_LAPIS_ORE = "Textures/blocks/lapis_ore";
+
+    public const string SPRITE_LEAVES = "Textures/blocks/leaves";
+    public const string SPRITE_LOG_OAK_TOP = "Textures/blocks/log_oak_top";
+    public const string SPRITE_LOG_OAK = "Textures/blocks/log_oak";
+    public const string SPRITE_PLANKS_OAK = "Textures/blocks/planks_oak";
+    public const string SPRITE_PLANKS_BIRCH = "Textures/blocks/planks_birch";
+    public const string SPRITE_LOG_BIRCH_TOP = "Textures/blocks/log_birch_top";
+    public const string SPRITE_LOG_BIRCH = "Textures/blocks/log_birch";
 
     public const string SPRITE_NULL = "Textures/null_content";
 
@@ -188,8 +195,6 @@ public class Constants : MonoBehaviour
     public const string ITEM_SOURCE_IRON_SWORD = "Items/iron_sword";
     public const string ITEM_SOURCE_GOLD_SWORD = "Items/gold_sword";
     public const string ITEM_SOURCE_DIAMOND_SWORD = "Items/diamond_sword";
-
-    public const string ITEM_SOURCE_IRON_CHESTPLATE = "Items/iron_chestplate";
 
 
     // World Prefab path

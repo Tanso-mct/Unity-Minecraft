@@ -247,6 +247,14 @@ public class World : MonoBehaviour
         worldShader.SetBuffer(kernelIndex, "sourceMeshTris", sourceMeshTrisBuff);
     }
 
+    // DEBUG用
+    private void CreateBlock(ref Vector3Int pos, int blockId, ref int[] blocksId)
+    {
+        int index = pos.x + pos.y * Constants.WORLD_SIZE + pos.z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
+        blocksId[index] = blockId;
+        pos.x++;
+    }
+
     // Paramに保存されているワールド情報を使用してワールドの生成
     public void Create(string worldType)
     {
@@ -309,65 +317,26 @@ public class World : MonoBehaviour
                 }
             }
 
-            // 横長の柱を生成
-            for (int x = Constants.WORLD_HALF_SIZE + 2; x < Constants.WORLD_HALF_SIZE + 10; x++)
-            {
-                int y = 5;
-                int z = Constants.WORLD_HALF_SIZE;
-                int index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
-                blocksId[index] = (int)Constants.VAXEL_TYPE.BEDROCK;
-            }
+            // すべてのブロックを生成
+            Vector3Int blockCoords = new Vector3Int(1 + Constants.WORLD_HALF_SIZE, 5, Constants.WORLD_HALF_SIZE);
 
-            // 池を生成
-            for (int x = Constants.WORLD_HALF_SIZE + 2; x < Constants.WORLD_HALF_SIZE + 10; x++)
-            {
-                int y = 4;
-                int z = Constants.WORLD_HALF_SIZE + 4;
-                int index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
-                throughBlocksId[index] = (int)Constants.VAXEL_TYPE.WATER;
+            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.STONE, ref blocksId);
+            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.COBBLESTONE, ref blocksId);
+            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.STONE_ANDESITE, ref blocksId);
+            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.STONE_DIORITE, ref blocksId);
+            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.STONE_GRANITE, ref blocksId);
+            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.COAL_ORE, ref blocksId);
+            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.IRON_ORE, ref blocksId);
+            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.GOLD_ORE, ref blocksId);
+            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.DIAMOND_ORE, ref blocksId);
+            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.EMERALD_ORE, ref blocksId);
+            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.LAPIS_ORE, ref blocksId);
+            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.LEAVES, ref blocksId);
+            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.LOG_OAK_TOP, ref blocksId);
+            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.PLANKS_OAK, ref blocksId);
+            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.PLANKS_BIRCH, ref blocksId);
+            CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.LOG_BIRCH_TOP, ref blocksId);
 
-                y = 5;
-                index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
-                throughBlocksId[index] = (int)Constants.VAXEL_TYPE.WATER;
-
-                y = 6;
-                index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
-                throughBlocksId[index] = (int)Constants.VAXEL_TYPE.WATER;
-
-                z = Constants.WORLD_HALF_SIZE + 5;
-                y = 4;
-                index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
-                throughBlocksId[index] = (int)Constants.VAXEL_TYPE.WATER;
-
-                y = 5;
-                index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
-                throughBlocksId[index] = (int)Constants.VAXEL_TYPE.WATER;
-
-                y = 6;
-                index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
-                throughBlocksId[index] = (int)Constants.VAXEL_TYPE.WATER;
-
-                z = Constants.WORLD_HALF_SIZE + 6;
-                y = 4;
-                index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
-                throughBlocksId[index] = (int)Constants.VAXEL_TYPE.WATER;
-
-                y = 5;
-                index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
-                throughBlocksId[index] = (int)Constants.VAXEL_TYPE.WATER;
-
-                y = 6;
-                index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
-                throughBlocksId[index] = (int)Constants.VAXEL_TYPE.WATER;
-            }
-
-            for (int x = Constants.WORLD_HALF_SIZE + 12; x < Constants.WORLD_HALF_SIZE + 20; x++)
-            {
-                int y = 4;
-                int z = Constants.WORLD_HALF_SIZE + 4;
-                int index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
-                throughBlocksId[index] = (int)Constants.VAXEL_TYPE.WATER;
-            }
         }
         else 
         {

@@ -784,6 +784,12 @@ public class Player : MonoBehaviour
         blockAdmin.FinishedBreak(frameDestroyBlocks);
     }
 
+    private void HotBarSelectSlot(int slot)
+    {
+        hotBar.SelectSlot(slot);
+        UpdateHotBarSlot();
+    }
+
     public void FrameStart()
     {
         // プレイヤーの現在座標を取得
@@ -791,26 +797,26 @@ public class Player : MonoBehaviour
 
         if (!isInventoryOpen) // プレイヤーのホットバーの選択スロットを更新
         {
-            if (McControls.IsKeyDown(Constants.CONTROL_HS1)) hotBar.SelectSlot(1);
-            else if (McControls.IsKeyDown(Constants.CONTROL_HS2)) hotBar.SelectSlot(2);
-            else if (McControls.IsKeyDown(Constants.CONTROL_HS3)) hotBar.SelectSlot(3);
-            else if (McControls.IsKeyDown(Constants.CONTROL_HS4)) hotBar.SelectSlot(4);
-            else if (McControls.IsKeyDown(Constants.CONTROL_HS5)) hotBar.SelectSlot(5);
-            else if (McControls.IsKeyDown(Constants.CONTROL_HS6)) hotBar.SelectSlot(6);
-            else if (McControls.IsKeyDown(Constants.CONTROL_HS7)) hotBar.SelectSlot(7);
-            else if (McControls.IsKeyDown(Constants.CONTROL_HS8)) hotBar.SelectSlot(8);
-            else if (McControls.IsKeyDown(Constants.CONTROL_HS9)) hotBar.SelectSlot(9);
+            if (McControls.IsKeyDown(Constants.CONTROL_HS1)) HotBarSelectSlot(1);
+            else if (McControls.IsKeyDown(Constants.CONTROL_HS2)) HotBarSelectSlot(2);
+            else if (McControls.IsKeyDown(Constants.CONTROL_HS3)) HotBarSelectSlot(3);
+            else if (McControls.IsKeyDown(Constants.CONTROL_HS4)) HotBarSelectSlot(4);
+            else if (McControls.IsKeyDown(Constants.CONTROL_HS5)) HotBarSelectSlot(5);
+            else if (McControls.IsKeyDown(Constants.CONTROL_HS6)) HotBarSelectSlot(6);
+            else if (McControls.IsKeyDown(Constants.CONTROL_HS7)) HotBarSelectSlot(7);
+            else if (McControls.IsKeyDown(Constants.CONTROL_HS8)) HotBarSelectSlot(8);
+            else if (McControls.IsKeyDown(Constants.CONTROL_HS9)) HotBarSelectSlot(9);
 
             float scroll = Input.GetAxis("Mouse ScrollWheel");
             if (scroll > 0)
             {
-                if (hotBar.SelectingSlot == 1) hotBar.SelectSlot(9);
-                else hotBar.SelectSlot(hotBar.SelectingSlot - 1);
+                if (hotBar.SelectingSlot == 1) HotBarSelectSlot(9);
+                else HotBarSelectSlot(hotBar.SelectingSlot - 1);
             }
             else if (scroll < 0)
             {
-                if (hotBar.SelectingSlot == 9) hotBar.SelectSlot(1);
-                else hotBar.SelectSlot(hotBar.SelectingSlot + 1);
+                if (hotBar.SelectingSlot == 9) HotBarSelectSlot(1);
+                else HotBarSelectSlot(hotBar.SelectingSlot + 1);
             }
 
             if (McControls.IsKeyDown(Constants.CONTROL_DROP_ITEM))

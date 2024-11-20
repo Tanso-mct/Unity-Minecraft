@@ -5,6 +5,7 @@ using UnityEngine;
 public class CreativeContainer : Container
 {
     [SerializeField] private Container hotBar;
+    [SerializeField] private Container inventory;
 
     public override void Init()
     {
@@ -18,7 +19,11 @@ public class CreativeContainer : Container
     {
         slots[slotId-1].SetContents(vaxelId, amount);
 
-        if (slotId-1 < hotBar.slots.Count) hotBar.slots[slotId-1].SetContents(vaxelId, amount);
+        if (slotId-1 < hotBar.slots.Count)
+        {
+            hotBar.slots[slotId-1].SetContents(vaxelId, amount);
+            inventory.slots[slotId-1].SetContents(vaxelId, amount);
+        }
     }
 
     public override void SlotQuickMove()

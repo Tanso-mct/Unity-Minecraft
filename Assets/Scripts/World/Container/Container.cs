@@ -29,6 +29,9 @@ public class Container : MonoBehaviour
 
     [SerializeField] private GameObject playerObj;
 
+    private int passedFrame = 0;
+    private int moveFinishedFrame = 0;
+
     public void SetNowHoverSlot(int slotId)
     {
         nowHoverSlotId = slotId;
@@ -41,19 +44,21 @@ public class Container : MonoBehaviour
 
     public void StartHoverSlotMove(int slotId)
     {
-        // if (GetIsContain(slotId) == 0) return;
-
         Debug.Log("Is Start Hover Slot Moving: " + isStartHoverSlotMoving);
+        Debug.Log("Game Object: " + gameObject.name);
 
-        if (!isStartHoverSlotMoving && !Input.GetKey(KeyCode.LeftShift))
+        if (moveFinishedFrame + 2 < passedFrame)
         {
-            isStartHoverSlotMoving = true;
-            startSlotId = slotId;
-        }
-        else if (!isStartHoverSlotMoving && Input.GetKey(KeyCode.LeftShift))
-        {
-            startSlotId = slotId;
-            SlotQuickMove();
+            if (!isStartHoverSlotMoving && !Input.GetKey(KeyCode.LeftShift))
+            {
+                isStartHoverSlotMoving = true;
+                startSlotId = slotId;
+            }
+            else if (!isStartHoverSlotMoving && Input.GetKey(KeyCode.LeftShift))
+            {
+                startSlotId = slotId;
+                SlotQuickMove();
+            }
         }
     }
 
@@ -64,6 +69,8 @@ public class Container : MonoBehaviour
 
     public void Update()
     {
+        passedFrame++;
+
         if (Input.GetMouseButtonDown(0) && isHoverSlotMoving)
         {
             int vaxelId = 0;
@@ -108,6 +115,8 @@ public class Container : MonoBehaviour
             }
 
             hoverSlot.gameObject.SetActive(false);
+
+            moveFinishedFrame = passedFrame;
 
             isStartHoverSlotMoving = false;
             isHoverSlotMoving = false;

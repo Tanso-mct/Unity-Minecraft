@@ -19,7 +19,11 @@ public class Inventory : Container
     {
         slots[slotId-1].SetContents(vaxelId, amount);
 
-        if (slotId-1 < hotBar.slots.Count) hotBar.slots[slotId-1].SetContents(vaxelId, amount);
+        if (slotId-1 < hotBar.slots.Count)
+        {
+            hotBar.slots[slotId-1].SetContents(vaxelId, amount);
+            creativeContainer.slots[slotId-1].SetContents(vaxelId, amount);
+        }
     }
 
     public override void SlotQuickMove()

@@ -23,6 +23,8 @@ public class ContainerSlot : MonoBehaviour
     [SerializeField] private bool isSelectable = true;
     [SerializeField] public bool isQuickMoveable = true;
 
+    private bool isClicked = false;
+
     public void Init(int slotId)
     {
         Sprite nullItemSprite = null;

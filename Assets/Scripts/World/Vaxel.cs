@@ -40,8 +40,6 @@ public class Vaxel
         hotBar.RemoveContent(1, hotBar.SelectingSlot);
         
         mcSounds.PlayBlock(SupportFunc.GetSoundTypeFromId(setBlockId));
-
-        Debug.Log("Sound Type : " + SupportFunc.GetSoundTypeFromId(setBlockId));
     }
 
     public virtual void FinishedBreak(Vector4 frameDestroyBlock)
@@ -63,8 +61,6 @@ public class Vaxel
         thisItem.ThrowIt(new Vector3(Random.Range(0, 2), Random.Range(0, 2), Random.Range(0, 2)), breakBlockId, SupportFunc.LoadMultiTextureFromId(breakBlockId));
 
         mcSounds.PlayBlock(SupportFunc.GetSoundTypeFromId(breakBlockId));
-
-        Debug.Log("Sound Type : " + SupportFunc.GetSoundTypeFromId(breakBlockId));
     }
 
     public virtual void TryBreak(Vector4 block, ref Vector4 frameDestroyBlock)

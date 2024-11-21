@@ -75,6 +75,7 @@ public class BaseManager : MonoBehaviour
             case Constants.MSG_NULL:
                 break;
             case Constants.MSG_CHANGE_SCENE:
+                ChangeScene();
                 break;
             case Constants.MSG_QUIT_GAME:
                 QuitGame();
@@ -114,6 +115,22 @@ public class BaseManager : MonoBehaviour
     // paramに格納されたシーン名を元に、シーンを変更する。
     public int ChangeScene()
     {
-        return Constants.MSG_NULL;
+        Debug.Log("ChangeScene: " + Param.strPar);
+        if (Param.strPar == Constants.SCENE_MENU)
+        {
+            Exit();
+            UnityEngine.SceneManagement.SceneManager.LoadScene(Constants.SCENE_MENU);
+        }
+        else if (Param.strPar == Constants.SCENE_PLAY)
+        {
+            Exit();
+            UnityEngine.SceneManagement.SceneManager.LoadScene(Constants.SCENE_PLAY);
+        }
+        else
+        {
+            return Constants.MSG_FAILED;
+        }
+
+        return Constants.MSG_FAILED;
     }
 }

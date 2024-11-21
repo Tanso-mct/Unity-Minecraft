@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class MenuManager : Manager
 {
+    [SerializeField] private GameObject wndBuild;
     [SerializeField] private GameObject wndLoad;
     [SerializeField] private GameObject wndTitle;
     [SerializeField] private GameObject wndOption;
@@ -22,6 +23,8 @@ public class MenuManager : Manager
     private int loadingFrame = 0;
 
     [SerializeField] private McSounds mcSounds;
+
+    private int isStartBuildWorld = 0;
 
     public override void BaseAwake()
     {
@@ -75,6 +78,20 @@ public class MenuManager : Manager
             loadingFrame++; 
             CloseWindow(wndLoad.name);
             ShowWindow(wndTitle.name);
+        }
+
+        if (isStartBuildWorld == 1)
+        {
+            isStartBuildWorld++;
+            Debug.Log("isStartBuildWorld: " + isStartBuildWorld);
+        }
+        else if (isStartBuildWorld == 2)
+        {
+            isStartBuildWorld = 0;
+            Param.msg = Constants.MSG_CHANGE_SCENE;
+            Param.strPar = Constants.SCENE_PLAY;
+
+            Debug.Log("Start Build World");
         }
     }
 
@@ -203,8 +220,10 @@ public class MenuManager : Manager
     public void CreateNewWorld()
     {
         Debug.Log("CreateNewWorld");
-
         mcSounds.PlayUI(Constants.SOUND_CLICK);
+        ShowWindow(wndBuild.name);
+
+        isStartBuildWorld = 1;
     }
 
     public void DestroySelectWorld()

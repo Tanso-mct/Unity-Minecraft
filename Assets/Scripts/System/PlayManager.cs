@@ -103,6 +103,9 @@ public class PlayManager : Manager
     public void SaveAndQuit()
     {
         Debug.Log("SaveAndQuit");
+
+        Param.msg = Constants.MSG_CHANGE_SCENE;
+        Param.strPar = Constants.SCENE_MENU;
     }
 
     public void ShowOption()

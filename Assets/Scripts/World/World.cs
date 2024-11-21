@@ -88,8 +88,6 @@ public class World : MonoBehaviour
     {
         WorldInfo worldInfo = new WorldInfo();
         worldInfo.worldName = name;
-        worldInfo.gameMode = gameMode;
-        worldInfo.worldType = worldType;
 
         WorldInfos.Add(worldInfo);
     }
@@ -199,8 +197,7 @@ public class World : MonoBehaviour
         RaycastInit();
 
         // ワールドの生成もしくは読み込み
-        if(thisInfo.dataJsonPath == "") Create(thisInfo.worldType);
-        else LoadFromJson();
+        Create();
     }
 
     private void SetMeshGenerateBuff(int kernelIndex)
@@ -254,7 +251,7 @@ public class World : MonoBehaviour
     }
 
     // Paramに保存されているワールド情報を使用してワールドの生成
-    public void Create(string worldType)
+    public void Create()
     {
         // プレイヤーの初期化
         player.Init();
@@ -298,41 +295,28 @@ public class World : MonoBehaviour
         int[] blocksId = new int[Constants.WORLD_SIZE * Constants.WORLD_HEIGHT * Constants.WORLD_SIZE];
         int[] throughBlocksId = new int[Constants.WORLD_SIZE * Constants.WORLD_HEIGHT * Constants.WORLD_SIZE];
 
-        // フラットワールドの生成
-        for (int x = 0; x < Constants.WORLD_SIZE; x++)
+        if(thisInfo.dataJsonPath == "")
         {
-            for (int y = 0; y < Constants.WORLD_HEIGHT; y++)
+            // フラットワールドの生成
+            for (int x = 0; x < Constants.WORLD_SIZE; x++)
             {
-                for (int z = 0; z < Constants.WORLD_SIZE; z++)
+                for (int y = 0; y < Constants.WORLD_HEIGHT; y++)
                 {
-                    int index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
-                    if (y == 0) blocksId[index] = (int)Constants.VAXEL_TYPE.BEDROCK; 
-                    else if (y >= 1 && y <= 2) blocksId[index] = (int)Constants.VAXEL_TYPE.DIRT;
-                    else if (y == 3) blocksId[index] = (int)Constants.VAXEL_TYPE.GRASS_TOP;
-                    else blocksId[index] = (int)Constants.VAXEL_TYPE.AIR;
+                    for (int z = 0; z < Constants.WORLD_SIZE; z++)
+                    {
+                        int index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
+                        if (y == 0) blocksId[index] = (int)Constants.VAXEL_TYPE.BEDROCK; 
+                        else if (y >= 1 && y <= 2) blocksId[index] = (int)Constants.VAXEL_TYPE.DIRT;
+                        else if (y == 3) blocksId[index] = (int)Constants.VAXEL_TYPE.GRASS_TOP;
+                        else blocksId[index] = (int)Constants.VAXEL_TYPE.AIR;
+                    }
                 }
             }
         }
-
-        // すべてのブロックを生成
-        Vector3Int blockCoords = new Vector3Int(1 + Constants.WORLD_HALF_SIZE, 5, Constants.WORLD_HALF_SIZE);
-
-        CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.STONE, ref blocksId);
-        CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.COBBLESTONE, ref blocksId);
-        CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.STONE_ANDESITE, ref blocksId);
-        CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.STONE_DIORITE, ref blocksId);
-        CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.STONE_GRANITE, ref blocksId);
-        CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.COAL_ORE, ref blocksId);
-        CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.IRON_ORE, ref blocksId);
-        CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.GOLD_ORE, ref blocksId);
-        CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.DIAMOND_ORE, ref blocksId);
-        CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.EMERALD_ORE, ref blocksId);
-        CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.LAPIS_ORE, ref blocksId);
-        CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.LEAVES, ref blocksId);
-        CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.LOG_OAK_TOP, ref blocksId);
-        CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.PLANKS_OAK, ref blocksId);
-        CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.PLANKS_BIRCH, ref blocksId);
-        CreateBlock(ref blockCoords, (int)Constants.VAXEL_TYPE.LOG_BIRCH_TOP, ref blocksId);
+        else
+        {
+            // 作成済みのワールド情報を読み込む
+        }
 
         
         blocksIDBuff.SetData(blocksId);

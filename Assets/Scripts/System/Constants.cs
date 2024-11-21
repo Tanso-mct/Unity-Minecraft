@@ -106,6 +106,40 @@ public class Constants : MonoBehaviour
         LOG_OAK_TOP, LOG_OAK, LOG_OAK_BOTTOM, 
         PLANKS_OAK, PLANKS_BIRCH,
         LOG_BIRCH_TOP, LOG_BIRCH, LOG_BIRCH_BOTTOM,
+        GRAVEL, 
+        HARDENED_CLAY,
+        HARDENED_CLAY_STAINED_BLACK,
+        HARDENED_CLAY_STAINED_BLUE,
+        HARDENED_CLAY_STAINED_BROWN,
+        HARDENED_CLAY_STAINED_CYAN,
+        HARDENED_CLAY_STAINED_GRAY,
+        HARDENED_CLAY_STAINED_GREEN,
+        HARDENED_CLAY_STAINED_LIGHT_BLUE,
+        HARDENED_CLAY_STAINED_LIME,
+        HARDENED_CLAY_STAINED_MAGENTA,
+        HARDENED_CLAY_STAINED_ORANGE,
+        HARDENED_CLAY_STAINED_PINK,
+        HARDENED_CLAY_STAINED_PURPLE,
+        HARDENED_CLAY_STAINED_RED,
+        HARDENED_CLAY_STAINED_SILVER,
+        HARDENED_CLAY_STAINED_WHITE,
+        HARDENED_CLAY_STAINED_YELLOW,
+        WOOL_COLORED_BLUE,
+        WOOL_COLORED_BROWN,
+        WOOL_COLORED_CYAN,
+        WOOL_COLORED_GRAY,
+        WOOL_COLORED_GREEN,
+        WOOL_COLORED_LIGHT_BLUE,
+        WOOL_COLORED_LIME,
+        WOOL_COLORED_MAGENTA,
+        WOOL_COLORED_ORANGE,
+        WOOL_COLORED_PINK,
+        WOOL_COLORED_PURPLE,
+        WOOL_COLORED_RED,
+        WOOL_COLORED_SILVER,
+        WOOL_COLORED_WHITE,
+        WOOL_COLORED_YELLOW,
+
     }
 
     public const int TARGET_BLOCK_SELECT = 0;
@@ -169,6 +203,42 @@ public class Constants : MonoBehaviour
     public const string SPRITE_PLANKS_BIRCH = "Textures/blocks/planks_birch";
     public const string SPRITE_LOG_BIRCH_TOP = "Textures/blocks/log_birch_top";
     public const string SPRITE_LOG_BIRCH = "Textures/blocks/log_birch";
+
+    public const string SPRITE_GRAVEL = "Textures/blocks/gravel";
+
+    public const string SPRITE_HARDENED_CLAY = "Textures/blocks/hardened_clay";
+    public const string SPRITE_HARDENED_CLAY_STAINED_BLACK = "Textures/blocks/hardened_clay_stained_black";
+    public const string SPRITE_HARDENED_CLAY_STAINED_BLUE = "Textures/blocks/hardened_clay_stained_blue";
+    public const string SPRITE_HARDENED_CLAY_STAINED_BROWN = "Textures/blocks/hardened_clay_stained_brown";
+    public const string SPRITE_HARDENED_CLAY_STAINED_CYAN = "Textures/blocks/hardened_clay_stained_cyan";
+    public const string SPRITE_HARDENED_CLAY_STAINED_GRAY = "Textures/blocks/hardened_clay_stained_gray";
+    public const string SPRITE_HARDENED_CLAY_STAINED_GREEN = "Textures/blocks/hardened_clay_stained_green";
+    public const string SPRITE_HARDENED_CLAY_STAINED_LIGHT_BLUE = "Textures/blocks/hardened_clay_stained_light_blue";
+    public const string SPRITE_HARDENED_CLAY_STAINED_LIME = "Textures/blocks/hardened_clay_stained_lime";
+    public const string SPRITE_HARDENED_CLAY_STAINED_MAGENTA = "Textures/blocks/hardened_clay_stained_magenta";
+    public const string SPRITE_HARDENED_CLAY_STAINED_ORANGE = "Textures/blocks/hardened_clay_stained_orange";
+    public const string SPRITE_HARDENED_CLAY_STAINED_PINK = "Textures/blocks/hardened_clay_stained_pink";
+    public const string SPRITE_HARDENED_CLAY_STAINED_PURPLE = "Textures/blocks/hardened_clay_stained_purple";
+    public const string SPRITE_HARDENED_CLAY_STAINED_RED = "Textures/blocks/hardened_clay_stained_red";
+    public const string SPRITE_HARDENED_CLAY_STAINED_SILVER = "Textures/blocks/hardened_clay_stained_silver";
+    public const string SPRITE_HARDENED_CLAY_STAINED_WHITE = "Textures/blocks/hardened_clay_stained_white";
+    public const string SPRITE_HARDENED_CLAY_STAINED_YELLOW = "Textures/blocks/hardened_clay_stained_yellow";
+
+    public const string SPRITE_WOOL_COLORED_BLUE = "Textures/blocks/wool_colored_blue";
+    public const string SPRITE_WOOL_COLORED_BROWN = "Textures/blocks/wool_colored_brown";
+    public const string SPRITE_WOOL_COLORED_CYAN = "Textures/blocks/wool_colored_cyan";
+    public const string SPRITE_WOOL_COLORED_GRAY = "Textures/blocks/wool_colored_gray";
+    public const string SPRITE_WOOL_COLORED_GREEN = "Textures/blocks/wool_colored_green";
+    public const string SPRITE_WOOL_COLORED_LIGHT_BLUE = "Textures/blocks/wool_colored_light_blue";
+    public const string SPRITE_WOOL_COLORED_LIME = "Textures/blocks/wool_colored_lime";
+    public const string SPRITE_WOOL_COLORED_MAGENTA = "Textures/blocks/wool_colored_magenta";
+    public const string SPRITE_WOOL_COLORED_ORANGE = "Textures/blocks/wool_colored_orange";
+    public const string SPRITE_WOOL_COLORED_PINK = "Textures/blocks/wool_colored_pink";
+    public const string SPRITE_WOOL_COLORED_PURPLE = "Textures/blocks/wool_colored_purple";
+    public const string SPRITE_WOOL_COLORED_RED = "Textures/blocks/wool_colored_red";
+    public const string SPRITE_WOOL_COLORED_SILVER = "Textures/blocks/wool_colored_silver";
+    public const string SPRITE_WOOL_COLORED_WHITE = "Textures/blocks/wool_colored_white";
+    public const string SPRITE_WOOL_COLORED_YELLOW = "Textures/blocks/wool_colored_yellow";
 
     public const string SPRITE_NULL = "Textures/null_content";
 

@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class McSounds : MonoBehaviour
 {
-    private static bool hasSaveData = false;
+    private string currentScene = "";
+    private bool hasSaveData = false;
 
     [SerializeField] SelectBarParts masterSb;
     [SerializeField] SelectBarParts musicSb;
@@ -13,19 +14,14 @@ public class McSounds : MonoBehaviour
     [SerializeField] SelectBarParts playersSb;
 
     private static int masterVolume = 50;
-    private static Vector2 masterSbPos;
 
     private static int musicVolume = 50;
-    private static Vector2 musicSbPos;
 
     private static int blocksVolume = 50;
-    private static Vector2 blocksSbPos;
 
     private static int uiVolume = 50;
-    private static Vector2 uiSbPos;
 
     private static int playersVolume = 50;
-    private static Vector2 playersSbPos;
 
     [SerializeField] private AudioSource sourceMusic;
     [SerializeField] private AudioSource sourceBlock;
@@ -44,6 +40,8 @@ public class McSounds : MonoBehaviour
 
     public void Init()
     {
+        currentScene = "";
+
         if (hasSaveData)
         {
             // Load data
@@ -63,6 +61,36 @@ public class McSounds : MonoBehaviour
 
         playersSb.Init(playersVolume);
         SetPlayers();
+
+        musicClipsIndex = new Dictionary<string, int>();
+        for (int i = 0; i < musicClips.Count; i++)
+        {
+            musicClipsIndex.Add(musicClips[i].name, i);
+        }
+
+        blocksClipsIndex = new Dictionary<string, int>();
+        for (int i = 0; i < blocksClips.Count; i++)
+        {
+            blocksClipsIndex.Add(blocksClips[i].name, i);
+        }
+
+        uiClipsIndex = new Dictionary<string, int>();
+        for (int i = 0; i < uiClips.Count; i++)
+        {
+            uiClipsIndex.Add(uiClips[i].name, i);
+        }
+
+        playersClipsIndex = new Dictionary<string, int>();
+        for (int i = 0; i < playersClips.Count; i++)
+        {
+            playersClipsIndex.Add(playersClips[i].name, i);
+        }
+
+        sourceMusic.volume = (musicVolume / 100f) * (masterVolume / 100f);
+        sourceBlock.volume = (blocksVolume / 100f) * (masterVolume / 100f);
+        sourceUI.volume = (uiVolume / 100f) * (masterVolume / 100f);
+        sourcePlayer.volume = (playersVolume / 100f) * (masterVolume / 100f);
+
     }
 
     public void Save()
@@ -70,10 +98,76 @@ public class McSounds : MonoBehaviour
         // Save data
     }
 
+    void Update()
+    {
+        if (currentScene != "")
+        {
+            if (!sourceMusic.isPlaying)
+            {
+                PlayMusic(currentScene);
+            }
+        }
+    }
+
+    public void PlayMusic(string scene)
+    {
+        currentScene = scene;
+        if (scene == Constants.SCENE_MENU)
+        {
+            int randomValue = Random.Range(1, 5);
+            if (musicClipsIndex.ContainsKey(Constants.SOUND_MENU + randomValue))
+            {
+                sourceMusic.clip = musicClips[musicClipsIndex[Constants.SOUND_MENU + randomValue]];
+                sourceMusic.Play();
+            }
+        }
+        else if (scene == Constants.SCENE_PLAY)
+        {
+            int randomValue = Random.Range(1, 5);
+            if (musicClipsIndex.ContainsKey(Constants.SOUND_HAL + randomValue))
+            {
+                sourceMusic.clip = musicClips[musicClipsIndex[Constants.SOUND_HAL + randomValue]];
+                sourceMusic.Play();
+            }
+        }
+    }
+
+    public void PlayBlock(string clipName)
+    {
+        int randomValue = Random.Range(1, 5);
+        if (blocksClipsIndex.ContainsKey(clipName + randomValue))
+        {
+            sourceBlock.clip = blocksClips[blocksClipsIndex[clipName + randomValue]];
+            sourceBlock.Play();
+        }
+    }
+
+    public void PlayUI(string clipName)
+    {
+        if (uiClipsIndex.ContainsKey(clipName))
+        {
+            sourceUI.clip = uiClips[uiClipsIndex[clipName]];
+            sourceUI.Play();
+        }
+    }
+
+    public void PlayPlayer(string clipName)
+    {
+        if (playersClipsIndex.ContainsKey(clipName))
+        {
+            sourcePlayer.clip = playersClips[playersClipsIndex[clipName]];
+            sourcePlayer.Play();
+        }
+    }
+
     public void SetMaster()
     {
         masterVolume = (int)masterSb.Val;
-        masterSbPos = masterSb.SelectorPos;
+
+        sourceMusic.volume = (musicVolume / 100f) * (masterVolume / 100f);
+        sourceBlock.volume = (blocksVolume / 100f) * (masterVolume / 100f);
+        sourceUI.volume = (uiVolume / 100f) * (masterVolume / 100f);
+        sourcePlayer.volume = (playersVolume / 100f) * (masterVolume / 100f);
 
         masterSb.EditTxt("Master Volume: " + masterVolume + "%");
     }
@@ -81,7 +175,8 @@ public class McSounds : MonoBehaviour
     public void SetMusic()
     {
         musicVolume = (int)musicSb.Val;
-        musicSbPos = musicSb.SelectorPos;
+
+        sourceMusic.volume = (musicVolume / 100f) * (masterVolume / 100f);
 
         musicSb.EditTxt("Music: " + musicVolume + "%");
     }
@@ -89,7 +184,8 @@ public class McSounds : MonoBehaviour
     public void SetBlocks()
     {
         blocksVolume = (int)blocksSb.Val;
-        blocksSbPos = blocksSb.SelectorPos;
+
+        sourceBlock.volume = (blocksVolume / 100f) * (masterVolume / 100f);
 
         blocksSb.EditTxt("Blocks: " + blocksVolume + "%");
     }
@@ -97,7 +193,8 @@ public class McSounds : MonoBehaviour
     public void SetUi()
     {
         uiVolume = (int)uiSb.Val;
-        uiSbPos = uiSb.SelectorPos;
+
+        sourceUI.volume = (uiVolume / 100f) * (masterVolume / 100f);
 
         uiSb.EditTxt("UI: " + uiVolume + "%");
     }
@@ -105,7 +202,8 @@ public class McSounds : MonoBehaviour
     public void SetPlayers()
     {
         playersVolume = (int)playersSb.Val;
-        playersSbPos = playersSb.SelectorPos;
+
+        sourcePlayer.volume = (playersVolume / 100f) * (masterVolume / 100f);
 
         playersSb.EditTxt("Players: " + playersVolume + "%");
     }

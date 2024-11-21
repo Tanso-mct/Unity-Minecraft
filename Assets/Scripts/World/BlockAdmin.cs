@@ -13,6 +13,9 @@ public class BlockAdmin : MonoBehaviour
 
     [SerializeField] private GameObject entityItemParent = null;
 
+    [SerializeField] private McSounds mcSounds = null;
+
+
     public void Init()
     {
         setVaxel = null;
@@ -87,6 +90,9 @@ public class BlockAdmin : MonoBehaviour
         if (setVaxel == null) return false;
 
         setVaxel.FinishedSet(frameSetBlock);
+
+        mcSounds.PlayBlock(Constants.SOUND_DIG_STONE);
+
         setVaxel = null;
 
         return true;
@@ -97,6 +103,9 @@ public class BlockAdmin : MonoBehaviour
         if (breakVaxel == null) return false;
 
         breakVaxel.FinishedBreak(frameDestroyBlock);
+
+        mcSounds.PlayBlock(Constants.SOUND_DIG_GRASS);
+
         breakVaxel = null;
         return true;
     }

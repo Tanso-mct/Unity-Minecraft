@@ -212,6 +212,22 @@ public class Constants : MonoBehaviour
         shader.SetInt("WORLD_HEIGHT", WORLD_HEIGHT);
     }
 
+    // Sound
+    public const string SOUND_HAL = "hal";
+    public const string SOUND_MENU = "menu";
+
+    public const string SOUND_DIG_CLOTH = "dig_cloth";
+    public const string SOUND_DIG_GRASS = "dig_grass";
+    public const string SOUND_DIG_STONE = "dig_stone";
+    public const string SOUND_DIG_WOOD = "dig_wood";
+    public const string SOUND_DIG_GRAVEL = "dig_gravel";
+    public const string SOUND_DIG_SAND = "dig_sand";
+
+    public const string SOUND_CLICK = "click";
+
+    public const string SOUND_FALL_SMALL = "fall_small";
+
+
 }
 
 

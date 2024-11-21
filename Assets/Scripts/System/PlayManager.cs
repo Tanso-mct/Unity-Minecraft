@@ -19,6 +19,8 @@ public class PlayManager : Manager
 
     [SerializeField] private float controlScrollBottom;
 
+    [SerializeField] private McSounds mcSounds;
+
     public override void BaseAwake()
     {
         // Managerに設定されているすべてのWindowを初期化
@@ -79,6 +81,8 @@ public class PlayManager : Manager
 
         McControls.CursorLock(false);
         ShowWindow(wndOption.name);
+
+        mcSounds.PlayUI(Constants.SOUND_CLICK);
     }
 
     public void CloseOption()
@@ -88,6 +92,8 @@ public class PlayManager : Manager
 
         ShowWindow(wndPlay.name);
         McControls.CursorLock(true);
+
+        mcSounds.PlayUI(Constants.SOUND_CLICK);
     }
 
     public void ShowPlayerInventory()
@@ -122,24 +128,32 @@ public class PlayManager : Manager
     {
         CloseWindow(wndOption.name);
         ShowWindow(wndVideoSetting.name);
+
+        mcSounds.PlayUI(Constants.SOUND_CLICK);
     }
 
     public void CloseVideoSetting()
     {
         CloseWindow(wndVideoSetting.name);
         ShowWindow(wndOption.name);
+
+        mcSounds.PlayUI(Constants.SOUND_CLICK);
     }
 
     public void ShowSoundSetting()
     {
         CloseWindow(wndOption.name);
         ShowWindow(wndSoundSetting.name);
+
+        mcSounds.PlayUI(Constants.SOUND_CLICK);
     }
 
     public void CloseSoundSetting()
     {
         CloseWindow(wndSoundSetting.name);
         ShowWindow(wndOption.name);
+
+        mcSounds.PlayUI(Constants.SOUND_CLICK);
     }
 
     public void ShowControlSetting()
@@ -148,6 +162,8 @@ public class PlayManager : Manager
 
         ShowWindow(wndControlSetting.name);
         ShowWindow(wndControlSettingScroll.name);
+
+        mcSounds.PlayUI(Constants.SOUND_CLICK);
     }
 
     public void CloseControlSetting()
@@ -158,5 +174,7 @@ public class PlayManager : Manager
         ShowWindow(wndOption.name);
 
         Param.popUpWindowDone = true;
+
+        mcSounds.PlayUI(Constants.SOUND_CLICK);
     }
 }

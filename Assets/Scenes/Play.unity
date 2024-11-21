@@ -1608,6 +1608,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   entityItemParent: {fileID: 679081783}
+  mcSounds: {fileID: 303595962}
 --- !u!1001 &249625422
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5882,6 +5883,7 @@ MonoBehaviour:
   wndPlayerInventory: {fileID: 1342120842}
   wndCreativeContainer: {fileID: 1926139929}
   controlScrollBottom: -1575
+  mcSounds: {fileID: 303595962}
 --- !u!4 &957236581 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 158345074529576982, guid: 5e412af8e24955f44a863a25b048b3e6, type: 3}

@@ -42,6 +42,9 @@ public class ButtonEl : Element
             unHoverEvent.Invoke();
         }
 
-        if (IsClick() && clickEvent != null) clickEvent.Invoke();
+        if (IsClick() && clickEvent != null)
+        {
+            clickEvent.Invoke();
+        }
     }
 }

@@ -38,6 +38,8 @@ public class McSounds : MonoBehaviour
     private Dictionary<string, int> uiClipsIndex;
     private Dictionary<string, int> playersClipsIndex;
 
+    [SerializeField] private float clickStartTime = 0.5f;
+
     public void Init()
     {
         currentScene = "";
@@ -147,6 +149,7 @@ public class McSounds : MonoBehaviour
         if (uiClipsIndex.ContainsKey(clipName))
         {
             sourceUI.clip = uiClips[uiClipsIndex[clipName]];
+            sourceUI.time = clickStartTime;
             sourceUI.Play();
         }
     }

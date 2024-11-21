@@ -42,7 +42,6 @@ public class Player : MonoBehaviour
 
     // Vaxel管理クラス
     [SerializeField] private BlockAdmin blockAdmin;
-    [SerializeField] private ItemAdmin itemAdmin;
     
     // プレイヤーのリーチ
     [SerializeField] private float reach = 5f;

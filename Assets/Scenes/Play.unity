@@ -2673,50 +2673,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6c15dd09b0e8f24793eda433a538397, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &401382473
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 401382474}
-  - component: {fileID: 401382475}
-  m_Layer: 0
-  m_Name: ItemAdmin
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &401382474
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 401382473}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 995783288}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &401382475
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 401382473}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: edacd0a281b669448bc320aba0f78cfa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &408841862
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5654,6 +5610,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1924733627}
     - target: {fileID: 3379727396607066145, guid: 5e412af8e24955f44a863a25b048b3e6, type: 3}
+      propertyPath: mcSounds
+      value: 
+      objectReference: {fileID: 303595962}
+    - target: {fileID: 3379727396607066145, guid: 5e412af8e24955f44a863a25b048b3e6, type: 3}
       propertyPath: useBtnParts
       value: 
       objectReference: {fileID: 1671811057}
@@ -5772,6 +5732,10 @@ PrefabInstance:
     - target: {fileID: 6917924943108552276, guid: 5e412af8e24955f44a863a25b048b3e6, type: 3}
       propertyPath: friendlySb
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6917924943108552276, guid: 5e412af8e24955f44a863a25b048b3e6, type: 3}
+      propertyPath: clickStartTime
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 8402309157070100889, guid: 5e412af8e24955f44a863a25b048b3e6, type: 3}
       propertyPath: m_Name
@@ -6156,7 +6120,6 @@ Transform:
   m_Children:
   - {fileID: 1277467229}
   - {fileID: 239868568}
-  - {fileID: 401382474}
   m_Father: {fileID: 1744933561}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &995946406 stripped
@@ -10364,7 +10327,6 @@ MonoBehaviour:
   cam: {fileID: 922196900}
   hitBoxAdmin: {fileID: 1277467230}
   blockAdmin: {fileID: 239868569}
-  itemAdmin: {fileID: 401382475}
   reach: 4.5
   mat: {fileID: 2100000, guid: bdbad945551d6bf48babd9fdaabd76f0, type: 2}
   texture: {fileID: 2800000, guid: 166fea76460a8bb4dbc3dee4b3f4750e, type: 3}
@@ -13152,7 +13114,6 @@ MonoBehaviour:
   objWorldThroughMesh: {fileID: 1632933859}
   player: {fileID: 1586971688}
   blockAdmin: {fileID: 239868569}
-  itemAdmin: {fileID: 401382475}
   hitboxAdmin: {fileID: 1277467230}
   worldShader: {fileID: 7200000, guid: 10b320411cf700b49a086142f44534bb, type: 3}
   meshBlock: {fileID: 1576143353}

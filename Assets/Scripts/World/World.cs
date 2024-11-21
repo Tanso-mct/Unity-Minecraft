@@ -35,7 +35,6 @@ public class World : MonoBehaviour
 
     // Vaxelの管理クラス
     [SerializeField] private BlockAdmin blockAdmin;
-    [SerializeField] private ItemAdmin itemAdmin;
 
     // HitBoxの管理クラス
     [SerializeField] private McHitBoxAdmin hitboxAdmin;
@@ -117,7 +116,6 @@ public class World : MonoBehaviour
 
         // Vaxelの管理クラスの初期化
         blockAdmin.Init();
-        itemAdmin.Init();
 
         // ソースメッシュオブジェクトの初期化
         sourceMeshVs = new List<Vector3>();

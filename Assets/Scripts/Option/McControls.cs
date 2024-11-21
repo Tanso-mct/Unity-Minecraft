@@ -63,6 +63,8 @@ public class McControls : MonoBehaviour
     [SerializeField] private TextButtonParts backBtnParts = null;
     [SerializeField] private TextButtonParts forwardBtnParts = null;
 
+    [SerializeField] private McSounds mcSounds = null;
+
     public void Init()
     {
         if (hasSaveData)
@@ -171,6 +173,8 @@ public class McControls : MonoBehaviour
 
         isEditing = true;
         editingFrame = 0;
+
+        mcSounds.PlayUI(Constants.SOUND_CLICK);
     }
 
     private void Update()

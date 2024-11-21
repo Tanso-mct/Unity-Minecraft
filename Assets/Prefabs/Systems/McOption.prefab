@@ -95,6 +95,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: ddac68ab62d26c848bd3d8b2e6dcba42, type: 3}
   playersClips:
   - {fileID: 8300000, guid: a5ce122a230501348a89bc5d3d42653e, type: 3}
+  clickStartTime: 0.6
 --- !u!1 &2501115658926341635
 GameObject:
   m_ObjectHideFlags: 0
@@ -209,6 +210,7 @@ MonoBehaviour:
   rightBtnParts: {fileID: 0}
   backBtnParts: {fileID: 0}
   forwardBtnParts: {fileID: 0}
+  mcSounds: {fileID: 7404210073812728297}
 --- !u!1 &3787311949653340865
 GameObject:
   m_ObjectHideFlags: 0

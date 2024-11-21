@@ -32,6 +32,8 @@ public class BlockAdmin : MonoBehaviour
             case (int)Constants.VAXEL_TYPE.DIRT:
             case (int)Constants.VAXEL_TYPE.GRASS_TOP:
             case (int)Constants.VAXEL_TYPE.OBSIDIAN:
+            case (int)Constants.VAXEL_TYPE.WATER:
+            case (int)Constants.VAXEL_TYPE.LAVA:
             case (int)Constants.VAXEL_TYPE.STONE:
             case (int)Constants.VAXEL_TYPE.COBBLESTONE:
             case (int)Constants.VAXEL_TYPE.STONE_ANDESITE:
@@ -53,7 +55,7 @@ public class BlockAdmin : MonoBehaviour
             case (int)Constants.VAXEL_TYPE.LOG_BIRCH:
             case (int)Constants.VAXEL_TYPE.LOG_BIRCH_BOTTOM:
                 rtVaxel = new Vaxel();
-                rtVaxel.Init(entityItemParent);
+                rtVaxel.Init(entityItemParent, mcSounds);
                 break;
         }
 
@@ -91,8 +93,6 @@ public class BlockAdmin : MonoBehaviour
 
         setVaxel.FinishedSet(frameSetBlock);
 
-        mcSounds.PlayBlock(Constants.SOUND_DIG_STONE);
-
         setVaxel = null;
 
         return true;
@@ -103,8 +103,6 @@ public class BlockAdmin : MonoBehaviour
         if (breakVaxel == null) return false;
 
         breakVaxel.FinishedBreak(frameDestroyBlock);
-
-        mcSounds.PlayBlock(Constants.SOUND_DIG_GRASS);
 
         breakVaxel = null;
         return true;

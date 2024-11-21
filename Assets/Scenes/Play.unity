@@ -10360,6 +10360,8 @@ MonoBehaviour:
   creativeItemContainer: {fileID: 1656007949}
   isInventoryOpen: 0
   triggerHitBoxObj: {fileID: 1659086479}
+  mcSounds: {fileID: 303595962}
+  fastFallSpeed: 15
 --- !u!65 &1586971690
 BoxCollider:
   m_ObjectHideFlags: 0

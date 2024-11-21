@@ -145,6 +145,11 @@ public class Constants : MonoBehaviour
     public const string SPRITE_GRASS_SIDE = "Textures/blocks/grass_side";
     public const string SPRITE_GRASS_BOTTOM = "Textures/blocks/dirt";
 
+    public const string SPRITE_OBSIDIAN = "Textures/blocks/obsidian";
+
+    public const string SPRITE_WATER = "Textures/blocks/water";
+    public const string SPRITE_LAVA = "Textures/blocks/lava";
+
     public const string SPRITE_STONE = "Textures/blocks/stone";
     public const string SPRITE_COBBLESTONE = "Textures/blocks/cobblestone";
     public const string SPRITE_STONE_ANDESITE = "Textures/blocks/stone_andesite";

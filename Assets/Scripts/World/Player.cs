@@ -156,7 +156,11 @@ public class Player : MonoBehaviour
     public bool isInventoryOpen = false;
 
     [SerializeField] private GameObject triggerHitBoxObj;
-    
+
+    [SerializeField] private McSounds mcSounds = null;
+
+    private bool isFastFalling = false;
+    [SerializeField] private float fastFallSpeed = 10.0f;
 
     public void Init()
     {
@@ -792,6 +796,9 @@ public class Player : MonoBehaviour
         // プレイヤーの現在座標を取得
         pos = transform.position;
 
+        // プレイヤーの現在のスピードから高速で落下しているかどうかを判定
+        if (rb.velocity.y < -fastFallSpeed) isFastFalling = true;
+
         if (!isInventoryOpen) // プレイヤーのホットバーの選択スロットを更新
         {
             if (McControls.IsKeyDown(Constants.CONTROL_HS1)) HotBarSelectSlot(1);
@@ -858,24 +865,24 @@ public class Player : MonoBehaviour
                 if (contact.point.y >= pos.y - collisionOffset && contact.point.y <= pos.y + collisionOffset && !isFlying)
                 {
                     isGrounded = true;
+                    if (isFastFalling)
+                    {
+                        mcSounds.PlayPlayer(Constants.SOUND_FALL_SMALL);
+                        isFastFalling = false;
+                    }
                 }
                 else if 
                 (
                     contact.point.y >= pos.y - collisionOffset && contact.point.y <= pos.y + collisionOffset && isFlying)
                 {
                     isLanded = true;
+                    if (isFastFalling)
+                    {
+                        mcSounds.PlayPlayer(Constants.SOUND_FALL_SMALL);
+                        isFastFalling = false;
+                    }
                 }
             }
         }
-    }
-
-    void OnCollisionStay(Collision collision)
-    {
-        // Debug.Log("Collision Stay with " + collision.gameObject.name);
-    }
-
-    void OnCollisionExit(Collision collision)
-    {
-        
     }
 }

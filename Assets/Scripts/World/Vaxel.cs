@@ -18,12 +18,15 @@ public class Vaxel
     public GameObject entityItemParent;
     public float entityItemOffY = 0.7f;
 
-    public virtual void Init(GameObject entityItemParent)
+    private McSounds mcSounds = null;
+
+    public virtual void Init(GameObject entityItemParent, McSounds mcSounds)
     {
         setBlockId = (int)Constants.VAXEL_TYPE.AIR;
         breakBlockId = (int)Constants.VAXEL_TYPE.AIR;
 
         this.entityItemParent = entityItemParent;
+        this.mcSounds = mcSounds;
     }
 
     public virtual void FinishedSet(Vector4 frameSetBlock)
@@ -35,6 +38,10 @@ public class Vaxel
 
         HotBar hotBar = sourceSetContainer as HotBar;
         hotBar.RemoveContent(1, hotBar.SelectingSlot);
+        
+        mcSounds.PlayBlock(SupportFunc.GetSoundTypeFromId(setBlockId));
+
+        Debug.Log("Sound Type : " + SupportFunc.GetSoundTypeFromId(setBlockId));
     }
 
     public virtual void FinishedBreak(Vector4 frameDestroyBlock)
@@ -54,6 +61,10 @@ public class Vaxel
 
         EntityItem thisItem = entityItem.GetComponent<EntityItem>();
         thisItem.ThrowIt(new Vector3(Random.Range(0, 2), Random.Range(0, 2), Random.Range(0, 2)), breakBlockId, SupportFunc.LoadMultiTextureFromId(breakBlockId));
+
+        mcSounds.PlayBlock(SupportFunc.GetSoundTypeFromId(breakBlockId));
+
+        Debug.Log("Sound Type : " + SupportFunc.GetSoundTypeFromId(breakBlockId));
     }
 
     public virtual void TryBreak(Vector4 block, ref Vector4 frameDestroyBlock)

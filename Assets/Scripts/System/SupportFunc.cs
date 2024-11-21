@@ -134,6 +134,18 @@ public class SupportFunc
                 rtStr = Constants.SPRITE_DIRT;
                 break;
 
+            case (int)Constants.VAXEL_TYPE.OBSIDIAN:
+                rtStr = Constants.SPRITE_OBSIDIAN;
+                break;
+
+            case (int)Constants.VAXEL_TYPE.WATER:
+                rtStr = Constants.SPRITE_WATER;
+                break;
+
+            case (int)Constants.VAXEL_TYPE.LAVA:
+                rtStr = Constants.SPRITE_LAVA;
+                break;
+
             case (int)Constants.VAXEL_TYPE.STONE:
                 rtStr = Constants.SPRITE_STONE;
                 break;
@@ -206,6 +218,58 @@ public class SupportFunc
 
             case (int)Constants.VAXEL_TYPE.LOG_BIRCH:
                 rtStr = Constants.SPRITE_LOG_BIRCH;
+                break;
+        }
+
+        return rtStr;
+    }
+
+    public static string GetSoundTypeFromId(int vaxelId)
+    {
+        string rtStr = "";
+        switch (vaxelId)
+        {
+            case (int)Constants.VAXEL_TYPE.AIR:
+            case (int)Constants.VAXEL_TYPE.WATER:
+            case (int)Constants.VAXEL_TYPE.LAVA:
+                rtStr = "";
+                break;
+
+            case (int)Constants.VAXEL_TYPE.DIRT:
+            case (int)Constants.VAXEL_TYPE.LEAVES:
+                rtStr = Constants.SOUND_DIG_GRAVEL;
+                break;
+
+            case (int)Constants.VAXEL_TYPE.GRASS_TOP:
+            case (int)Constants.VAXEL_TYPE.GRASS_SIDE:
+            case (int)Constants.VAXEL_TYPE.GRASS_BOTTOM:
+                rtStr = Constants.SOUND_DIG_GRASS;
+                break;
+
+            case (int)Constants.VAXEL_TYPE.STONE:
+            case (int)Constants.VAXEL_TYPE.OBSIDIAN:
+            case (int)Constants.VAXEL_TYPE.COBBLESTONE:
+            case (int)Constants.VAXEL_TYPE.STONE_ANDESITE:
+            case (int)Constants.VAXEL_TYPE.STONE_DIORITE:
+            case (int)Constants.VAXEL_TYPE.STONE_GRANITE:
+            case (int)Constants.VAXEL_TYPE.COAL_ORE:
+            case (int)Constants.VAXEL_TYPE.IRON_ORE:
+            case (int)Constants.VAXEL_TYPE.GOLD_ORE:
+            case (int)Constants.VAXEL_TYPE.DIAMOND_ORE:
+            case (int)Constants.VAXEL_TYPE.EMERALD_ORE:
+            case (int)Constants.VAXEL_TYPE.LAPIS_ORE:
+                rtStr = Constants.SOUND_DIG_STONE;
+                break;
+            
+            case (int)Constants.VAXEL_TYPE.LOG_OAK_TOP:
+            case (int)Constants.VAXEL_TYPE.LOG_OAK_BOTTOM:
+            case (int)Constants.VAXEL_TYPE.LOG_OAK:
+            case (int)Constants.VAXEL_TYPE.PLANKS_OAK:
+            case (int)Constants.VAXEL_TYPE.PLANKS_BIRCH:
+            case (int)Constants.VAXEL_TYPE.LOG_BIRCH_TOP:
+            case (int)Constants.VAXEL_TYPE.LOG_BIRCH_BOTTOM:
+            case (int)Constants.VAXEL_TYPE.LOG_BIRCH:
+                rtStr = Constants.SOUND_DIG_WOOD;
                 break;
         }
 

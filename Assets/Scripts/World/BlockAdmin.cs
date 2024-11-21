@@ -26,7 +26,6 @@ public class BlockAdmin : MonoBehaviour
 
         switch (blockId)
         {
-            case (int)Constants.VAXEL_TYPE.BEDROCK:
             case (int)Constants.VAXEL_TYPE.DIRT:
             case (int)Constants.VAXEL_TYPE.GRASS_TOP:
             case (int)Constants.VAXEL_TYPE.OBSIDIAN:
@@ -79,6 +78,7 @@ public class BlockAdmin : MonoBehaviour
     public void Break(Vector4 block, ref Vector4 frameDestroyBlock)
     {
         breakVaxel = GetVaxel(block);
+        if (breakVaxel == null) return;
         breakVaxel.TryBreak(block, ref frameDestroyBlock);
     }
 

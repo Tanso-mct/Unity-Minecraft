@@ -54,8 +54,11 @@ public class Inventory : Container
                     SetSlotContent(startSlotId, 0, 0);
                     return;
                 }
-                else if (thisSlotIsStackable && thisSlotVaxelId == startSlotVaxelId && thisSlotAmount + startSlotAmount > stackMax)
-                {
+                else if 
+                (
+                    thisSlotIsStackable && thisSlotVaxelId == startSlotVaxelId && 
+                    thisSlotAmount + startSlotAmount > stackMax && thisSlotAmount != stackMax
+                ){
                     SetSlotContent(i+1, startSlotVaxelId, stackMax);
                     SetSlotContent(startSlotId, startSlotVaxelId, thisSlotAmount + startSlotAmount - stackMax);
                     return;
@@ -84,8 +87,11 @@ public class Inventory : Container
                     SetSlotContent(startSlotId, 0, 0);
                     return;
                 }
-                else if (thisSlotIsStackable && thisSlotVaxelId == startSlotVaxelId && thisSlotAmount + startSlotAmount > stackMax)
-                {
+                else if 
+                (
+                    thisSlotIsStackable && thisSlotVaxelId == startSlotVaxelId && 
+                    thisSlotAmount + startSlotAmount > stackMax && thisSlotAmount != stackMax
+                ){
                     SetSlotContent(i+1, startSlotVaxelId, stackMax);
                     SetSlotContent(startSlotId, startSlotVaxelId, thisSlotAmount + startSlotAmount - stackMax);
                     return;

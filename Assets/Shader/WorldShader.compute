@@ -156,6 +156,39 @@ int GetBlockType(int blockId)
         case 20: // LEAVES
         case 24: // PLANKS_OAK
         case 25: // PLANKS_BIRCH
+        case 29: // GRAVEL
+        case 30: // HARDENED_CLAY
+        case 31: // HARDENED_CLAY_STAINED_BLACK
+        case 32: // HARDENED_CLAY_STAINED_BLUE
+        case 33: // HARDENED_CLAY_STAINED_BROWN
+        case 34: // HARDENED_CLAY_STAINED_CYAN
+        case 35: // HARDENED_CLAY_STAINED_GRAY
+        case 36: // HARDENED_CLAY_STAINED_GREEN
+        case 37: // HARDENED_CLAY_STAINED_LIGHT_BLUE
+        case 38: // HARDENED_CLAY_STAINED_LIME
+        case 39: // HARDENED_CLAY_STAINED_MAGENTA
+        case 40: // HARDENED_CLAY_STAINED_ORANGE
+        case 41: // HARDENED_CLAY_STAINED_PINK
+        case 42: // HARDENED_CLAY_STAINED_PURPLE
+        case 43: // HARDENED_CLAY_STAINED_RED
+        case 44: // HARDENED_CLAY_STAINED_SILVER
+        case 45: // HARDENED_CLAY_STAINED_WHITE
+        case 46: // HARDENED_CLAY_STAINED_YELLOW
+        case 47: // WOOL_COLORED_BLUE
+        case 48: // WOOL_COLORED_BROWN
+        case 49: // WOOL_COLORED_CYAN
+        case 50: // WOOL_COLORED_GRAY
+        case 51: // WOOL_COLORED_GREEN
+        case 52: // WOOL_COLORED_LIGHT_BLUE
+        case 53: // WOOL_COLORED_LIME
+        case 54: // WOOL_COLORED_MAGENTA
+        case 55: // WOOL_COLORED_ORANGE
+        case 56: // WOOL_COLORED_PINK
+        case 57: // WOOL_COLORED_PURPLE
+        case 58: // WOOL_COLORED_RED
+        case 59: // WOOL_COLORED_SILVER
+        case 60: // WOOL_COLORED_WHITE
+        case 61: // WOOL_COLORED_YELLOW
             return 0;
 
         case 3: // GRASS_TOP

@@ -54,6 +54,39 @@ public class BlockAdmin : MonoBehaviour
             case (int)Constants.VAXEL_TYPE.LOG_BIRCH_TOP:
             case (int)Constants.VAXEL_TYPE.LOG_BIRCH:
             case (int)Constants.VAXEL_TYPE.LOG_BIRCH_BOTTOM:
+            case (int)Constants.VAXEL_TYPE.GRAVEL:
+            case (int)Constants.VAXEL_TYPE.HARDENED_CLAY:
+            case (int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_BLACK:
+            case (int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_BLUE:
+            case (int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_BROWN:
+            case (int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_CYAN:
+            case (int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_GRAY:
+            case (int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_GREEN:
+            case (int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_LIGHT_BLUE:
+            case (int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_LIME:
+            case (int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_MAGENTA:
+            case (int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_ORANGE:
+            case (int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_PINK:
+            case (int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_PURPLE:
+            case (int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_RED:
+            case (int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_SILVER:
+            case (int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_WHITE:
+            case (int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_YELLOW:
+            case (int)Constants.VAXEL_TYPE.WOOL_COLORED_BLUE:
+            case (int)Constants.VAXEL_TYPE.WOOL_COLORED_BROWN:
+            case (int)Constants.VAXEL_TYPE.WOOL_COLORED_CYAN:
+            case (int)Constants.VAXEL_TYPE.WOOL_COLORED_GRAY:
+            case (int)Constants.VAXEL_TYPE.WOOL_COLORED_GREEN:
+            case (int)Constants.VAXEL_TYPE.WOOL_COLORED_LIGHT_BLUE:
+            case (int)Constants.VAXEL_TYPE.WOOL_COLORED_LIME:
+            case (int)Constants.VAXEL_TYPE.WOOL_COLORED_MAGENTA:
+            case (int)Constants.VAXEL_TYPE.WOOL_COLORED_ORANGE:
+            case (int)Constants.VAXEL_TYPE.WOOL_COLORED_PINK:
+            case (int)Constants.VAXEL_TYPE.WOOL_COLORED_PURPLE:
+            case (int)Constants.VAXEL_TYPE.WOOL_COLORED_RED:
+            case (int)Constants.VAXEL_TYPE.WOOL_COLORED_SILVER:
+            case (int)Constants.VAXEL_TYPE.WOOL_COLORED_WHITE:
+            case (int)Constants.VAXEL_TYPE.WOOL_COLORED_YELLOW:
                 rtVaxel = new Vaxel();
                 rtVaxel.Init(entityItemParent, mcSounds);
                 break;

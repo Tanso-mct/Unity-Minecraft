@@ -6,6 +6,7 @@ public class Inventory : Container
 {
     [SerializeField] private Container hotBar;
     [SerializeField] private Container creativeContainer;
+    [SerializeField] private Container creativeContainer2;
 
     public override void Init()
     {
@@ -23,6 +24,7 @@ public class Inventory : Container
         {
             hotBar.slots[slotId-1].SetContents(vaxelId, amount);
             creativeContainer.slots[slotId-1].SetContents(vaxelId, amount);
+            creativeContainer2.slots[slotId-1].SetContents(vaxelId, amount);
         }
     }
 
@@ -114,6 +116,7 @@ public class Inventory : Container
                 {
                     hotBar.slots[i].SetContents(vaxelId, 1);
                     creativeContainer.slots[i].SetContents(vaxelId, 1);
+                    creativeContainer2.slots[i].SetContents(vaxelId, 1);
                 }
                 return true;
             }
@@ -124,6 +127,7 @@ public class Inventory : Container
                 {
                     hotBar.slots[i].SetContents(vaxelId, nowAmount + 1);
                     creativeContainer.slots[i].SetContents(vaxelId, nowAmount + 1);
+                    creativeContainer2.slots[i].SetContents(vaxelId, nowAmount + 1);
                 }
                 return true;
             }
@@ -146,6 +150,7 @@ public class Inventory : Container
             {
                 hotBar.slots[slot-1].SetContents(nowVaxelId, nowAmount - amount);
                 creativeContainer.slots[slot-1].SetContents(nowVaxelId, nowAmount - amount);
+                creativeContainer2.slots[slot-1].SetContents(nowVaxelId, nowAmount - amount);
             }
             return new Vector2(nowVaxelId, amount);
         }
@@ -156,6 +161,7 @@ public class Inventory : Container
             {
                 hotBar.slots[slot-1].SetContents(0, 0);
                 creativeContainer.slots[slot-1].SetContents(0, 0);
+                creativeContainer2.slots[slot-1].SetContents(0, 0);
             }
             return new Vector2(nowVaxelId, nowAmount);
         }
@@ -166,6 +172,7 @@ public class Inventory : Container
             {
                 hotBar.slots[slot-1].SetContents(0, 0);
                 creativeContainer.slots[slot-1].SetContents(0, 0);
+                creativeContainer2.slots[slot-1].SetContents(0, 0);
             }
             return new Vector2(nowVaxelId, 1);
         }

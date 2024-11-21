@@ -151,6 +151,7 @@ public class Player : MonoBehaviour
     [SerializeField] private Inventory inventory;
     [SerializeField] private HotBar hotBar;
     [SerializeField] private CreativeContainer creativeItemContainer;
+    [SerializeField] private CreativeContainer creativeItemContainer2;
 
     // 何らかのインベントリを開いているかどうか
     public bool isInventoryOpen = false;
@@ -161,11 +162,6 @@ public class Player : MonoBehaviour
 
     private bool isFastFalling = false;
     [SerializeField] private float fastFallSpeed = 10.0f;
-
-    // ジャンプキー2回押しを監視するための変数
-    private bool isJumpKeyPushed = false;
-    private int lastJumpFrame = 0;
-    [SerializeField] private int doubleTapFrame = 20;
 
     public void Init()
     {
@@ -189,6 +185,7 @@ public class Player : MonoBehaviour
         inventory.Init();
         hotBar.Init();
         creativeItemContainer.Init();
+        creativeItemContainer2.Init();
 
         // アニメーターの初期化
         animParts = parts.GetComponent<Animator>();
@@ -447,19 +444,6 @@ public class Player : MonoBehaviour
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             isGrounded = false;
-        }
-
-        if (McControls.IsKeyDown(Constants.CONTROL_JUMP) && isFlying)
-        {
-            int currentFrame = Time.frameCount;
-
-            if (currentFrame - lastJumpFrame <= doubleTapFrame)
-            {
-                if (rb.useGravity) rb.useGravity = false;
-                else rb.useGravity = true;
-            }
-
-            lastJumpFrame = currentFrame;
         }
     }
 

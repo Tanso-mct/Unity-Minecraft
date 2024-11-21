@@ -112,113 +112,9 @@ public class SupportFunc
     static public string GetSpritePathFromId(int vaxelId)
     {
         string rtStr = "";
-        switch (vaxelId)
+        if (vaxelId < Constants.VAXEL_SPRITE_PATH.Count)
         {
-            case (int)Constants.VAXEL_TYPE.AIR:
-                rtStr = Constants.SPRITE_NULL;
-                break;
-
-            case (int)Constants.VAXEL_TYPE.DIRT:
-                rtStr = Constants.SPRITE_DIRT;
-                break;
-
-            case (int)Constants.VAXEL_TYPE.GRASS_TOP:
-                rtStr = Constants.SPRITE_GRASS_TOP;
-                break;
-
-            case (int)Constants.VAXEL_TYPE.GRASS_SIDE:
-                rtStr = Constants.SPRITE_GRASS_SIDE;
-                break;
-
-            case (int)Constants.VAXEL_TYPE.GRASS_BOTTOM:
-                rtStr = Constants.SPRITE_DIRT;
-                break;
-
-            case (int)Constants.VAXEL_TYPE.OBSIDIAN:
-                rtStr = Constants.SPRITE_OBSIDIAN;
-                break;
-
-            case (int)Constants.VAXEL_TYPE.WATER:
-                rtStr = Constants.SPRITE_WATER;
-                break;
-
-            case (int)Constants.VAXEL_TYPE.LAVA:
-                rtStr = Constants.SPRITE_LAVA;
-                break;
-
-            case (int)Constants.VAXEL_TYPE.STONE:
-                rtStr = Constants.SPRITE_STONE;
-                break;
-
-            case (int)Constants.VAXEL_TYPE.COBBLESTONE:
-                rtStr = Constants.SPRITE_COBBLESTONE;
-                break;
-
-            case (int)Constants.VAXEL_TYPE.STONE_ANDESITE:
-                rtStr = Constants.SPRITE_STONE_ANDESITE;
-                break;
-
-            case (int)Constants.VAXEL_TYPE.STONE_DIORITE:
-                rtStr = Constants.SPRITE_STONE_DIORITE;
-                break;
-
-            case (int)Constants.VAXEL_TYPE.STONE_GRANITE:
-                rtStr = Constants.SPRITE_STONE_GRANITE;
-                break;
-
-            case (int)Constants.VAXEL_TYPE.COAL_ORE:
-                rtStr = Constants.SPRITE_COAL_ORE;
-                break;
-
-            case (int)Constants.VAXEL_TYPE.IRON_ORE:
-                rtStr = Constants.SPRITE_IRON_ORE;
-                break;
-
-            case (int)Constants.VAXEL_TYPE.GOLD_ORE:
-                rtStr = Constants.SPRITE_GOLD_ORE;
-                break;
-
-            case (int)Constants.VAXEL_TYPE.DIAMOND_ORE:
-                rtStr = Constants.SPRITE_DIAMOND_ORE;
-                break;
-
-            case (int)Constants.VAXEL_TYPE.EMERALD_ORE:
-                rtStr = Constants.SPRITE_EMERALD_ORE;
-                break;
-
-            case (int)Constants.VAXEL_TYPE.LAPIS_ORE:
-                rtStr = Constants.SPRITE_LAPIS_ORE;
-                break;
-
-            case (int)Constants.VAXEL_TYPE.LEAVES:
-                rtStr = Constants.SPRITE_LEAVES;
-                break;
-
-            case (int)Constants.VAXEL_TYPE.LOG_OAK_TOP:
-            case (int)Constants.VAXEL_TYPE.LOG_OAK_BOTTOM:
-                rtStr = Constants.SPRITE_LOG_OAK_TOP;
-                break;
-
-            case (int)Constants.VAXEL_TYPE.LOG_OAK:
-                rtStr = Constants.SPRITE_LOG_OAK;
-                break;
-
-            case (int)Constants.VAXEL_TYPE.PLANKS_OAK:
-                rtStr = Constants.SPRITE_PLANKS_OAK;
-                break;
-
-            case (int)Constants.VAXEL_TYPE.PLANKS_BIRCH:
-                rtStr = Constants.SPRITE_PLANKS_BIRCH;
-                break;
-
-            case (int)Constants.VAXEL_TYPE.LOG_BIRCH_TOP:
-            case (int)Constants.VAXEL_TYPE.LOG_BIRCH_BOTTOM:
-                rtStr = Constants.SPRITE_LOG_BIRCH_TOP;
-                break;
-
-            case (int)Constants.VAXEL_TYPE.LOG_BIRCH:
-                rtStr = Constants.SPRITE_LOG_BIRCH;
-                break;
+            rtStr = Constants.VAXEL_SPRITE_PATH[vaxelId];
         }
 
         return rtStr;
@@ -237,6 +133,7 @@ public class SupportFunc
 
             case (int)Constants.VAXEL_TYPE.DIRT:
             case (int)Constants.VAXEL_TYPE.LEAVES:
+            case (int)Constants.VAXEL_TYPE.GRAVEL:
                 rtStr = Constants.SOUND_DIG_GRAVEL;
                 break;
 
@@ -244,6 +141,24 @@ public class SupportFunc
             case (int)Constants.VAXEL_TYPE.GRASS_SIDE:
             case (int)Constants.VAXEL_TYPE.GRASS_BOTTOM:
                 rtStr = Constants.SOUND_DIG_GRASS;
+                break;
+
+            case (int)Constants.VAXEL_TYPE.WOOL_COLORED_BLUE:
+            case (int)Constants.VAXEL_TYPE.WOOL_COLORED_BROWN:
+            case (int)Constants.VAXEL_TYPE.WOOL_COLORED_CYAN:
+            case (int)Constants.VAXEL_TYPE.WOOL_COLORED_GRAY:
+            case (int)Constants.VAXEL_TYPE.WOOL_COLORED_GREEN:
+            case (int)Constants.VAXEL_TYPE.WOOL_COLORED_LIGHT_BLUE:
+            case (int)Constants.VAXEL_TYPE.WOOL_COLORED_LIME:
+            case (int)Constants.VAXEL_TYPE.WOOL_COLORED_MAGENTA:
+            case (int)Constants.VAXEL_TYPE.WOOL_COLORED_ORANGE:
+            case (int)Constants.VAXEL_TYPE.WOOL_COLORED_PINK:
+            case (int)Constants.VAXEL_TYPE.WOOL_COLORED_PURPLE:
+            case (int)Constants.VAXEL_TYPE.WOOL_COLORED_RED:
+            case (int)Constants.VAXEL_TYPE.WOOL_COLORED_SILVER:
+            case (int)Constants.VAXEL_TYPE.WOOL_COLORED_WHITE:
+            case (int)Constants.VAXEL_TYPE.WOOL_COLORED_YELLOW:
+                rtStr = Constants.SOUND_DIG_CLOTH;
                 break;
 
             case (int)Constants.VAXEL_TYPE.STONE:
@@ -258,6 +173,24 @@ public class SupportFunc
             case (int)Constants.VAXEL_TYPE.DIAMOND_ORE:
             case (int)Constants.VAXEL_TYPE.EMERALD_ORE:
             case (int)Constants.VAXEL_TYPE.LAPIS_ORE:
+
+            case (int)Constants.VAXEL_TYPE.HARDENED_CLAY:
+            case (int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_BLACK:
+            case (int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_BLUE:
+            case (int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_BROWN:
+            case (int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_CYAN:
+            case (int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_GRAY:
+            case (int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_GREEN:
+            case (int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_LIGHT_BLUE:
+            case (int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_LIME:
+            case (int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_MAGENTA:
+            case (int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_ORANGE:
+            case (int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_PINK:
+            case (int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_PURPLE:
+            case (int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_RED:
+            case (int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_SILVER:
+            case (int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_WHITE:
+            case (int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_YELLOW:
                 rtStr = Constants.SOUND_DIG_STONE;
                 break;
             

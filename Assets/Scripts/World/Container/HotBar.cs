@@ -12,6 +12,7 @@ public class HotBar : Container
 
     [SerializeField] private Container inventory;
     [SerializeField] private CreativeContainer creativeContainer;
+    [SerializeField] private CreativeContainer creativeContainer2;
 
     [SerializeField] private GameObject holdingBlock;
 
@@ -88,6 +89,7 @@ public class HotBar : Container
                 slots[i].SetContents(vaxelId, 1);
                 inventory.slots[i].SetContents(vaxelId, 1);
                 creativeContainer.slots[i].SetContents(vaxelId, 1);
+                creativeContainer2.slots[i].SetContents(vaxelId, 1);
                 return true;
             }
             else if (isStackable && nowVaxelId == vaxelId && nowAmount < stackMax) 
@@ -95,6 +97,7 @@ public class HotBar : Container
                 slots[i].SetContents(vaxelId, nowAmount + 1);
                 inventory.slots[i].SetContents(vaxelId, nowAmount + 1);
                 creativeContainer.slots[i].SetContents(vaxelId, nowAmount + 1);
+                creativeContainer2.slots[i].SetContents(vaxelId, nowAmount + 1);
                 return true;
             }
         }
@@ -114,6 +117,7 @@ public class HotBar : Container
             slots[slot-1].SetContents(nowVaxelId, nowAmount - amount);
             inventory.slots[slot-1].SetContents(nowVaxelId, nowAmount - amount);
             creativeContainer.slots[slot-1].SetContents(nowVaxelId, nowAmount - amount);
+            creativeContainer2.slots[slot-1].SetContents(nowVaxelId, nowAmount - amount);
             return new Vector2(nowVaxelId, amount);
         }
         else if (isStackable && nowVaxelId != 0 && nowAmount <= amount)
@@ -121,6 +125,7 @@ public class HotBar : Container
             slots[slot-1].SetContents(0, 0);
             inventory.slots[slot-1].SetContents(0, 0);
             creativeContainer.slots[slot-1].SetContents(0, 0);
+            creativeContainer2.slots[slot-1].SetContents(0, 0);
             return new Vector2(nowVaxelId, nowAmount);
         }
         else if (!isStackable && nowVaxelId != 0)
@@ -128,6 +133,7 @@ public class HotBar : Container
             slots[slot-1].SetContents(0, 0);
             inventory.slots[slot-1].SetContents(0, 0);
             creativeContainer.slots[slot-1].SetContents(0, 0);
+            creativeContainer2.slots[slot-1].SetContents(0, 0);
             return new Vector2(nowVaxelId, 1);
         }
         else

@@ -4,8 +4,12 @@ using UnityEngine;
 
 public class CreativeContainer : Container
 {
+    [SerializeField] private int containerId = 0;
+
     [SerializeField] private Container hotBar;
     [SerializeField] private Container inventory;
+
+    [SerializeField] private Container otherContainer;
 
     public override void Init()
     {
@@ -14,28 +18,66 @@ public class CreativeContainer : Container
             slots[i].Init(i+1);
         }
 
-        slots[9].SetContents((int)Constants.VAXEL_TYPE.DIRT, 1);
-        slots[10].SetContents((int)Constants.VAXEL_TYPE.GRASS_TOP, 1);
-        slots[11].SetContents((int)Constants.VAXEL_TYPE.OBSIDIAN, 1);
-        slots[12].SetContents((int)Constants.VAXEL_TYPE.WATER, 1);
-        slots[13].SetContents((int)Constants.VAXEL_TYPE.LAVA, 1);
-        slots[14].SetContents((int)Constants.VAXEL_TYPE.STONE, 1);
-        slots[15].SetContents((int)Constants.VAXEL_TYPE.COBBLESTONE, 1);
-        slots[16].SetContents((int)Constants.VAXEL_TYPE.STONE_ANDESITE, 1);
-        slots[17].SetContents((int)Constants.VAXEL_TYPE.STONE_DIORITE, 1);
-        slots[18].SetContents((int)Constants.VAXEL_TYPE.STONE_GRANITE, 1);
-        slots[19].SetContents((int)Constants.VAXEL_TYPE.COAL_ORE, 1);
-        slots[20].SetContents((int)Constants.VAXEL_TYPE.IRON_ORE, 1);
-        slots[21].SetContents((int)Constants.VAXEL_TYPE.GOLD_ORE, 1);
-        slots[22].SetContents((int)Constants.VAXEL_TYPE.DIAMOND_ORE, 1);
-        slots[23].SetContents((int)Constants.VAXEL_TYPE.EMERALD_ORE, 1);
-        slots[24].SetContents((int)Constants.VAXEL_TYPE.LAPIS_ORE, 1);
-        slots[25].SetContents((int)Constants.VAXEL_TYPE.LEAVES, 1);
-        slots[26].SetContents((int)Constants.VAXEL_TYPE.LOG_OAK_TOP, 1);
-        slots[27].SetContents((int)Constants.VAXEL_TYPE.PLANKS_OAK, 1);
-        slots[28].SetContents((int)Constants.VAXEL_TYPE.PLANKS_BIRCH, 1);
-        slots[29].SetContents((int)Constants.VAXEL_TYPE.LOG_BIRCH_TOP, 1);
-        
+        if (containerId == 0)
+        {
+            slots[9].SetContents((int)Constants.VAXEL_TYPE.DIRT, 1);
+            slots[10].SetContents((int)Constants.VAXEL_TYPE.GRASS_TOP, 1);
+            slots[11].SetContents((int)Constants.VAXEL_TYPE.OBSIDIAN, 1);
+            slots[12].SetContents((int)Constants.VAXEL_TYPE.WATER, 1);
+            slots[13].SetContents((int)Constants.VAXEL_TYPE.LAVA, 1);
+            slots[14].SetContents((int)Constants.VAXEL_TYPE.STONE, 1);
+            slots[15].SetContents((int)Constants.VAXEL_TYPE.COBBLESTONE, 1);
+            slots[16].SetContents((int)Constants.VAXEL_TYPE.STONE_ANDESITE, 1);
+            slots[17].SetContents((int)Constants.VAXEL_TYPE.STONE_DIORITE, 1);
+            slots[18].SetContents((int)Constants.VAXEL_TYPE.STONE_GRANITE, 1);
+            slots[19].SetContents((int)Constants.VAXEL_TYPE.COAL_ORE, 1);
+            slots[20].SetContents((int)Constants.VAXEL_TYPE.IRON_ORE, 1);
+            slots[21].SetContents((int)Constants.VAXEL_TYPE.GOLD_ORE, 1);
+            slots[22].SetContents((int)Constants.VAXEL_TYPE.DIAMOND_ORE, 1);
+            slots[23].SetContents((int)Constants.VAXEL_TYPE.EMERALD_ORE, 1);
+            slots[24].SetContents((int)Constants.VAXEL_TYPE.LAPIS_ORE, 1);
+            slots[25].SetContents((int)Constants.VAXEL_TYPE.LEAVES, 1);
+            slots[26].SetContents((int)Constants.VAXEL_TYPE.LOG_OAK_TOP, 1);
+            slots[27].SetContents((int)Constants.VAXEL_TYPE.PLANKS_OAK, 1);
+            slots[28].SetContents((int)Constants.VAXEL_TYPE.PLANKS_BIRCH, 1);
+            slots[29].SetContents((int)Constants.VAXEL_TYPE.LOG_BIRCH_TOP, 1);
+            slots[30].SetContents((int)Constants.VAXEL_TYPE.GRAVEL, 1);
+        }
+        else if (containerId == 1)
+        {
+            slots[9].SetContents((int)Constants.VAXEL_TYPE.HARDENED_CLAY, 1);
+            slots[10].SetContents((int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_BLACK, 1);
+            slots[11].SetContents((int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_BLUE, 1);
+            slots[12].SetContents((int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_BROWN, 1);
+            slots[13].SetContents((int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_CYAN, 1);
+            slots[14].SetContents((int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_GRAY, 1);
+            slots[15].SetContents((int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_GREEN, 1);
+            slots[16].SetContents((int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_LIGHT_BLUE, 1);
+            slots[17].SetContents((int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_LIME, 1);
+            slots[18].SetContents((int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_MAGENTA, 1);
+            slots[19].SetContents((int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_ORANGE, 1);
+            slots[20].SetContents((int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_PINK, 1);
+            slots[21].SetContents((int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_PURPLE, 1);
+            slots[22].SetContents((int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_RED, 1);
+            slots[23].SetContents((int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_WHITE, 1);
+            slots[24].SetContents((int)Constants.VAXEL_TYPE.HARDENED_CLAY_STAINED_YELLOW, 1);
+
+            slots[25].SetContents((int)Constants.VAXEL_TYPE.WOOL_COLORED_BLUE, 1);
+            slots[26].SetContents((int)Constants.VAXEL_TYPE.WOOL_COLORED_BROWN, 1);
+            slots[27].SetContents((int)Constants.VAXEL_TYPE.WOOL_COLORED_CYAN, 1);
+            slots[28].SetContents((int)Constants.VAXEL_TYPE.WOOL_COLORED_GRAY, 1);
+            slots[29].SetContents((int)Constants.VAXEL_TYPE.WOOL_COLORED_GREEN, 1);
+            slots[30].SetContents((int)Constants.VAXEL_TYPE.WOOL_COLORED_LIGHT_BLUE, 1);
+            slots[31].SetContents((int)Constants.VAXEL_TYPE.WOOL_COLORED_LIME, 1);
+            slots[32].SetContents((int)Constants.VAXEL_TYPE.WOOL_COLORED_MAGENTA, 1);
+            slots[33].SetContents((int)Constants.VAXEL_TYPE.WOOL_COLORED_ORANGE, 1);
+            slots[34].SetContents((int)Constants.VAXEL_TYPE.WOOL_COLORED_PINK, 1);
+            slots[35].SetContents((int)Constants.VAXEL_TYPE.WOOL_COLORED_PURPLE, 1);
+            slots[36].SetContents((int)Constants.VAXEL_TYPE.WOOL_COLORED_RED, 1);
+            slots[37].SetContents((int)Constants.VAXEL_TYPE.WOOL_COLORED_SILVER, 1);
+            slots[38].SetContents((int)Constants.VAXEL_TYPE.WOOL_COLORED_WHITE, 1);
+            slots[39].SetContents((int)Constants.VAXEL_TYPE.WOOL_COLORED_YELLOW, 1);
+        }
 
     }
 
@@ -46,6 +88,7 @@ public class CreativeContainer : Container
             slots[slotId-1].SetContents(vaxelId, amount);
             hotBar.slots[slotId-1].SetContents(vaxelId, amount);
             inventory.slots[slotId-1].SetContents(vaxelId, amount);
+            otherContainer.slots[slotId-1].SetContents(vaxelId, amount);
         }
     }
 

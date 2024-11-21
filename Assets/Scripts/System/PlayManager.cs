@@ -37,6 +37,9 @@ public class PlayManager : Manager
         // 各ウィンドウの処理を実行
         ExecuteWindows();
 
+        // MUSIC再生
+        mcSounds.PlayMusic(Constants.SCENE_PLAY);
+
         // スクロールされている場合、ウィンドウを移動
         ScrollWindows();
     }

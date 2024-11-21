@@ -37,6 +37,9 @@ public class MenuManager : Manager
         // 各ウィンドウの処理を実行
         ExecuteWindows();
 
+        // MUSIC再生
+        mcSounds.PlayMusic(Constants.SCENE_MENU);
+
         // スクロールされている場合、ウィンドウを移動
         if (wndControlSetting.GetComponent<MenuWindow>().IsOpening)
         {

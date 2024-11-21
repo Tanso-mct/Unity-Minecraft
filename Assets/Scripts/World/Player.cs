@@ -821,6 +821,7 @@ public class Player : MonoBehaviour
             {
                 // ホットバーのアイテムをドロップ
                 hotBar.DropItem(hotBar.SelectingSlot);
+                UpdateHotBarSlot();
             }
         }
         else

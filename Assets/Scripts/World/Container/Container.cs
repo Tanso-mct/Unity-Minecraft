@@ -44,6 +44,18 @@ public class Container : MonoBehaviour
 
     }
 
+    public virtual void DropItem(int slotId)
+    {
+        if (McControls.IsKeyDown(Constants.CONTROL_DROP_ITEM) && !Input.GetKey(KeyCode.LeftShift))
+        {
+            RemoveContent(1, slotId);
+        }
+        else if (McControls.IsKeyDown(Constants.CONTROL_DROP_ITEM) && Input.GetKey(KeyCode.LeftShift))
+        {
+            RemoveContent(64, slotId);
+        }
+    }
+
     public void StartHoverSlotMove(int slotId)
     {
         if (moveFinishedFrame + 2 < passedFrame)
@@ -99,22 +111,34 @@ public class Container : MonoBehaviour
                     else if (isStackable && hoverAmount + amount > stackMax)
                     {
                         SetSlotContent(nowHoverSlotId, vaxelId, stackMax);
-                        if (!isInfiniteBlock) SetSlotContent(startSlotId, vaxelId, hoverAmount + amount - stackMax);
+                        if ((!isInfiniteBlock) || (isInfiniteBlock && startSlotId >= 1 && startSlotId <= 9)) 
+                        {
+                            SetSlotContent(startSlotId, vaxelId, hoverAmount + amount - stackMax);
+                        }
                     }
                 }
                 else if (hoverVaxelId != vaxelId)
                 {
                     SetSlotContent(nowHoverSlotId, vaxelId, amount);
-                    if (!isInfiniteBlock) SetSlotContent(startSlotId, hoverVaxelId, hoverAmount);
+                    if ((!isInfiniteBlock) || (isInfiniteBlock && startSlotId >= 1 && startSlotId <= 9)) 
+                    {
+                        SetSlotContent(startSlotId, hoverVaxelId, hoverAmount);
+                    }
                 }
                 else
                 {
-                    if (!isInfiniteBlock) SetSlotContent(startSlotId, vaxelId, amount);
+                    if ((!isInfiniteBlock) || (isInfiniteBlock && startSlotId >= 1 && startSlotId <= 9)) 
+                    {
+                        SetSlotContent(startSlotId, vaxelId, amount);
+                    }
                 }
             }
             else
             {
-                if (!isInfiniteBlock) SetSlotContent(startSlotId, vaxelId, amount);
+                if ((!isInfiniteBlock) || (isInfiniteBlock && startSlotId >= 1 && startSlotId <= 9)) 
+                {
+                    SetSlotContent(startSlotId, vaxelId, amount);
+                }
             }
 
             hoverSlot.gameObject.SetActive(false);
@@ -149,7 +173,10 @@ public class Container : MonoBehaviour
             startHoverSlotPos = slots[startSlotId-1].transform.position;
             startMousePos = Input.mousePosition;
 
-            if (!isInfiniteBlock) SetSlotContent(startSlotId, 0, 0);
+            if ((!isInfiniteBlock) || (isInfiniteBlock && startSlotId >= 1 && startSlotId <= 9)) 
+            {
+                SetSlotContent(startSlotId, 0, 0);
+            }
         }
     }
 
@@ -213,25 +240,5 @@ public class Container : MonoBehaviour
         {
             return new Vector2(0, 0);
         }
-    }
-    
-    public void DropItem(int slotId)
-    {
-        RemoveContent(1, slotId);
-
-        GameObject entityItem = null;
-        GameObject entityBlockPrefab = null;
-        SupportFunc.InstantiatePrefab
-        (
-            ref entityItem, ref entityBlockPrefab, Constants.PREFAB_ENTITY_BLOCK, ref entityItemParent, 
-            SupportFunc.PosFloatConvert(new Vector3(playerObj.transform.position.x, playerObj.transform.position.y + entityItemOffY, playerObj.transform.position.z))
-        );
-
-        EntityItem thisItem = entityItem.GetComponent<EntityItem>();
-        thisItem.ThrowIt
-        (
-            new Vector3(Random.Range(0, 2), Random.Range(0, 2), Random.Range(0, 2)), 
-            GetIsContain(slotId), SupportFunc.LoadMultiTextureFromId(GetIsContain(slotId))
-        );
     }
 }

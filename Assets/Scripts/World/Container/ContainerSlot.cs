@@ -44,14 +44,7 @@ public class ContainerSlot : MonoBehaviour
     {
         selector.gameObject.SetActive(true);
 
-        if (McControls.IsKeyDown(Constants.CONTROL_DROP_ITEM) && !Input.GetKey(KeyCode.LeftShift))
-        {
-            container.RemoveContent(1, slotId);
-        }
-        else if (McControls.IsKeyDown(Constants.CONTROL_DROP_ITEM) && Input.GetKey(KeyCode.LeftShift))
-        {
-            container.RemoveContent(64, slotId);
-        }
+        container.DropItem(slotId);
 
         if (isSelectable) container.SetNowHoverSlot(slotId);
         else container.SetNowHoverSlot(0);

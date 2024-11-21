@@ -11,10 +11,6 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject parts;
     [SerializeField] private GameObject partsSub;
 
-    private Vector3 canvasRightArmIdlePos;
-    private Vector3 canvasRightArmIdleRot;
-    private Vector3 canvasRightArmIdleScale;
-
     // Parts‚ÌGameObject
     [SerializeField] private List<GameObject> partsList;
 

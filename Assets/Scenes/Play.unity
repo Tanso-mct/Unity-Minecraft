@@ -3200,22 +3200,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6466358576794943675, guid: 69a9c11f710057a42b4278b724138ccc, type: 3}
   m_PrefabInstance: {fileID: 322120015}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &331396694 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2437705564637114112, guid: eea1d6cba0e9e15428b1c5ba4770f000, type: 3}
-  m_PrefabInstance: {fileID: 1671811002}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 331396695}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 131f7d72ad8dc9e4db576605c71179c8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!1 &331396695 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2323645738706563484, guid: eea1d6cba0e9e15428b1c5ba4770f000, type: 3}
-  m_PrefabInstance: {fileID: 1671811002}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &340146137
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9386,7 +9370,7 @@ PrefabInstance:
     - target: {fileID: 3379727396607066145, guid: 5e412af8e24955f44a863a25b048b3e6, type: 3}
       propertyPath: sneakBtnParts
       value: 
-      objectReference: {fileID: 331396694}
+      objectReference: {fileID: 0}
     - target: {fileID: 3379727396607066145, guid: 5e412af8e24955f44a863a25b048b3e6, type: 3}
       propertyPath: attackBtnParts
       value: 
@@ -9604,7 +9588,7 @@ MonoBehaviour:
   wndPlayerInventory: {fileID: 1342120842}
   wndCreativeContainer: {fileID: 1926139929}
   wndCreativeContainer2: {fileID: 1759736540}
-  controlScrollBottom: -1700
+  controlScrollBottom: -1600
   mcSounds: {fileID: 303595962}
 --- !u!4 &957236581 stripped
 Transform:
@@ -17423,7 +17407,7 @@ PrefabInstance:
     - target: {fileID: 1316409757073141121, guid: eea1d6cba0e9e15428b1c5ba4770f000, type: 3}
       propertyPath: clickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
       value: 
-      objectReference: {fileID: 331396695}
+      objectReference: {fileID: 0}
     - target: {fileID: 1316409757073141121, guid: eea1d6cba0e9e15428b1c5ba4770f000, type: 3}
       propertyPath: clickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.GameObject, UnityEngine
@@ -17543,7 +17527,7 @@ PrefabInstance:
     - target: {fileID: 2437705564637114112, guid: eea1d6cba0e9e15428b1c5ba4770f000, type: 3}
       propertyPath: clickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
       value: 
-      objectReference: {fileID: 331396695}
+      objectReference: {fileID: 0}
     - target: {fileID: 2437705564637114112, guid: eea1d6cba0e9e15428b1c5ba4770f000, type: 3}
       propertyPath: clickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
       value: Sneak_btn

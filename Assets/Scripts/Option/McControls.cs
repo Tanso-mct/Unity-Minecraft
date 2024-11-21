@@ -28,7 +28,6 @@ public class McControls : MonoBehaviour
 
     static private KeyCode inventoryKey = KeyCode.E;
 
-    static private KeyCode sneakKey = KeyCode.LeftControl;
     static private KeyCode jumpKey = KeyCode.Space;
     static private KeyCode sprintKey = KeyCode.LeftShift;
     static private KeyCode leftKey = KeyCode.A;
@@ -57,7 +56,6 @@ public class McControls : MonoBehaviour
 
     [SerializeField] private TextButtonParts inventoryBtnParts = null;
     
-    [SerializeField] private TextButtonParts sneakBtnParts = null;
     [SerializeField] private TextButtonParts jumpBtnParts = null;
     [SerializeField] private TextButtonParts sprintBtnParts = null;
     [SerializeField] private TextButtonParts leftBtnParts = null;
@@ -107,8 +105,6 @@ public class McControls : MonoBehaviour
         inventoryBtnParts.EditInitText(inventoryKey.ToString());
         inventoryBtnParts.EditHoverText(inventoryKey.ToString());
 
-        sneakBtnParts.EditInitText(sneakKey.ToString());
-        sneakBtnParts.EditHoverText(sneakKey.ToString());
         jumpBtnParts.EditInitText(jumpKey.ToString());
         jumpBtnParts.EditHoverText(jumpKey.ToString());
         sprintBtnParts.EditInitText(sprintKey.ToString());
@@ -262,10 +258,6 @@ public class McControls : MonoBehaviour
                 BindInput(ref inventoryKey);
                 return;
 
-            case Constants.CONTROL_SNEAK:
-                BindInput(ref sneakKey);
-                return;
-
             case Constants.CONTROL_JUMP:
                 BindInput(ref jumpKey);
                 return;
@@ -360,10 +352,6 @@ public class McControls : MonoBehaviour
                 KeyReset(ref inventoryBtnParts, ref inventoryKey, Constants.KEY_INVENTORY);
                 return;
 
-            case Constants.CONTROL_SNEAK:
-                KeyReset(ref sneakBtnParts, ref sneakKey, Constants.KEY_SNEAK);
-                return;
-
             case Constants.CONTROL_JUMP:
                 KeyReset(ref jumpBtnParts, ref jumpKey, Constants.KEY_JUMP);
                 return;
@@ -411,7 +399,6 @@ public class McControls : MonoBehaviour
 
         KeyReset(ref inventoryBtnParts, ref inventoryKey, Constants.KEY_INVENTORY);
 
-        KeyReset(ref sneakBtnParts, ref sneakKey, Constants.KEY_SNEAK);
         KeyReset(ref jumpBtnParts, ref jumpKey, Constants.KEY_JUMP);
         KeyReset(ref sprintBtnParts, ref sprintKey, Constants.KEY_SPRINT);
         KeyReset(ref leftBtnParts, ref leftKey, Constants.KEY_LEFT);
@@ -485,9 +472,6 @@ public class McControls : MonoBehaviour
             case Constants.CONTROL_INVENTORY:
                 return Input.GetKey(inventoryKey);
 
-            case Constants.CONTROL_SNEAK:
-                return Input.GetKey(sneakKey);
-
             case Constants.CONTROL_JUMP:
                 return Input.GetKey(jumpKey);
 
@@ -553,9 +537,6 @@ public class McControls : MonoBehaviour
             case Constants.CONTROL_INVENTORY:
                 return Input.GetKeyDown(inventoryKey);
 
-            case Constants.CONTROL_SNEAK:
-                return Input.GetKeyDown(sneakKey);
-
             case Constants.CONTROL_JUMP:
                 return Input.GetKeyDown(jumpKey);
 
@@ -620,9 +601,6 @@ public class McControls : MonoBehaviour
 
             case Constants.CONTROL_INVENTORY:
                 return Input.GetKeyUp(inventoryKey);
-
-            case Constants.CONTROL_SNEAK:
-                return Input.GetKeyUp(sneakKey);
 
             case Constants.CONTROL_JUMP:
                 return Input.GetKeyUp(jumpKey);

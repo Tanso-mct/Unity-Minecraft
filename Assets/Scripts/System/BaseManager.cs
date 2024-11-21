@@ -18,9 +18,6 @@ public class BaseManager : MonoBehaviour
         // メッセージ処理のためのパラメータを初期化
         Param.Init();
 
-        // ワールド情報を読み込み
-        World.LoadInfoFromJson();
-
         // Managerクラスを継承したクラスを持つゲームオブジェクトからManagerクラスを取得
         manager = managerObject.GetComponent<Manager>();
 

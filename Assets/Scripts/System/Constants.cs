@@ -37,7 +37,6 @@ public class Constants : MonoBehaviour
 
     public const  KeyCode KEY_INVENTORY = KeyCode.E;
 
-    public const KeyCode KEY_SNEAK = KeyCode.LeftControl;
     public const  KeyCode KEY_JUMP = KeyCode.Space;
     public const  KeyCode KEY_SPRINT = KeyCode.LeftShift;
     public const  KeyCode KEY_LEFT = KeyCode.A;
@@ -73,7 +72,6 @@ public class Constants : MonoBehaviour
 
     public const string CONTROL_INVENTORY = "Inventory";
 
-    public const string CONTROL_SNEAK = "Sneak";
     public const string CONTROL_JUMP = "Jump";
     public const string CONTROL_SPRINT = "Sprint";
     public const string CONTROL_LEFT = "Left";

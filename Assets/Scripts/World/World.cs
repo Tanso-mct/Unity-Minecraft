@@ -7,19 +7,11 @@ using UnityEngine.AI;
 public class World : MonoBehaviour
 {
     // ワールド情報のリスト
-    public static List<WorldInfo> WorldInfos;
-
-    // 現在のワールド情報
-    private static WorldInfo thisInfo;
-
     // ブロックのバッファー。その座標に存在しているブロックの種類を示す。
     private ComputeBuffer blocksIDBuff;
 
     // 当たり判定を持たないブロックのバッファー。その座標に存在しているブロックの種類を示す。
     private ComputeBuffer throughBlocksIDBuff;
-
-    // ワールド上のブロックとエンティティとアイテムのオブジェクト
-    List<Vaxel> items;
 
     // ワールドメッシュオブジェクト
     [SerializeField] private GameObject objWorldMesh;
@@ -77,26 +69,6 @@ public class World : MonoBehaviour
     // Raycastの精度
     [SerializeField] private int rayAccuracy = 100;
 
-    public static void LoadInfoFromJson()
-    {
-        WorldInfos = new List<WorldInfo>();
-
-        // 読み込み
-    }
-
-    public static void CreateWorldInfo(string name, string gameMode, string worldType)
-    {
-        WorldInfo worldInfo = new WorldInfo();
-        worldInfo.worldName = name;
-
-        WorldInfos.Add(worldInfo);
-    }
-
-    public static void SetWorldInfo(int infoIndex)
-    {
-        thisInfo = WorldInfos[infoIndex];
-    }
-
     private void SaveWorldInfo()
     {
         // JSONファイルに保存
@@ -109,8 +81,6 @@ public class World : MonoBehaviour
 
         // ワールドすり抜けブロックらの初期化
         throughBlocksIDBuff = new ComputeBuffer(Constants.WORLD_SIZE * Constants.WORLD_HEIGHT * Constants.WORLD_SIZE, sizeof(int));
-
-        items = new List<Vaxel>();
 
         // Vaxelの管理クラスの初期化
         blockAdmin.Init();
@@ -295,27 +265,20 @@ public class World : MonoBehaviour
         int[] blocksId = new int[Constants.WORLD_SIZE * Constants.WORLD_HEIGHT * Constants.WORLD_SIZE];
         int[] throughBlocksId = new int[Constants.WORLD_SIZE * Constants.WORLD_HEIGHT * Constants.WORLD_SIZE];
 
-        if(thisInfo.dataJsonPath == "")
+        // フラットワールドの生成
+        for (int x = 0; x < Constants.WORLD_SIZE; x++)
         {
-            // フラットワールドの生成
-            for (int x = 0; x < Constants.WORLD_SIZE; x++)
+            for (int y = 0; y < Constants.WORLD_HEIGHT; y++)
             {
-                for (int y = 0; y < Constants.WORLD_HEIGHT; y++)
+                for (int z = 0; z < Constants.WORLD_SIZE; z++)
                 {
-                    for (int z = 0; z < Constants.WORLD_SIZE; z++)
-                    {
-                        int index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
-                        if (y == 0) blocksId[index] = (int)Constants.VAXEL_TYPE.BEDROCK; 
-                        else if (y >= 1 && y <= 2) blocksId[index] = (int)Constants.VAXEL_TYPE.DIRT;
-                        else if (y == 3) blocksId[index] = (int)Constants.VAXEL_TYPE.GRASS_TOP;
-                        else blocksId[index] = (int)Constants.VAXEL_TYPE.AIR;
-                    }
+                    int index = x + y * Constants.WORLD_SIZE + z * Constants.WORLD_SIZE * Constants.WORLD_HEIGHT;
+                    if (y == 0) blocksId[index] = (int)Constants.VAXEL_TYPE.BEDROCK; 
+                    else if (y >= 1 && y <= 2) blocksId[index] = (int)Constants.VAXEL_TYPE.DIRT;
+                    else if (y == 3) blocksId[index] = (int)Constants.VAXEL_TYPE.GRASS_TOP;
+                    else blocksId[index] = (int)Constants.VAXEL_TYPE.AIR;
                 }
             }
-        }
-        else
-        {
-            // 作成済みのワールド情報を読み込む
         }
 
         

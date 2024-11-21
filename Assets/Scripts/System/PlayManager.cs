@@ -23,6 +23,8 @@ public class PlayManager : Manager
 
     [SerializeField] private McSounds mcSounds;
 
+    static private int createdTimes = 0;
+
     public override void BaseAwake()
     {
         // Managerに設定されているすべてのWindowを初期化
@@ -44,6 +46,13 @@ public class PlayManager : Manager
 
         // スクロールされている場合、ウィンドウを移動
         ScrollWindows();
+
+        if (createdTimes != 0)
+        {
+            ShowMenu();
+        }
+
+        createdTimes++;
     }
 
     public override void BaseUpdate()

@@ -73,6 +73,48 @@ public class McControls : MonoBehaviour
         senSb.Init((int)(((sen / senMax) * 100f)));
         senSb.EditTxt("Sensitivity: " + (int)(((sen / senMax) * 100f)) + "%");
 
+        attackBtnParts.EditInitText(attackKey.ToString());
+        attackBtnParts.EditHoverText(attackKey.ToString());
+        dropBtnParts.EditInitText(dropKey.ToString());
+        dropBtnParts.EditHoverText(dropKey.ToString());
+        useBtnParts.EditInitText(useKey.ToString());
+        useBtnParts.EditHoverText(useKey.ToString());
+
+
+        hotBar1BtnParts.EditInitText(hotBar1Key.ToString());
+        hotBar1BtnParts.EditHoverText(hotBar1Key.ToString());
+        hotBar2BtnParts.EditInitText(hotBar2Key.ToString());
+        hotBar2BtnParts.EditHoverText(hotBar2Key.ToString());
+        hotBar3BtnParts.EditInitText(hotBar3Key.ToString());
+        hotBar3BtnParts.EditHoverText(hotBar3Key.ToString());
+        hotBar4BtnParts.EditInitText(hotBar4Key.ToString());
+        hotBar4BtnParts.EditHoverText(hotBar4Key.ToString());
+        hotBar5BtnParts.EditInitText(hotBar5Key.ToString());
+        hotBar5BtnParts.EditHoverText(hotBar5Key.ToString());
+        hotBar6BtnParts.EditInitText(hotBar6Key.ToString());
+        hotBar6BtnParts.EditHoverText(hotBar6Key.ToString());
+        hotBar7BtnParts.EditInitText(hotBar7Key.ToString());
+        hotBar7BtnParts.EditHoverText(hotBar7Key.ToString());
+        hotBar8BtnParts.EditInitText(hotBar8Key.ToString());
+        hotBar8BtnParts.EditHoverText(hotBar8Key.ToString());
+        hotBar9BtnParts.EditInitText(hotBar9Key.ToString());
+        hotBar9BtnParts.EditHoverText(hotBar9Key.ToString());
+
+        inventoryBtnParts.EditInitText(inventoryKey.ToString());
+        inventoryBtnParts.EditHoverText(inventoryKey.ToString());
+
+        jumpBtnParts.EditInitText(jumpKey.ToString());
+        jumpBtnParts.EditHoverText(jumpKey.ToString());
+        sprintBtnParts.EditInitText(sprintKey.ToString());
+        sprintBtnParts.EditHoverText(sprintKey.ToString());
+        leftBtnParts.EditInitText(leftKey.ToString());
+        leftBtnParts.EditHoverText(leftKey.ToString());
+        rightBtnParts.EditInitText(rightKey.ToString());
+        rightBtnParts.EditHoverText(rightKey.ToString());
+        backBtnParts.EditInitText(backKey.ToString());
+        backBtnParts.EditHoverText(backKey.ToString());
+        forwardBtnParts.EditInitText(forwardKey.ToString());
+        forwardBtnParts.EditHoverText(forwardKey.ToString());
     }
 
     public void Save()

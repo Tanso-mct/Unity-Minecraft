@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,14 +11,19 @@ public class McVideos : MonoBehaviour
     [SerializeField] SelectBarParts renderDistanceSb;
     [SerializeField] SelectBarParts brightnessSb;
 
+    public Camera mainCamera = null;
+
     private static int fov = 70;
     public static int Fov { get { return fov; } }
     private static Vector2 fovSbPos;
 
-    private static int renderDistance = 2;
-    public static int RenderDistance { get { return renderDistance; } }
+    private static int renderDistance = 4;
+    public static int RenderDistance { get { return renderDistance / 2; } }
     
     private static Vector2 renderDistanceSbPos;
+
+    private float maxBrightness = 2.3f;
+    private float minBrightness = 0.3f;
 
     private static int brightness = 50;
     public static int Brightness { get { return brightness; } }
@@ -29,7 +35,20 @@ public class McVideos : MonoBehaviour
         if (hasSaveData)
         {
             // Load data
+
         }
+
+        fovSb.Init(fov);
+        SetFov();
+
+        if (renderDistanceSb != null)
+        {   
+            renderDistanceSb.Init(renderDistance);
+            SetRenderDistance();
+        }
+
+        brightnessSb.Init(brightness);
+        SetBrightness();
     }
 
     public void Save()
@@ -41,6 +60,8 @@ public class McVideos : MonoBehaviour
     {
         fov = (int)fovSb.Val;
         fovSbPos = fovSb.SelectorPos;
+
+        if (mainCamera != null) mainCamera.fieldOfView = fov;
 
         if (fov == 70) fovSb.EditTxt("FOV: Normal");
         else if (fov == 110) fovSb.EditTxt("FOV: Quake Pro");
@@ -72,6 +93,8 @@ public class McVideos : MonoBehaviour
     {
         brightness = (int)brightnessSb.Val;
         brightnessSbPos = brightnessSb.SelectorPos;
+
+        RenderSettings.ambientIntensity = minBrightness + (maxBrightness - minBrightness) * brightness / 100;
 
         if (brightness == 0) brightnessSb.EditTxt("Brightness: Moody");
         else if (brightness > 0 && brightness < 100) brightnessSb.EditTxt("Brightness: +" + brightness + "%");

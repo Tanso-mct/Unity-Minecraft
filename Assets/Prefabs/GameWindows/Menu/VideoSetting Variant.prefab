@@ -120,7 +120,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2328324273460847353, guid: 0bfdc381a039f7a488ddf9fdcbda93b0, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -257
+      value: -321.5
       objectReference: {fileID: 0}
     - target: {fileID: 2328324273460847353, guid: 0bfdc381a039f7a488ddf9fdcbda93b0, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -132,7 +132,7 @@ PrefabInstance:
       objectReference: {fileID: -748194229, guid: a6be7d01d33a1f44cbce4faab3cb83c9, type: 3}
     - target: {fileID: 3254369464187890530, guid: 0bfdc381a039f7a488ddf9fdcbda93b0, type: 3}
       propertyPath: val
-      value: 8
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 3254369464187890530, guid: 0bfdc381a039f7a488ddf9fdcbda93b0, type: 3}
       propertyPath: maxVal
@@ -168,7 +168,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3600829495305200513, guid: 0bfdc381a039f7a488ddf9fdcbda93b0, type: 3}
       propertyPath: m_Text
-      value: 'Render Distance: 8 Normal'
+      value: 'Render Distance: 4 Short+'
       objectReference: {fileID: 0}
     - target: {fileID: 3600829495305200513, guid: 0bfdc381a039f7a488ddf9fdcbda93b0, type: 3}
       propertyPath: m_Color.b
@@ -184,7 +184,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4150920726210743595, guid: 0bfdc381a039f7a488ddf9fdcbda93b0, type: 3}
       propertyPath: m_Text
-      value: 'Render Distance: 8 Normal'
+      value: 'Render Distance: 4 Short+'
       objectReference: {fileID: 0}
     - target: {fileID: 5268589682981355521, guid: 0bfdc381a039f7a488ddf9fdcbda93b0, type: 3}
       propertyPath: m_SizeDelta.x

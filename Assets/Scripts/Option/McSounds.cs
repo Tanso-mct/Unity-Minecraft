@@ -1,4 +1,4 @@
-using System.Collections;
+ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,29 +11,36 @@ public class McSounds : MonoBehaviour
     [SerializeField] SelectBarParts blocksSb;
     [SerializeField] SelectBarParts uiSb;
     [SerializeField] SelectBarParts playersSb;
-    [SerializeField] SelectBarParts hostileSb;
-    [SerializeField] SelectBarParts friendlySb;
 
-    private static int masterVal = 50;
+    private static int masterVolume = 50;
     private static Vector2 masterSbPos;
 
-    private static int musicVal = 50;
+    private static int musicVolume = 50;
     private static Vector2 musicSbPos;
 
-    private static int blocksVal = 50;
+    private static int blocksVolume = 50;
     private static Vector2 blocksSbPos;
 
-    private static int uiVal = 50;
+    private static int uiVolume = 50;
     private static Vector2 uiSbPos;
 
-    private static int playersVal = 50;
+    private static int playersVolume = 50;
     private static Vector2 playersSbPos;
 
-    private static int hostileVal = 50;
-    private static Vector2 hostileSbPos;
+    [SerializeField] private AudioSource sourceMusic;
+    [SerializeField] private AudioSource sourceBlock;
+    [SerializeField] private AudioSource sourceUI;
+    [SerializeField] private AudioSource sourcePlayer;
 
-    private static int friendlyVal = 50;
-    private static Vector2 friendlySbPos;
+    [SerializeField] private List<AudioClip> musicClips;
+    [SerializeField] private List<AudioClip> blocksClips;
+    [SerializeField] private List<AudioClip> uiClips;
+    [SerializeField] private List<AudioClip> playersClips;
+
+    private Dictionary<string, int> musicClipsIndex;
+    private Dictionary<string, int> blocksClipsIndex;
+    private Dictionary<string, int> uiClipsIndex;
+    private Dictionary<string, int> playersClipsIndex;
 
     public void Init()
     {
@@ -41,6 +48,21 @@ public class McSounds : MonoBehaviour
         {
             // Load data
         }
+
+        masterSb.Init(masterVolume);
+        SetMaster();
+
+        musicSb.Init(musicVolume);
+        SetMusic();
+
+        blocksSb.Init(blocksVolume);
+        SetBlocks();
+
+        uiSb.Init(uiVolume);
+        SetUi();
+
+        playersSb.Init(playersVolume);
+        SetPlayers();
     }
 
     public void Save()
@@ -50,58 +72,41 @@ public class McSounds : MonoBehaviour
 
     public void SetMaster()
     {
-        masterVal = (int)masterSb.Val;
+        masterVolume = (int)masterSb.Val;
         masterSbPos = masterSb.SelectorPos;
 
-        masterSb.EditTxt("Master Volume: " + masterVal + "%");
+        masterSb.EditTxt("Master Volume: " + masterVolume + "%");
     }
 
     public void SetMusic()
     {
-        musicVal = (int)musicSb.Val;
+        musicVolume = (int)musicSb.Val;
         musicSbPos = musicSb.SelectorPos;
 
-        musicSb.EditTxt("Music: " + musicVal + "%");
+        musicSb.EditTxt("Music: " + musicVolume + "%");
     }
 
     public void SetBlocks()
     {
-        blocksVal = (int)blocksSb.Val;
+        blocksVolume = (int)blocksSb.Val;
         blocksSbPos = blocksSb.SelectorPos;
 
-        blocksSb.EditTxt("Blocks: " + blocksVal + "%");
+        blocksSb.EditTxt("Blocks: " + blocksVolume + "%");
     }
 
     public void SetUi()
     {
-        uiVal = (int)uiSb.Val;
+        uiVolume = (int)uiSb.Val;
         uiSbPos = uiSb.SelectorPos;
 
-        uiSb.EditTxt("UI: " + uiVal + "%");
+        uiSb.EditTxt("UI: " + uiVolume + "%");
     }
 
     public void SetPlayers()
     {
-        playersVal = (int)playersSb.Val;
+        playersVolume = (int)playersSb.Val;
         playersSbPos = playersSb.SelectorPos;
 
-        playersSb.EditTxt("Players: " + playersVal + "%");
+        playersSb.EditTxt("Players: " + playersVolume + "%");
     }
-
-    public void SetHostile()
-    {
-        hostileVal = (int)hostileSb.Val;
-        hostileSbPos = hostileSb.SelectorPos;
-
-        hostileSb.EditTxt("Hostile Creatures: " + hostileVal + "%");
-    }
-
-    public void SetFriendly()
-    {
-        friendlyVal = (int)friendlySb.Val;
-        friendlySbPos = friendlySb.SelectorPos;
-
-        friendlySb.EditTxt("Friendly Creatures: " + friendlyVal + "%");
-    }
-    
 }

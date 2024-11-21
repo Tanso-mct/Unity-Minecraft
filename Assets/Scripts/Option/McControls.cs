@@ -7,7 +7,9 @@ public class McControls : MonoBehaviour
     private static bool hasSaveData = false;
 
     [SerializeField] private SelectBarParts senSb;
-    private static int sen = 2;
+    private float senMax = 8;
+    private float senMin = 0.001f;
+    private static float sen = 4;
     private static Vector2 senSbPos;
 
     static private KeyCode attackKey = KeyCode.Mouse0;
@@ -67,6 +69,10 @@ public class McControls : MonoBehaviour
         {
             // Load data
         }
+
+        senSb.Init((int)(((sen / senMax) * 100f)));
+        senSb.EditTxt("Sensitivity: " + (int)(((sen / senMax) * 100f)) + "%");
+
     }
 
     public void Save()
@@ -81,10 +87,11 @@ public class McControls : MonoBehaviour
 
     public void SenEdit()
     {
-        sen = (int)senSb.Val;
+        sen = senMin + (senMax - senMin) * senSb.Val / 100f;
+
         senSbPos = senSb.SelectorPos;
 
-        senSb.EditTxt("Sensitivity: " + sen + "%");
+        senSb.EditTxt("Sensitivity: " + (int)(((sen / senMax) * 100f)) + "%");
 
         Param.popUpWindowDone = true;
     }

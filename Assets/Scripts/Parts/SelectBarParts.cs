@@ -25,6 +25,16 @@ public class SelectBarParts : MonoBehaviour
 
     [SerializeField] private GameObject hoverText = null;
 
+    public void Init(float val)
+    {
+        // SelectorÇÃèâä˙à íuÇê›íË
+        this.val = val;
+        float aspect = (val - minVal) / (maxVal - minVal);
+        float posX = selectBarEl.GetBarMin() + selectBarEl.GetFrameWidth() * aspect;
+        Vector2 pos = new Vector2(posX, selectBarEl.selector.transform.position.y);
+        selectBarEl.selector.transform.position = pos;
+    }
+
     public void EditTxt(string txt)
     {
         selectBarEl.initText.text = txt;

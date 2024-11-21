@@ -28,6 +28,11 @@ public class Inventory : Container
         }
     }
 
+    public override void DropItem(int slotId)
+    {
+        
+    }
+
     public override void SlotQuickMove()
     {
         int startSlotVaxelId = 0;

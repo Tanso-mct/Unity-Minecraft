@@ -83,15 +83,12 @@ public class MenuManager : Manager
         if (isStartBuildWorld == 1)
         {
             isStartBuildWorld++;
-            Debug.Log("isStartBuildWorld: " + isStartBuildWorld);
         }
         else if (isStartBuildWorld == 2)
         {
             isStartBuildWorld = 0;
             Param.msg = Constants.MSG_CHANGE_SCENE;
             Param.strPar = Constants.SCENE_PLAY;
-
-            Debug.Log("Start Build World");
         }
     }
 
@@ -103,7 +100,6 @@ public class MenuManager : Manager
 
     public void ShowOption()
     {
-        Debug.Log("ShowOption");
         CloseWindow(wndTitle.name);
         ShowWindow(wndOption.name);
 
@@ -112,7 +108,6 @@ public class MenuManager : Manager
 
     public void CloseOption()
     {
-        Debug.Log("CloseOption");
         CloseWindow(wndOption.name);
         ShowWindow(wndTitle.name);
 
@@ -121,7 +116,6 @@ public class MenuManager : Manager
 
     public void ShowVideoSetting()
     {
-        Debug.Log("ShowVideoSetting");
         CloseWindow(wndOption.name);
         ShowWindow(wndVideoSetting.name);
 
@@ -130,7 +124,6 @@ public class MenuManager : Manager
 
     public void CloseVideoSetting()
     {
-        Debug.Log("CloseVideoSetting");
         CloseWindow(wndVideoSetting.name);
         ShowWindow(wndOption.name);
 
@@ -139,7 +132,6 @@ public class MenuManager : Manager
 
     public void ShowSoundSetting()
     {
-        Debug.Log("ShowSoundSetting");
         CloseWindow(wndOption.name);
         ShowWindow(wndSoundSetting.name);
 
@@ -148,7 +140,6 @@ public class MenuManager : Manager
 
     public void CloseSoundSetting()
     {
-        Debug.Log("CloseSoundSetting");
         CloseWindow(wndSoundSetting.name);
         ShowWindow(wndOption.name);
 
@@ -157,7 +148,6 @@ public class MenuManager : Manager
 
     public void ShowControlSetting()
     {
-        Debug.Log("ShowControlSetting");
         CloseWindow(wndOption.name);
         
         ShowWindow(wndControlSetting.name);
@@ -168,7 +158,6 @@ public class MenuManager : Manager
 
     public void CloseControlSetting()
     {
-        Debug.Log("CloseControlSetting");
         CloseWindow(wndControlSetting.name);
         CloseWindow(wndControlSettingScroll.name);
 
@@ -181,7 +170,6 @@ public class MenuManager : Manager
 
     public void ShowSinglePlayer()
     {
-        Debug.Log("ShowSinglePlayer");
         CloseWindow(wndTitle.name);
 
         ShowWindow(wndSinglePlayer.name);
@@ -192,7 +180,6 @@ public class MenuManager : Manager
 
     public void CloseSinglePlayer()
     {
-        Debug.Log("CloseSinglePlayer");
         CloseWindow(wndSinglePlayer.name);
         CloseWindow(wndSinglePlayerScroll.name);
 
@@ -212,14 +199,11 @@ public class MenuManager : Manager
 
     public void PlaySelectWorld()
     {
-        Debug.Log("PlaySelectWorld");
-
         mcSounds.PlayUI(Constants.SOUND_CLICK);
     }
 
     public void CreateNewWorld()
     {
-        Debug.Log("CreateNewWorld");
         mcSounds.PlayUI(Constants.SOUND_CLICK);
         ShowWindow(wndBuild.name);
 
@@ -228,8 +212,6 @@ public class MenuManager : Manager
 
     public void DestroySelectWorld()
     {
-        Debug.Log("DestroySelectWorld");
-
         mcSounds.PlayUI(Constants.SOUND_CLICK);
     }
 }

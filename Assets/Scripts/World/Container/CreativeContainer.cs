@@ -94,17 +94,7 @@ public class CreativeContainer : Container
 
     public override void DropItem(int slotId)
     {
-        if (slotId >= 1 && slotId <= 9)
-        {
-            if (McControls.IsKeyDown(Constants.CONTROL_DROP_ITEM) && !Input.GetKey(KeyCode.LeftShift))
-            {
-                RemoveContent(1, slotId);
-            }
-            else if (McControls.IsKeyDown(Constants.CONTROL_DROP_ITEM) && Input.GetKey(KeyCode.LeftShift))
-            {
-                RemoveContent(64, slotId);
-            }
-        }
+        
     }
 
     public override void SlotQuickMove()

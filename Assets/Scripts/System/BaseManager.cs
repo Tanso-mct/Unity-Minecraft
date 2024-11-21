@@ -115,7 +115,6 @@ public class BaseManager : MonoBehaviour
     // paramに格納されたシーン名を元に、シーンを変更する。
     public int ChangeScene()
     {
-        Debug.Log("ChangeScene: " + Param.strPar);
         if (Param.strPar == Constants.SCENE_MENU)
         {
             Exit();

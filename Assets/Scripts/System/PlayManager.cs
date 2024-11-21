@@ -6,6 +6,7 @@ public class PlayManager : Manager
 {
     [SerializeField] private GameObject wndPlay;
 
+    [SerializeField] private GameObject wndMenu;
     [SerializeField] private GameObject wndOption;
     [SerializeField] private GameObject wndVideoSetting;
     [SerializeField] private GameObject wndSoundSetting;
@@ -52,7 +53,7 @@ public class PlayManager : Manager
             wndPlay.gameObject.GetComponent<PlayWindow>().IsOpening &&
             !player.isInventoryOpen
         ){
-            ShowOption();
+            ShowMenu();
         }
 
         if (McControls.IsKeyDown(Constants.CONTROL_INVENTORY) && !player.isInventoryOpen)
@@ -77,12 +78,36 @@ public class PlayManager : Manager
         Dispose();
     }
 
-    public void ShowOption()
+    public void ShowMenu()
     {
         CloseWindow(wndPlay.name);
         Physics.simulationMode = SimulationMode.Script;
-
         McControls.CursorLock(false);
+        
+        ShowWindow(wndMenu.name);
+
+        mcSounds.PlayUI(Constants.SOUND_CLICK);
+    }
+
+    public void CloseMenu()
+    {
+        CloseWindow(wndMenu.name);
+        Physics.simulationMode = SimulationMode.FixedUpdate;
+        McControls.CursorLock(true);
+
+        ShowWindow(wndPlay.name);
+
+        mcSounds.PlayUI(Constants.SOUND_CLICK);
+    }
+
+    public void SaveAndQuit()
+    {
+        Debug.Log("SaveAndQuit");
+    }
+
+    public void ShowOption()
+    {
+        CloseWindow(wndMenu.name);
         ShowWindow(wndOption.name);
 
         mcSounds.PlayUI(Constants.SOUND_CLICK);
@@ -91,10 +116,7 @@ public class PlayManager : Manager
     public void CloseOption()
     {
         CloseWindow(wndOption.name);
-        Physics.simulationMode = SimulationMode.FixedUpdate;
-
-        ShowWindow(wndPlay.name);
-        McControls.CursorLock(true);
+        ShowWindow(wndMenu.name);
 
         mcSounds.PlayUI(Constants.SOUND_CLICK);
     }

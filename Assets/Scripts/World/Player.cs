@@ -162,6 +162,11 @@ public class Player : MonoBehaviour
     private bool isFastFalling = false;
     [SerializeField] private float fastFallSpeed = 10.0f;
 
+    // ジャンプキー2回押しを監視するための変数
+    private bool isJumpKeyPushed = false;
+    private int lastJumpFrame = 0;
+    [SerializeField] private int doubleTapFrame = 20;
+
     public void Init()
     {
         // プレイヤーの初期位置と回転角度
@@ -442,6 +447,19 @@ public class Player : MonoBehaviour
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             isGrounded = false;
+        }
+
+        if (McControls.IsKeyDown(Constants.CONTROL_JUMP) && isFlying)
+        {
+            int currentFrame = Time.frameCount;
+
+            if (currentFrame - lastJumpFrame <= doubleTapFrame)
+            {
+                if (rb.useGravity) rb.useGravity = false;
+                else rb.useGravity = true;
+            }
+
+            lastJumpFrame = currentFrame;
         }
     }
 
